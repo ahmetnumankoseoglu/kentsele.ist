@@ -18,17 +18,31 @@ export default function BasariliPage() {
 
   return (
     <AppShell showBottomCta={false}>
-      <h1 className="text-xl font-semibold">İlanın alındı</h1>
-      <p className="mt-2 text-sm text-slate-600">
-        İnceleme sonrası teyit için aranabilirsin. Yayınlanınca listede görünür.
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#eaf8ee] text-2xl text-[#2cb34f]">
+        ✓
+      </div>
+      <h1
+        className="mt-4 text-[22px] font-bold text-[#111321]"
+        style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
+      >
+        İlanın alındı
+      </h1>
+      <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
+        İnceleme sonrası teyit için aranabilirsin. Yayınlanınca listede
+        görünür.
       </p>
+
       {managePath && (
-        <div className="mt-6 rounded-2xl border border-black/5 bg-white p-4">
-          <p className="text-sm font-medium">Yönetim linkin (sakla)</p>
-          <p className="mt-2 break-all text-xs text-slate-600">{managePath}</p>
+        <div className="card-elevated mt-6 p-4">
+          <p className="text-sm font-bold text-[#111321]">
+            Yönetim linkin — sakla
+          </p>
+          <p className="mt-2 break-all rounded-[3px] bg-[#f8f8f8] p-3 text-xs text-[#6b7280]">
+            {managePath}
+          </p>
           <button
             type="button"
-            className="mt-3 h-11 w-full rounded-xl bg-slate-900 text-sm font-medium text-white"
+            className="btn-primary mt-3 w-full"
             onClick={async () => {
               await navigator.clipboard.writeText(
                 `${window.location.origin}${managePath}`
@@ -40,13 +54,17 @@ export default function BasariliPage() {
           </button>
           <Link
             href={managePath}
-            className="mt-2 flex h-11 items-center justify-center text-sm font-medium text-[#0B6E4F]"
+            className="mt-3 flex h-11 items-center justify-center text-sm font-bold text-[#168f43]"
           >
             İlanımı yönet
           </Link>
         </div>
       )}
-      <Link href="/" className="mt-6 block text-center text-sm text-slate-500">
+
+      <Link
+        href="/"
+        className="mt-6 block text-center text-sm font-bold text-[#6b7280]"
+      >
         Ana sayfaya dön
       </Link>
     </AppShell>

@@ -9,7 +9,7 @@ export function ContactActions({
 }) {
   if (anlasildi || !telefon) {
     return (
-      <p className="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
+      <p className="rounded-[3px] bg-[#f8f8f8] px-4 py-3 text-sm text-[#6b7280]">
         Bu ilan için anlaşma sağlandı. İletişim bilgisi kapalı.
       </p>
     );
@@ -17,17 +17,17 @@ export function ContactActions({
 
   return (
     <div className="grid grid-cols-2 gap-2">
-      <a
-        href={toTelHref(telefon)}
-        className="flex h-12 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white"
-      >
-        Ara · {formatPhoneDisplay(telefon)}
+      <a href={toTelHref(telefon)} className="btn-primary !px-2 text-sm">
+        Ara
+        <span className="ml-1 hidden font-medium sm:inline">
+          · {formatPhoneDisplay(telefon)}
+        </span>
       </a>
       <a
         href={toWhatsAppUrl(telefon)}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-12 items-center justify-center rounded-2xl bg-[#25D366] text-sm font-semibold text-white"
+        className="inline-flex h-auto items-center justify-center rounded-[3px] bg-[#25D366] px-3 py-3 text-sm font-bold text-white hover:bg-[#1fb855]"
       >
         WhatsApp
       </a>

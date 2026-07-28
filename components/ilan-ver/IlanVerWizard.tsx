@@ -13,6 +13,21 @@ import {
 
 const STEPS = 6;
 
+const STEP_META = [
+  { title: "İlçe seçin", sub: "Yalnızca İstanbul · 39 ilçe" },
+  {
+    title: "Kaç kat inşa edilecek?",
+    sub: "Zemin altı katlar dahil",
+  },
+  { title: "Binada kaç daire olacak?", sub: "Hedef daire sayısını seç" },
+  { title: "Ödeme tercihiniz nedir?", sub: "Müteahhitler buna göre teklif verir" },
+  {
+    title: "İhtiyaç detayı",
+    sub: "Ada/parsel, mevcut durum, beklenti…",
+  },
+  { title: "İletişim bilgilerin", sub: "Yayında telefon ve WhatsApp görünür" },
+];
+
 export function IlanVerWizard() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -31,6 +46,7 @@ export function IlanVerWizard() {
   });
 
   const progress = useMemo(() => ((step + 1) / STEPS) * 100, [step]);
+  const meta = STEP_META[step]!;
 
   async function submit() {
     setLoading(true);
@@ -53,7 +69,10 @@ export function IlanVerWizard() {
       }
       sessionStorage.setItem(
         "kentsele_manage",
-        JSON.stringify({ managePath: data.managePath, manageUrl: data.manageUrl })
+        JSON.stringify({
+          managePath: data.managePath,
+          manageUrl: data.manageUrl,
+        })
       );
       router.push("/ilan-ver/basarili");
     } catch {
@@ -69,134 +88,138 @@ export function IlanVerWizard() {
     if (step === 3 && !form.odeme_tercihi) return setError("Ödeme tercihi seçin");
     if (step === 4 && form.aciklama.trim().length < 20)
       return setError("En az 20 karakter yazın");
-    if (step === 5) return submit();
+    if (step === 5) {
+      if (form.iletisim_adi.trim().length < 2)
+        return setError("Ad soyad girin");
+      if (!form.telefon.trim()) return setError("Telefon girin");
+      return submit();
+    }
     setError(null);
     setStep((s) => s + 1);
   }
 
   return (
-    <div>
-      <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-black/5">
-        <div
-          className="h-full bg-[#0B6E4F] transition-all"
-          style={{ width: `${progress}%` }}
-        />
+    <div className="pb-4">
+      <div className="mb-2 flex items-center justify-between text-xs font-bold text-[#6b7280]">
+        <span>
+          Adım {step + 1}/{STEPS}
+        </span>
+        <span>%{Math.round(progress)}</span>
+      </div>
+      <div className="progress-track mb-6">
+        <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
 
-      {step === 0 && (
-        <div>
-          <h1 className="text-xl font-semibold">İlçe seçin</h1>
-          <p className="mt-1 text-sm text-slate-600">Yalnızca İstanbul · 39 ilçe</p>
-          <div className="mt-4 max-h-[50vh] space-y-1 overflow-y-auto">
-            {ISTANBUL_ILCELER.map((ilce) => (
-              <button
-                key={ilce}
-                type="button"
-                onClick={() => setForm((f) => ({ ...f, ilce }))}
-                className={`flex w-full rounded-xl px-3 py-3 text-left text-sm ${
-                  form.ilce === ilce
-                    ? "bg-[#0B6E4F] text-white"
-                    : "border border-black/5 bg-white"
-                }`}
-              >
-                {ilce}
-              </button>
-            ))}
-          </div>
-          <input
-            className="mt-3 w-full rounded-xl border border-black/10 bg-white px-3 py-3 text-sm"
-            placeholder="Mahalle (opsiyonel)"
-            value={form.mahalle}
-            onChange={(e) => setForm((f) => ({ ...f, mahalle: e.target.value }))}
-          />
-        </div>
-      )}
+      <h1
+        className="text-[22px] font-bold leading-snug text-[#111321]"
+        style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
+      >
+        {meta.title}
+      </h1>
+      <p className="mt-1 text-sm text-[#6b7280]">{meta.sub}</p>
 
-      {step === 1 && (
-        <div>
-          <h1 className="text-xl font-semibold">Kaç kat inşa edilecek?</h1>
-          <p className="mt-1 text-sm text-slate-600">Zemin altı katlar dahil</p>
-          <div className="mt-4 grid grid-cols-4 gap-2">
+      <div className="mt-5">
+        {step === 0 && (
+          <div>
+            <div className="max-h-[46vh] space-y-1.5 overflow-y-auto pr-0.5">
+              {ISTANBUL_ILCELER.map((ilce) => (
+                <button
+                  key={ilce}
+                  type="button"
+                  onClick={() => {
+                    setForm((f) => ({ ...f, ilce }));
+                    setError(null);
+                  }}
+                  data-selected={form.ilce === ilce}
+                  className="option-chip flex w-full px-3.5 py-3 text-left text-sm"
+                >
+                  {ilce}
+                </button>
+              ))}
+            </div>
+            <input
+              className="input-field mt-3"
+              placeholder="Mahalle (opsiyonel)"
+              value={form.mahalle}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, mahalle: e.target.value }))
+              }
+            />
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="grid grid-cols-4 gap-2">
             {KAT_SECENEKLERI.map((k) => (
               <button
                 key={k}
                 type="button"
-                onClick={() => setForm((f) => ({ ...f, kat_sayisi: k }))}
-                className={`rounded-xl py-3 text-sm font-medium ${
-                  form.kat_sayisi === k
-                    ? "bg-[#0B6E4F] text-white"
-                    : "border border-black/5 bg-white"
-                }`}
+                onClick={() => {
+                  setForm((f) => ({ ...f, kat_sayisi: k }));
+                  setError(null);
+                }}
+                data-selected={form.kat_sayisi === k}
+                className="option-chip py-3.5 text-sm font-bold"
               >
                 {k}
               </button>
             ))}
           </div>
-        </div>
-      )}
+        )}
 
-      {step === 2 && (
-        <div>
-          <h1 className="text-xl font-semibold">Binada kaç daire olacak?</h1>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+        {step === 2 && (
+          <div className="grid grid-cols-3 gap-2">
             {DAIRE_SECENEKLERI.map((d) => (
               <button
                 key={d}
                 type="button"
-                onClick={() => setForm((f) => ({ ...f, daire_sayisi: d }))}
-                className={`rounded-xl py-3 text-sm font-medium ${
-                  form.daire_sayisi === d
-                    ? "bg-[#0B6E4F] text-white"
-                    : "border border-black/5 bg-white"
-                }`}
+                onClick={() => {
+                  setForm((f) => ({ ...f, daire_sayisi: d }));
+                  setError(null);
+                }}
+                data-selected={form.daire_sayisi === d}
+                className="option-chip py-3.5 text-sm font-bold"
               >
                 {d}
               </button>
             ))}
           </div>
-        </div>
-      )}
+        )}
 
-      {step === 3 && (
-        <div>
-          <h1 className="text-xl font-semibold">Ödeme tercihiniz nedir?</h1>
-          <div className="mt-4 space-y-2">
+        {step === 3 && (
+          <div className="space-y-2">
             {ODEME_TERCIHLERI.map((o) => (
               <button
                 key={o}
                 type="button"
-                onClick={() => setForm((f) => ({ ...f, odeme_tercihi: o }))}
-                className={`flex w-full rounded-xl px-3 py-3 text-left text-sm ${
-                  form.odeme_tercihi === o
-                    ? "bg-[#0B6E4F] text-white"
-                    : "border border-black/5 bg-white"
-                }`}
+                onClick={() => {
+                  setForm((f) => ({ ...f, odeme_tercihi: o }));
+                  setError(null);
+                }}
+                data-selected={form.odeme_tercihi === o}
+                className="option-chip flex w-full px-3.5 py-3.5 text-left text-sm"
               >
                 {ODEME_LABELS[o]}
               </button>
             ))}
           </div>
-        </div>
-      )}
+        )}
 
-      {step === 4 && (
-        <div>
-          <h1 className="text-xl font-semibold">İhtiyaç detayı</h1>
+        {step === 4 && (
           <textarea
-            className="mt-4 min-h-40 w-full rounded-2xl border border-black/10 bg-white p-3 text-sm"
-            placeholder="Ada/parsel, mevcut durum, beklenti..."
+            className="input-field min-h-44 resize-y"
+            placeholder="Örn: 4 katlı 8 daireli bina, riskli yapı raporu alındı, kat karşılığı düşünüyoruz…"
             value={form.aciklama}
-            onChange={(e) => setForm((f) => ({ ...f, aciklama: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, aciklama: e.target.value }))
+            }
           />
-        </div>
-      )}
+        )}
 
-      {step === 5 && (
-        <div>
-          <h1 className="text-xl font-semibold">İletişim</h1>
-          <div className="mt-4 space-y-3">
+        {step === 5 && (
+          <div className="space-y-3">
             <input
-              className="w-full rounded-xl border border-black/10 bg-white px-3 py-3 text-sm"
+              className="input-field"
               placeholder="Ad soyad"
               value={form.iletisim_adi}
               onChange={(e) =>
@@ -204,31 +227,38 @@ export function IlanVerWizard() {
               }
             />
             <input
-              className="w-full rounded-xl border border-black/10 bg-white px-3 py-3 text-sm"
-              placeholder="Cep telefonu"
+              className="input-field"
+              placeholder="Cep telefonu (05xx…)"
               inputMode="tel"
               value={form.telefon}
-              onChange={(e) => setForm((f) => ({ ...f, telefon: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, telefon: e.target.value }))
+              }
             />
             <input
-              className="w-full rounded-xl border border-black/10 bg-white px-3 py-3 text-sm"
+              className="input-field"
               placeholder="E-posta (opsiyonel)"
               inputMode="email"
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {error && <p className="mt-3 text-sm text-rose-700">{error}</p>}
+      {error && (
+        <p className="mt-3 text-sm font-medium text-[#ee401d]">{error}</p>
+      )}
 
       <div className="mt-8 flex gap-2">
         {step > 0 && (
           <button
             type="button"
-            onClick={() => setStep((s) => s - 1)}
-            className="h-12 flex-1 rounded-2xl border border-black/10 bg-white text-sm font-medium"
+            onClick={() => {
+              setError(null);
+              setStep((s) => s - 1);
+            }}
+            className="btn-secondary flex-1"
           >
             Geri
           </button>
@@ -237,9 +267,13 @@ export function IlanVerWizard() {
           type="button"
           disabled={loading}
           onClick={next}
-          className="h-12 flex-[2] rounded-2xl bg-[#0B6E4F] text-sm font-semibold text-white disabled:opacity-60"
+          className="btn-primary flex-[2]"
         >
-          {step === 5 ? (loading ? "Gönderiliyor…" : "Gönder") : "Devam"}
+          {step === 5
+            ? loading
+              ? "Gönderiliyor…"
+              : "İlanı Gönder"
+            : "Devam"}
         </button>
       </div>
     </div>

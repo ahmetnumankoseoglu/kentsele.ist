@@ -1,21 +1,182 @@
 @import "tailwindcss";
 
+/* Armut-inspired design tokens */
 :root {
-  --background: #f7f6f3;
-  --foreground: #0f172a;
-  --accent: #0b6e4f;
+  --background: #ffffff;
+  --surface: #f8f8f8;
+  --foreground: #111321;
+  --muted: #6b7280;
+  --border: #e3e4e6;
+  --primary: #2cb34f;
+  --primary-hover: #1ca03e;
+  --primary-active: #168f43;
+  --primary-soft: #eaf8ee;
+  --danger: #ee401d;
+  --card-shadow:
+    0 15px 35px rgba(52, 58, 67, 0.08),
+    0 5px 15px rgba(0, 0, 0, 0.08),
+    0 0 2px rgba(0, 0, 0, 0.1);
+  --card-shadow-sm: 0 2px 8px rgba(17, 19, 33, 0.06);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-soft: var(--primary-soft);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-roboto);
+  --font-display: var(--font-raleway);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-roboto), Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-raleway), Raleway, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Primary CTA — Armut style */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 3px;
+  padding: 13px 32px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-primary:active {
+  background-color: var(--primary-active);
+}
+
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface);
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 3px;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #ebebeb;
+}
+
+.card {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: var(--card-shadow-sm);
+  border: 1px solid rgba(17, 19, 33, 0.04);
+}
+
+.card-elevated {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: var(--card-shadow);
+}
+
+.section-title {
+  position: relative;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64px;
+  height: 2px;
+  background: var(--primary);
+}
+
+.option-chip {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--foreground);
+  border-radius: 3px;
+  font-weight: 500;
+  transition:
+    border-color 0.12s ease,
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.option-chip[data-selected="true"],
+.option-chip.is-selected {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-active);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.input-field {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: #fff;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--foreground);
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(44, 179, 79, 0.15);
+}
+
+.progress-track {
+  height: 4px;
+  background: #e3e4e6;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.25s ease;
 }

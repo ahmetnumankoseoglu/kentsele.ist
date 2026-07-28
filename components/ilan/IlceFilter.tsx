@@ -13,10 +13,10 @@ export function IlceFilter() {
       <button
         type="button"
         onClick={() => router.push("/")}
-        className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
+        className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
           !current
-            ? "bg-slate-900 text-white"
-            : "bg-white text-slate-700 border border-black/5"
+            ? "bg-[#2cb34f] text-white"
+            : "border border-[#e3e4e6] bg-white text-[#111321]"
         }`}
       >
         Tümü
@@ -26,10 +26,10 @@ export function IlceFilter() {
           key={ilce}
           type="button"
           onClick={() => router.push(`/?ilce=${encodeURIComponent(ilce)}`)}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
+          className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
             current === ilce
-              ? "bg-slate-900 text-white"
-              : "bg-white text-slate-700 border border-black/5"
+              ? "bg-[#2cb34f] text-white"
+              : "border border-[#e3e4e6] bg-white text-[#111321]"
           }`}
         >
           {ilce}
