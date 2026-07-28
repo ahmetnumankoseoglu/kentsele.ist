@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { allSeoDistrictSlugs } from "@/lib/constants/istanbul-ilceler";
-import { getAllHaberler } from "@/lib/content/haberler";
 import { getPublicListings } from "@/lib/listings/queries";
+import { getPublishedNews } from "@/lib/news/queries";
 import { getSiteUrl } from "@/lib/seo/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -87,12 +87,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  const news: MetadataRoute.Sitemap = getAllHaberler().map((h) => ({
-    url: `${site}/haberler/${h.slug}`,
-    lastModified: new Date(h.dateModified ?? h.datePublished),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  let news: MetadataRoute.Sitemap = [];
+  try {
+    const articles = await getPublishedNews();
+    news = articles.map((h) => ({
+      url: `${site}/haberler/${h.slug}`,
+      lastModified: new Date(h.updated_at || h.published_at || h.created_at),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  } catch {
+    /* haber yoksa sitemap yine döner */
+  }
 
   // Yayındaki ilanlar
   let listings: MetadataRoute.Sitemap = [];

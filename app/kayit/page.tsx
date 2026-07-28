@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
+import { safeInternalPath } from "@/lib/auth/safe-next";
 
 export default function KayitPage() {
   const router = useRouter();
   const sp = useSearchParams();
-  const next = sp.get("next") || "/hesabim";
+  const next = safeInternalPath(sp.get("next"), "/hesabim");
   // /muteahhit paneline giden kayıtta varsayılan rol müteahhit
   const defaultRole =
     next.includes("muteahhit") || sp.get("role") === "muteahhit"

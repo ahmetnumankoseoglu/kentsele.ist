@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
+import { safeInternalPath } from "@/lib/auth/safe-next";
 
 export default function GirisPage() {
   const router = useRouter();
   const sp = useSearchParams();
-  const next = sp.get("next") || "/hesabim";
+  const next = safeInternalPath(sp.get("next"), "/hesabim");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

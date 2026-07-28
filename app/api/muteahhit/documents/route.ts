@@ -66,14 +66,39 @@ export async function POST(req: Request) {
     const path = `${profile.id}/${Date.now()}-${doc_type}.${ext}`;
     const buf = Buffer.from(await file.arrayBuffer());
 
+    const allowed = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+    const mime = file.type || "application/octet-stream";
+    if (!allowed.includes(mime)) {
+      return NextResponse.json(
+        {
+          error: "file",
+          message: "Yalnızca PDF, JPG veya PNG yükleyebilirsiniz.",
+        },
+        { status: 400 }
+      );
+    }
+
     const { error: upErr } = await admin.storage
       .from("contractor-docs")
       .upload(path, buf, {
-        contentType: file.type || "application/octet-stream",
+        contentType: mime,
         upsert: false,
       });
     if (upErr) {
-      console.warn("storage upload:", upErr.message);
+      console.error("storage upload:", upErr.message);
+      return NextResponse.json(
+        {
+          error: "storage",
+          message:
+            "Dosya depolanamadı. Storage bucket (contractor-docs) yapılandırmasını kontrol edin.",
+        },
+        { status: 500 }
+      );
     }
 
     const { data, error } = await admin

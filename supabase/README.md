@@ -9,7 +9,8 @@ kentsele.ist veritabanı, auth ve storage kurulumu.
 3. `migrations/003_listing_belgeler.sql` — imar belge checkbox alanları
 4. `migrations/004_listing_ada_parsel.sql` — ada/parsel (public view’da yok)
 5. `migrations/005_contact_messages.sql` — site iletişim formu
-6. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+6. `migrations/006_rls_lockdown.sql` — rol / müteahhit onay alanlarını client’tan kilitle
+7. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
 
 ## Dashboard ayarları
 

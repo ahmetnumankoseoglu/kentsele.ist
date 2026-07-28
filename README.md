@@ -36,6 +36,7 @@ Supabase SQL Editor’da migration’ları sırayla uygula:
 - [`supabase/migrations/003_listing_belgeler.sql`](supabase/migrations/003_listing_belgeler.sql)
 - [`supabase/migrations/004_listing_ada_parsel.sql`](supabase/migrations/004_listing_ada_parsel.sql)
 - [`supabase/migrations/005_contact_messages.sql`](supabase/migrations/005_contact_messages.sql)
+- [`supabase/migrations/006_rls_lockdown.sql`](supabase/migrations/006_rls_lockdown.sql)
 
 Adımlar için: [`supabase/README.md`](supabase/README.md)
 
