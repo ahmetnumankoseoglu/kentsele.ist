@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-07-28T23:08:26.239Z",
+  "templates": [
+    {
+      "id": "01-listing-received",
+      "subject": "İlanınız incelemede · Kadıköy · kentsele.ist",
+      "title": "İlanınız alındı — incelemede",
+      "file": "01-listing-received.html"
+    },
+    {
+      "id": "02-listing-published",
+      "subject": "İlanınız yayında · Kadıköy · kentsele.ist",
+      "title": "İlanınız yayında",
+      "file": "02-listing-published.html"
+    },
+    {
+      "id": "03-listing-back-to-review",
+      "subject": "İlan yeniden incelemede · Kadıköy",
+      "title": "İlanınız yeniden incelemede",
+      "file": "03-listing-back-to-review.html"
+    },
+    {
+      "id": "04-listing-agreed",
+      "subject": "Anlaşma sağlandı · Kadıköy",
+      "title": "Anlaşma sağlandı olarak işaretlendi",
+      "file": "04-listing-agreed.html"
+    },
+    {
+      "id": "05-listing-removed",
+      "subject": "İlan kaldırıldı · Kadıköy",
+      "title": "İlanınız yayından kaldırıldı",
+      "file": "05-listing-removed.html"
+    },
+    {
+      "id": "06-activate-account",
+      "subject": "Üyeliğini aktifleştir · kentsele.ist",
+      "title": "Hesabını aktifleştir — ilanını kolay yönet",
+      "file": "06-activate-account.html"
+    },
+    {
+      "id": "07-welcome-malik",
+      "subject": "Hoş geldin · kentsele.ist",
+      "title": "Hoş geldin — malik hesabın hazır",
+      "file": "07-welcome-malik.html"
+    },
+    {
+      "id": "08-welcome-contractor",
+      "subject": "Müteahhit kaydın alındı · kentsele.ist",
+      "title": "Müteahhit kaydın alındı",
+      "file": "08-welcome-contractor.html"
+    },
+    {
+      "id": "09-contractor-approved",
+      "subject": "Müteahhit hesabın onaylandı · kentsele.ist",
+      "title": "Hesabın onaylandı — iletişim açık",
+      "file": "09-contractor-approved.html"
+    },
+    {
+      "id": "10-contractor-rejected",
+      "subject": "Müteahhit başvurusu güncellendi · kentsele.ist",
+      "title": "Belge incelemesi tamamlanamadı",
+      "file": "10-contractor-rejected.html"
+    },
+    {
+      "id": "11-admin-contact",
+      "subject": "[İletişim] Destek talebi",
+      "title": "Yeni iletişim mesajı",
+      "file": "11-admin-contact.html"
+    },
+    {
+      "id": "12-admin-new-listing",
+      "subject": "[İlan] Kadıköy · inceleme",
+      "title": "Yeni ilan — inceleme bekliyor",
+      "file": "12-admin-new-listing.html"
+    }
+  ]
+}
