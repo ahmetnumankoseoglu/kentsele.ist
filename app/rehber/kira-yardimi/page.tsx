@@ -49,8 +49,8 @@ const FAQ = [
     a: "Kimlik, tapu/hisse belgesi, riskli yapı tespiti ve tebligat evrakları, ikametgâh, banka IBAN’ı, varsa vekâletname sık istenir. Liste dosyaya ve döneme göre değişir.",
   },
   {
-    q: "Kira yardımı hibe ve krediden farklı mı?",
-    a: "Evet. Hibe ve kredi çoğunlukla yapım / finansman paketidir; kira yardımı tahliye sürecinde barınma desteğidir. Ayrı başvuru ve ayrı şartları olabilir.",
+    q: "Kira yardımı hibe, kredi ve taşınma desteğinden farklı mı?",
+    a: "Evet. Hibe + kredi + taşınma (125.000 ₺) Yarısı Bizden birim paketine aittir (konut 1.875.000 ₺, iş yeri 1.000.000 ₺). Aylık kira yardımı ayrı bir barınma desteğidir; tutar ve süre resmî programa göre belirlenir.",
   },
   {
     q: "Ne kadar süre ödenir?",
@@ -132,8 +132,23 @@ export default function KiraYardimiPage() {
         <strong>Kentsel dönüşüm kira yardımı</strong>, 6306 sayılı kanun
         kapsamındaki uygulamalarda konutunu tahliye etmek zorunda kalan hak
         sahiplerine, yeniden yapım sürecinde barınma giderlerine katkı için
-        ödenen <strong>aylık nakdi destek</strong>tir. Hibe ve krediden ayrı bir
-        kalemdir; amaç inşaat bitene kadar geçici barınmayı kolaylaştırmaktır.
+        ödenen <strong>aylık nakdi destek</strong>tir. Amaç inşaat bitene kadar
+        geçici barınmayı kolaylaştırmaktır.
+      </p>
+      <p>
+        <strong>Karıştırılmamalı:</strong> Yarısı Bizden kampanyasındaki{" "}
+        <strong>taşınma / tahliye desteği</strong> (güncel{" "}
+        <strong>125.000 ₺</strong>) bir kerelik taşınma yardımını kapsar; hibe ve
+        kredi ile birlikte “1 konut için 1.875.000 ₺” paketinde yer alır.{" "}
+        <strong>Aylık kira yardımı</strong> ise ayrı bir destek kalemidir.
+        Hibe–kredi–taşınma paketini{" "}
+        <Link
+          href="/rehber/hibe-ve-kredi-hesaplama"
+          className="font-bold text-[#168f43]"
+        >
+          hibe ve kredi hesaplama
+        </Link>{" "}
+        sayfasında görebilirsiniz.
       </p>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">

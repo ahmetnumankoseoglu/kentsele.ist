@@ -30,7 +30,7 @@ const GUIDES = [
   {
     href: "/rehber/hibe-ve-kredi-hesaplama",
     title: "Hibe ve kredi hesaplama",
-    desc: "Konut 1.750.000 ₺ (875k hibe + 875k kredi), ticari 875.000 ₺ (437,5k + 437,5k) birim paketleri.",
+    desc: "Yarısı Bizden: konut 1.875.000 ₺ (875k+875k+125k taşınma), iş yeri 1.000.000 ₺. Konut+ticari karışık hesap.",
   },
 ] as const;
 
