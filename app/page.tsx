@@ -14,13 +14,29 @@ import {
 } from "@/lib/constants/istanbul-ilceler";
 import { FAQ_ITEMS } from "@/lib/content/faq";
 import { getPublishedNews } from "@/lib/news/queries";
+import type { Metadata } from "next";
 import {
   breadcrumbSchema,
   faqPageSchema,
   organizationSchema,
   websiteSchema,
 } from "@/lib/seo/schema";
+import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import type { PublicListing } from "@/types/listing";
+
+export const metadata: Metadata = istanbulGeoMetadata({
+  title: "İstanbul Kentsel Dönüşüm İlanları | Ücretsiz Malik İlanı",
+  description:
+    "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek hesaplama.",
+  path: "/",
+  keywords: [
+    "kentsel dönüşüm ilanları",
+    "İstanbul kentsel dönüşüm",
+    "malik ilanı",
+    "müteahhit bul",
+    "kat karşılığı",
+  ],
+});
 
 const POPULAR_ILCELER = [
   "Kadıköy",

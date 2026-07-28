@@ -8,7 +8,16 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/yonet/", "/yonetim", "/api/"],
+        disallow: [
+          "/yonet/",
+          "/yonetim",
+          "/yonetim/",
+          "/api/",
+          "/giris",
+          "/kayit",
+          "/hesabim",
+          "/muteahhit",
+        ],
       },
       {
         userAgent: "Googlebot-News",

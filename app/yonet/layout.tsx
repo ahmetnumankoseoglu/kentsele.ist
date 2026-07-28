@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { NOINDEX_METADATA } from "@/lib/seo/noindex";
 
 export const metadata: Metadata = {
   ...NOINDEX_METADATA,
-  title: "Giriş yap",
+  title: "İlan yönetimi",
 };
 
-export default function GirisLayout({
+export default function YonetLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <Suspense fallback={null}>{children}</Suspense>;
+  return children;
 }

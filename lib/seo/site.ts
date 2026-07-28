@@ -57,4 +57,7 @@ export const ISTANBUL_GEO = {
   icbm: "41.0082, 28.9784",
 } as const;
 
-export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/favicon.ico`;
+/** Absolute OG/Twitter image (Next.js file convention) */
+export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/opengraph-image`;
+export const DEFAULT_OG_IMAGE_ALT =
+  "kentsele.ist — İstanbul kentsel dönüşüm ilanları, malik ücretsiz ilan";

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import {
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
   getSiteUrl,
   ISTANBUL_GEO,
   SITE_DESCRIPTION,
@@ -58,11 +60,21 @@ export function istanbulGeoMetadata(overrides?: {
       title,
       description,
       countryName: "Türkiye",
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: DEFAULT_OG_IMAGE_ALT,
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [DEFAULT_OG_IMAGE],
     },
     robots: {
       index: true,
@@ -126,11 +138,21 @@ export function rehberArticleMetadata(opts: {
       authors: [SITE_NAME],
       section: "Kentsel Dönüşüm Rehberi",
       tags: ["kentsel dönüşüm", ...opts.keywords],
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: opts.title,
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: opts.title,
       description: opts.description,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

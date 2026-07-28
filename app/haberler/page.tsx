@@ -113,7 +113,7 @@ export default async function HaberlerPage() {
                   featured.banner_image_url ||
                   "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg"
                 }
-                alt=""
+                alt={featured.title}
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -147,7 +147,7 @@ export default async function HaberlerPage() {
                     h.cover_image_url ||
                     "https://cdn.armut.com/images/services/mobile/00761-kentsel-donusum-proje.jpeg"
                   }
-                  alt=""
+                  alt={h.title}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>

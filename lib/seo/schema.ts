@@ -1,4 +1,5 @@
 import {
+  DEFAULT_OG_IMAGE,
   getSiteUrl,
   ISTANBUL_GEO,
   SITE_DESCRIPTION,
@@ -72,7 +73,10 @@ export function organizationSchema() {
     logo: {
       "@type": "ImageObject",
       url: `${url}/favicon.ico`,
+      width: 48,
+      height: 48,
     },
+    image: DEFAULT_OG_IMAGE,
     description: SITE_DESCRIPTION,
     areaServed: istanbulPlaceSchema(),
     knowsAbout: [
@@ -196,7 +200,7 @@ export function newsArticleSchema(article: {
       "@type": "WebPage",
       "@id": pageUrl,
     },
-    image: article.image ? [article.image] : [`${url}/favicon.ico`],
+    image: article.image ? [article.image] : [DEFAULT_OG_IMAGE],
     inLanguage: SITE_LANG,
     articleSection: "İstanbul Kentsel Dönüşüm",
     contentLocation: istanbulPlaceSchema(),
@@ -281,7 +285,9 @@ export function rehberArticleSchema(opts: {
     ].join(", "),
     image: {
       "@type": "ImageObject",
-      url: `${url}/favicon.ico`,
+      url: DEFAULT_OG_IMAGE,
+      width: 1200,
+      height: 630,
     },
   };
 }
@@ -309,7 +315,9 @@ export function rehberWebPageSchema(opts: {
     spatialCoverage: istanbulPlaceSchema(),
     primaryImageOfPage: {
       "@type": "ImageObject",
-      url: `${url}/favicon.ico`,
+      url: DEFAULT_OG_IMAGE,
+      width: 1200,
+      height: 630,
     },
     datePublished: opts.datePublished,
     dateModified: opts.dateModified ?? opts.datePublished,
