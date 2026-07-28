@@ -14,6 +14,12 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["business", "real estate"],
     icons: [
       {
+        src: "/favicon.svg",
+        sizes: "any",
+        type: "image/svg+xml",
+        purpose: "any",
+      },
+      {
         src: "/favicon.ico",
         sizes: "any",
         type: "image/x-icon",

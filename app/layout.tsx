@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     template: "%s | Kentsele",
   },
   metadataBase: new URL(getSiteUrl()),
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   formatDetection: {
     telephone: true,
     email: true,
