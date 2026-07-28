@@ -16,7 +16,7 @@ export function RehberLayout({
   breadcrumbLast: string;
 }) {
   return (
-    <AppShell showBottomCta={false}>
+    <AppShell showBottomCta>
       {schemas ? <JsonLd data={schemas} /> : null}
       <nav className="mb-4 text-xs text-[#6b7280]">
         <Link href="/" className="font-medium text-[#168f43]">
@@ -43,17 +43,11 @@ export function RehberLayout({
       <article className="mt-6 space-y-4 text-sm leading-relaxed text-[#374151]">
         {children}
       </article>
-      <div className="mt-8 flex flex-col gap-2">
-        <Link href="/ilan-ver" className="btn-primary w-full">
-          Ücretsiz kentsel dönüşüm ilanı ver
-        </Link>
-        <Link
-          href="/rehber"
-          className="text-center text-sm font-bold text-[#168f43]"
-        >
+      <p className="mt-8 text-center">
+        <Link href="/rehber" className="text-sm font-bold text-[#168f43]">
           ← Tüm rehberler
         </Link>
-      </div>
+      </p>
     </AppShell>
   );
 }

@@ -53,7 +53,7 @@ export default function RehberIndexPage() {
   ];
 
   return (
-    <AppShell showBottomCta={false}>
+    <AppShell showBottomCta>
       <JsonLd data={schemas} />
       <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
         Bilgi bankası
@@ -82,9 +82,6 @@ export default function RehberIndexPage() {
           </Link>
         ))}
       </div>
-      <Link href="/ilan-ver" className="btn-primary mt-8 w-full">
-        Ücretsiz ilan ver
-      </Link>
     </AppShell>
   );
 }
