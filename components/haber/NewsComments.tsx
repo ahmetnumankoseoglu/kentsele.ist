@@ -68,7 +68,7 @@ export function NewsComments({
             minLength={2}
           />
           {error && <p className="text-xs text-[#ee401d]">{error}</p>}
-          <button type="submit" disabled={loading} className="btn-primary">
+          <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? "Gönderiliyor…" : "Yorum gönder"}
           </button>
         </form>

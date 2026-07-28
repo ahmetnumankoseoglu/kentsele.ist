@@ -60,13 +60,16 @@ export function ContactActions({
           Malik telefon numarası yalnızca <strong>onaylı müteahhit</strong>{" "}
           hesaplarına açıktır. Belge yükleyip doğrulama sonrası arayabilirsiniz.
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Link href="/kayit?role=muteahhit" className="btn-primary !py-2 !text-sm">
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Link
+            href="/kayit?next=/muteahhit"
+            className="btn-primary w-full !py-2.5 !text-sm"
+          >
             Müteahhit ol
           </Link>
           <Link
             href="/giris?next=/muteahhit"
-            className="btn-secondary !py-2 !text-sm"
+            className="btn-secondary w-full !py-2.5 !text-sm"
           >
             Giriş yap
           </Link>

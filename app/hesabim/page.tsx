@@ -76,7 +76,7 @@ export default async function HesabimPage() {
           <p className="mt-1 text-xs text-[#6b7280]">
             {contractor.company_name || "Firma adı girilmedi"}
           </p>
-          <Link href="/muteahhit" className="btn-primary mt-3 inline-flex">
+          <Link href="/muteahhit" className="btn-primary mt-3 w-full">
             Müteahhit paneli / belgeler
           </Link>
         </div>
@@ -89,8 +89,8 @@ export default async function HesabimPage() {
             Henüz hesabına bağlı ilan yok. Yeni ilan ücretsiz ve kayıtsız
             oluşturulur; düzenlemek için yönetim linkinden giriş yapıp ilanı
             bağlarsın.
-            <Link href="/ilan-ver" className="mt-3 block font-bold text-[#168f43]">
-              İlan ver →
+            <Link href="/ilan-ver" className="btn-primary mt-3 w-full">
+              İlan ver
             </Link>
           </div>
         ) : (

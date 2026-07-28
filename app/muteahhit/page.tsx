@@ -19,7 +19,7 @@ export default async function MuteahhitPage() {
       <AppShell showBottomCta={false}>
         <div className="card p-6 text-center">
           <p className="text-sm font-bold">Bu sayfa müteahhit hesapları içindir.</p>
-          <Link href="/kayit" className="btn-primary mt-4 inline-flex">
+          <Link href="/kayit?next=/muteahhit" className="btn-primary mt-4 w-full">
             Müteahhit olarak kayıt ol
           </Link>
         </div>

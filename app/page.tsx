@@ -98,16 +98,16 @@ export default async function HomePage({
             Malikler ücretsiz ve kayıtsız ilan verir. Müteahhitler belge onayı
             sonrası malikle iletişime geçer.
           </p>
-          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+          <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row">
             <Link
               href="/ilan-ver"
-              className="btn-primary w-full max-w-xs !text-base"
+              className="btn-primary w-full flex-1 !text-base"
             >
               BAŞLA
             </Link>
             <Link
               href="/ilanlar"
-              className="inline-flex items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
+              className="inline-flex w-full flex-1 items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
             >
               İlanları Gör
             </Link>
@@ -227,7 +227,7 @@ export default async function HomePage({
                 <p className="mt-1 text-sm text-[#6b7280]">
                   İlk ilanı sen ver; onaylı müteahhitler seni bulsun.
                 </p>
-                <Link href="/ilan-ver" className="btn-primary mt-5">
+                <Link href="/ilan-ver" className="btn-primary mt-5 w-full">
                   Ücretsiz İlan Ver
                 </Link>
               </div>
@@ -314,10 +314,7 @@ export default async function HomePage({
             İlanını 2 dakikada oluştur; teyit sonrası onaylı müteahhitler seni
             arasın.
           </p>
-          <Link
-            href="/ilan-ver"
-            className="btn-primary mt-5 inline-flex min-w-[200px]"
-          >
+          <Link href="/ilan-ver" className="btn-primary mt-5 w-full sm:w-auto sm:min-w-[200px]">
             Ücretsiz İlan Ver
           </Link>
         </section>

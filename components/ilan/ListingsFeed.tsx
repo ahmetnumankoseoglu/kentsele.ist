@@ -46,7 +46,7 @@ export function ListingsFeed({
             <p className="mt-1 text-sm text-[#6b7280]">
               İlk ilanı sen ver; onaylı müteahhitler seni bulsun.
             </p>
-            <Link href="/ilan-ver" className="btn-primary mt-5">
+            <Link href="/ilan-ver" className="btn-primary mt-5 w-full">
               Ücretsiz İlan Ver
             </Link>
           </div>

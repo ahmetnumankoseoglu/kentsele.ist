@@ -10,7 +10,12 @@ export default function KayitPage() {
   const router = useRouter();
   const sp = useSearchParams();
   const next = sp.get("next") || "/hesabim";
-  const [role, setRole] = useState<"malik" | "muteahhit">("malik");
+  // /muteahhit paneline giden kayıtta varsayılan rol müteahhit
+  const defaultRole =
+    next.includes("muteahhit") || sp.get("role") === "muteahhit"
+      ? "muteahhit"
+      : "malik";
+  const [role, setRole] = useState<"malik" | "muteahhit">(defaultRole);
   const [fullName, setFullName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");

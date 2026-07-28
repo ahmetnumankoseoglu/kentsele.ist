@@ -12,7 +12,7 @@ export default function NotFound() {
         <p className="mt-2 text-sm text-[#6b7280]">
           Aradığın sayfa yok veya kaldırılmış olabilir.
         </p>
-        <Link href="/" className="btn-primary mt-6">
+        <Link href="/" className="btn-primary mt-6 w-full">
           Ana sayfaya dön
         </Link>
       </div>

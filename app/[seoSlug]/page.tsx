@@ -189,13 +189,13 @@ export default async function DistrictSeoPage({
             {ilce} kentsel dönüşüm ilanı verin veya güncel ilanları inceleyin.
             Ücretsiz malik ilanları; iletişim yalnızca onaylı müteahhitlere açık.
           </p>
-          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-            <Link href="/ilan-ver" className="btn-primary">
+          <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row">
+            <Link href="/ilan-ver" className="btn-primary w-full flex-1">
               {ilce}’da ücretsiz ilan ver
             </Link>
             <Link
               href={`/ilanlar?ilce=${encodeURIComponent(ilce)}`}
-              className="inline-flex items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
+              className="inline-flex w-full flex-1 items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
             >
               {ilce} ilanlarını gör ({listings.length})
             </Link>
@@ -300,7 +300,7 @@ export default async function DistrictSeoPage({
               <p className="mt-1 text-sm text-[#6b7280]">
                 İlk {ilce} kentsel dönüşüm ilanını sen ver.
               </p>
-              <Link href="/ilan-ver" className="btn-primary mt-4">
+              <Link href="/ilan-ver" className="btn-primary mt-4 w-full">
                 Ücretsiz ilan ver
               </Link>
             </div>
@@ -338,7 +338,7 @@ export default async function DistrictSeoPage({
             2 dakikada ücretsiz ilan oluştur. Teyit sonrası onaylı müteahhitler
             seni arasın.
           </p>
-          <Link href="/ilan-ver" className="btn-primary mt-5 inline-flex">
+          <Link href="/ilan-ver" className="btn-primary mt-5 w-full sm:w-auto sm:min-w-[200px]">
             {ilce} ilanı ver
           </Link>
         </section>
