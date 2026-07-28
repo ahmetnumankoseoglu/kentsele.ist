@@ -11,8 +11,11 @@ import {
   ilceToSeoSlug,
   ISTANBUL_ILCELER,
 } from "@/lib/constants/istanbul-ilceler";
+import {
+  buildDistrictSeoSections,
+  getDistrictMeta,
+} from "@/lib/content/district-meta";
 import { getPublicListings } from "@/lib/listings/queries";
-import { FAQ_ITEMS } from "@/lib/content/faq";
 import {
   breadcrumbSchema,
   faqPageSchema,
@@ -35,8 +38,9 @@ export async function generateMetadata({
   const ilce = ilceFromSeoSlug(seoSlug);
   if (!ilce) return { title: "Sayfa bulunamadı" };
 
-  const title = `${ilce} Kentsel Dönüşüm | İlan Ver, Müteahhit Bul`;
-  const description = `${ilce} kentsel dönüşüm ilanları ve rehberi. ${ilce}’da kentsel dönüşüm için ücretsiz ilan verin; müteahhitler sizi arasın. kentsele.ist`;
+  const meta = getDistrictMeta(ilce, ISTANBUL_ILCELER);
+  const title = `${ilce} Kentsel Dönüşüm 2026 | İlan Ver, Müteahhit Bul | kentsele.ist`;
+  const description = `${ilce} kentsel dönüşüm rehberi (${meta.side}). ${ilce}’da riskli yapı, kat karşılığı ve hakediş süreçleri. Ücretsiz ilan verin; onaylı müteahhitler sizi arasın.`;
 
   return {
     title,
@@ -44,19 +48,33 @@ export async function generateMetadata({
     keywords: [
       `${ilce} kentsel dönüşüm`,
       `${ilce} kentsel dönüşüm ilanları`,
-      `${ilce} müteahhit`,
+      `${ilce} kentsel dönüşüm müteahhit`,
       `${ilce} kat karşılığı`,
+      `${ilce} riskli yapı`,
+      `${ilce} kentsel dönüşüm 2026`,
       "İstanbul kentsel dönüşüm",
+      `${meta.side} kentsel dönüşüm`,
     ],
     openGraph: {
-      title,
+      title: `${ilce} Kentsel Dönüşüm | kentsele.ist`,
       description,
       locale: "tr_TR",
       type: "website",
       url: `${getSiteUrl()}/${seoSlug}`,
+      siteName: "kentsele.ist",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${ilce} Kentsel Dönüşüm`,
+      description,
     },
     alternates: {
       canonical: `${getSiteUrl()}/${seoSlug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
     },
   };
 }
@@ -79,15 +97,38 @@ export default async function DistrictSeoPage({
 
   const site = getSiteUrl();
   const path = `/${seoSlug}`;
+  const districtMeta = getDistrictMeta(ilce, ISTANBUL_ILCELER);
+  const seo = buildDistrictSeoSections(districtMeta);
 
   const schemas = [
     serviceDistrictSchema(ilce, path),
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: `${ilce} Kentsel Dönüşüm`,
+      description: seo.intro,
+      url: `${site}${path}`,
+      inLanguage: "tr-TR",
+      isPartOf: {
+        "@type": "WebSite",
+        name: "kentsele.ist",
+        url: site,
+      },
+      about: {
+        "@type": "Place",
+        name: `${ilce}, İstanbul`,
+        containedInPlace: {
+          "@type": "City",
+          name: "İstanbul",
+        },
+      },
+    },
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
       { name: "İlanlar", path: "/ilanlar" },
       { name: `${ilce} Kentsel Dönüşüm`, path },
     ]),
-    faqPageSchema([...FAQ_ITEMS]),
+    faqPageSchema(seo.faq),
     itemListSchema(
       `${ilce} kentsel dönüşüm ilanları`,
       listings.map((l) => ({
@@ -95,9 +136,21 @@ export default async function DistrictSeoPage({
         url: `${site}/ilan/${l.slug}`,
       }))
     ),
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: `${ilce} kentsel dönüşüm adımları`,
+      description: `${ilce}’da kentsel dönüşüm sürecine başlamak için önerilen adımlar.`,
+      step: seo.processSteps.map((s, i) => ({
+        "@type": "HowToStep",
+        position: i + 1,
+        name: s.t,
+        text: s.d,
+      })),
+    },
   ];
 
-  const related = ISTANBUL_ILCELER.filter((x) => x !== ilce).slice(0, 8);
+  const related = ISTANBUL_ILCELER.filter((x) => x !== ilce);
 
   return (
     <AppShell fullBleed>
@@ -113,79 +166,142 @@ export default async function DistrictSeoPage({
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111321] via-[#111321]/75 to-[#111321]/45" />
-        <div className="relative mx-auto max-w-lg px-4 pb-8 pt-8">
-          <nav className="mb-3 text-xs text-white/60">
-            <Link href="/" className="text-[#2cb34f]">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111321] via-[#111321]/80 to-[#111321]/50" />
+        <div className="relative px-4 pb-9 pt-8 sm:px-6">
+          <nav className="mb-3 text-xs text-white/60" aria-label="Breadcrumb">
+            <Link href="/" className="text-[#2cb34f] hover:underline">
               Ana sayfa
             </Link>
             <span className="mx-1.5">/</span>
-            <span>{ilce} kentsel dönüşüm</span>
+            <Link href="/ilanlar" className="text-white/70 hover:underline">
+              İlanlar
+            </Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-white">{ilce} kentsel dönüşüm</span>
           </nav>
-          <h1 className="text-[26px] font-bold leading-tight">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#2cb34f]">
+            İstanbul · {districtMeta.side}
+          </p>
+          <h1 className="mt-2 text-[28px] font-bold leading-tight sm:text-[32px]">
             {ilce} Kentsel Dönüşüm
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-white/80">
-            {ilce} bölgesinde kentsel dönüşüm ilanı verin veya güncel ilanları
-            inceleyin. Ücretsiz, teyitli ve doğrudan iletişim.
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80">
+            {ilce} kentsel dönüşüm ilanı verin veya güncel ilanları inceleyin.
+            Ücretsiz malik ilanları; iletişim yalnızca onaylı müteahhitlere açık.
           </p>
-          <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
             <Link href="/ilan-ver" className="btn-primary">
-              {ilce}’da İlan Ver
+              {ilce}’da ücretsiz ilan ver
             </Link>
             <Link
               href={`/ilanlar?ilce=${encodeURIComponent(ilce)}`}
               className="inline-flex items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
             >
-              Tüm {ilce} ilanları
+              {ilce} ilanlarını gör ({listings.length})
             </Link>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-lg px-4 py-8">
-        <article className="card-elevated mb-8 p-5">
-          <h2 className="section-title">
-            {ilce} kentsel dönüşüm hakkında
-          </h2>
-          <div className="space-y-3 text-sm leading-relaxed text-[#6b7280]">
-            <p>
-              <strong className="text-[#111321]">{ilce}</strong>, İstanbul’da
-              kentsel dönüşüm talebinin yoğun olduğu ilçelerden biridir. Riskli
-              yapı stoku, kat karşılığı ve hakediş modelleri bu bölgede sık
-              gündeme gelir.
-            </p>
-            <p>
-              kentsele.ist üzerinden {ilce} kentsel dönüşüm ilanı oluşturmak
-              ücretsizdir. İlanınız teyit sonrası yayına alınır; müteahhitler
-              sizi arayabilir veya WhatsApp ile yazabilir.
-            </p>
-            <p>
-              Aşağıda {ilce} için yayındaki güncel ilanları görebilir, benzer
-              ilçelerin SEO sayfalarına göz atabilirsiniz.
-            </p>
-          </div>
+      <div className="px-4 py-8 sm:px-6">
+        {/* Intro article */}
+        <article className="card-elevated mb-8 p-5 sm:p-6">
+          <h2 className="section-title">{ilce} kentsel dönüşüm nedir?</h2>
+          <p className="text-sm leading-relaxed text-[#374151]">{seo.intro}</p>
+          <p className="mt-3 text-sm leading-relaxed text-[#6b7280]">
+            {districtMeta.character} Bu sayfa; “{ilce} kentsel dönüşüm”, “
+            {ilce} kentsel dönüşüm ilanları” ve “{ilce} müteahhit” aramaları için
+            bilgilendirici bir rehber olarak hazırlanmıştır.
+          </p>
         </article>
 
+        {/* Why */}
         <section className="mb-8">
-          <div className="mb-4 flex items-end justify-between">
+          <h2 className="section-title">{seo.whyTitle}</h2>
+          <div className="space-y-3">
+            {seo.whyBody.map((p, i) => (
+              <p
+                key={i}
+                className="text-sm leading-relaxed text-[#6b7280]"
+              >
+                {p}
+              </p>
+            ))}
+          </div>
+          <ul className="mt-4 space-y-2">
+            {districtMeta.focusTopics.map((t) => (
+              <li
+                key={t}
+                className="how-step card flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[#111321]"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#eaf8ee] text-xs text-[#168f43]">
+                  ✓
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Process */}
+        <section className="mb-8">
+          <h2 className="section-title">{seo.processTitle}</h2>
+          <ol className="space-y-3">
+            {seo.processSteps.map((s, i) => (
+              <li key={s.t} className="how-step card flex gap-3 p-4">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-[#111321]">{s.t}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
+                    {s.d}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* Models */}
+        <section className="mb-8">
+          <h2 className="section-title">{seo.modelsTitle}</h2>
+          <div className="grid gap-3">
+            {seo.models.map((m) => (
+              <div key={m.t} className="card p-4">
+                <h3 className="text-sm font-bold text-[#168f43]">{m.t}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#6b7280]">
+                  {m.d}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Listings */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-end justify-between gap-2">
             <h2 className="section-title mb-0 pb-2">
-              {ilce} güncel ilanlar
+              {ilce} güncel kentsel dönüşüm ilanları
             </h2>
             <span className="mb-2 text-xs font-bold text-[#6b7280]">
               {listings.length} ilan
             </span>
           </div>
+          <p className="mb-4 text-sm text-[#6b7280]">
+            Aşağıda {ilce} için yayındaki ilanlar listelenir. Detayda iletişim
+            bilgisi yalnızca onaylı müteahhit hesaplarına açılır.
+          </p>
           {listings.length === 0 ? (
             <div className="card p-6 text-center">
               <p className="text-sm font-bold text-[#111321]">
                 {ilce}’da henüz yayınlı ilan yok
               </p>
               <p className="mt-1 text-sm text-[#6b7280]">
-                İlk ilanı sen ver.
+                İlk {ilce} kentsel dönüşüm ilanını sen ver.
               </p>
               <Link href="/ilan-ver" className="btn-primary mt-4">
-                İlan Ver
+                Ücretsiz ilan ver
               </Link>
             </div>
           ) : (
@@ -197,30 +313,78 @@ export default async function DistrictSeoPage({
           )}
         </section>
 
+        {/* Tips */}
         <section className="mb-8">
-          <h2 className="section-title">Sıkça sorulan sorular</h2>
-          <FaqAccordion />
+          <h2 className="section-title">{seo.tipsTitle}</h2>
+          <ul className="space-y-2">
+            {seo.tips.map((tip, i) => (
+              <li
+                key={i}
+                className="card flex gap-3 p-4 text-sm leading-relaxed text-[#6b7280]"
+              >
+                <span className="font-bold text-[#2cb34f]">{i + 1}.</span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
+        {/* Mid CTA */}
+        <section className="mb-8 overflow-hidden rounded-lg bg-[#111321] px-5 py-8 text-center text-white">
+          <h2 className="text-lg font-bold">
+            {ilce} kentsel dönüşüm için hazır mısın?
+          </h2>
+          <p className="mt-2 text-sm text-white/70">
+            2 dakikada ücretsiz ilan oluştur. Teyit sonrası onaylı müteahhitler
+            seni arasın.
+          </p>
+          <Link href="/ilan-ver" className="btn-primary mt-5 inline-flex">
+            {ilce} ilanı ver
+          </Link>
+        </section>
+
+        {/* FAQ */}
+        <section className="mb-8">
+          <h2 className="section-title">
+            {ilce} kentsel dönüşüm SSS
+          </h2>
+          <FaqAccordion items={seo.faq} />
+        </section>
+
+        {/* Closing */}
+        <section className="card-elevated mb-8 p-5">
+          <h2 className="text-base font-bold text-[#111321]">
+            {ilce} kentsel dönüşümde bir sonraki adım
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
+            {seo.closing}
+          </p>
+        </section>
+
+        {/* All other districts for internal linking SEO */}
         <section className="mb-4">
-          <h2 className="section-title">Diğer ilçeler</h2>
+          <h2 className="section-title">İstanbul ilçe kentsel dönüşüm sayfaları</h2>
+          <p className="mb-4 -mt-2 text-sm text-[#6b7280]">
+            Yakın bölgeler: {districtMeta.neighboring.join(", ")}. Tüm 39 ilçe
+            için ayrı rehber sayfaları:
+          </p>
           <div className="flex flex-wrap gap-2">
             {related.map((name) => (
               <Link
                 key={name}
                 href={`/${ilceToSeoSlug(name)}`}
-                className="rounded-full border border-[#e3e4e6] bg-white px-3 py-1.5 text-xs font-semibold text-[#111321] hover:border-[#2cb34f] hover:text-[#168f43]"
+                className="rounded-full border border-[#e3e4e6] bg-white px-3 py-1.5 text-xs font-semibold text-[#111321] transition hover:border-[#2cb34f] hover:text-[#168f43]"
               >
                 {name} kentsel dönüşüm
               </Link>
             ))}
-            <Link
-              href="/ilanlar"
-              className="rounded-full bg-[#eaf8ee] px-3 py-1.5 text-xs font-bold text-[#168f43]"
-            >
-              Tüm ilanlar
-            </Link>
           </div>
+          <Link
+            href="/ilanlar"
+            className="mt-4 inline-block text-sm font-bold text-[#168f43]"
+          >
+            Tüm İstanbul ilanları →
+          </Link>
         </section>
       </div>
     </AppShell>

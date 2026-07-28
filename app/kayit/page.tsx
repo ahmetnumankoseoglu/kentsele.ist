@@ -90,8 +90,14 @@ export default function KayitPage() {
 
       {role === "muteahhit" && (
         <p className="mt-3 rounded-[3px] bg-[#fff7e6] px-3 py-2 text-xs text-[#b45309]">
-          Müteahhit hesapları belge yükleyip onaylanmadan malik numaralarını
-          göremez.
+          Müteahhitler ilan veremez; yalnızca ilanları inceler. Belge + onay
+          sonrası malik numarası görünür.
+        </p>
+      )}
+      {role === "malik" && (
+        <p className="mt-3 rounded-[3px] bg-[#eaf8ee] px-3 py-2 text-xs text-[#168f43]">
+          İlan vermek için kayıt zorunlu değildir. Düzenlemek için hesap
+          gerekir.
         </p>
       )}
 

@@ -1,9 +1,23 @@
 import { NextResponse } from "next/server";
 import { createListingSchema } from "@/lib/validations/listing";
 import { createListing } from "@/lib/listings/mutations";
+import { getCurrentProfile } from "@/lib/auth/session";
 
 export async function POST(req: Request) {
   try {
+    // Müteahhitler ilan veremez
+    const profile = await getCurrentProfile();
+    if (profile?.role === "muteahhit") {
+      return NextResponse.json(
+        {
+          error: "forbidden_role",
+          message:
+            "Müteahhit hesapları ilan veremez. İlan yalnızca malikler içindir.",
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const parsed = createListingSchema.safeParse(body);
     if (!parsed.success) {
