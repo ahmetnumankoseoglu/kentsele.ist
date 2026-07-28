@@ -25,8 +25,20 @@
 - Müteahhit kaydı / teklif paneli
 - SMS OTP
 - Ödeme, garanti, mesajlaşma
-- Türkiye geneli (sadece İstanbul)
+- İstanbul dışı iller / ilçeler (ürün yalnızca İstanbul)
 - Görsel yükleme / Supabase Storage
+
+### Coğrafi kapsam (kilitli)
+
+- Ürün **yalnızca İstanbul** içindir. İl seçimi yoktur; form ve filtrede sadece ilçe vardır.
+- Tüm **39 ilçe** sabit listede yer alır (alfabetik). Kodda tek kaynak: `lib/constants/istanbul-ilceler.ts` (veya eşdeğeri).
+
+**İstanbul ilçeleri (39):**  
+Adalar, Arnavutköy, Ataşehir, Avcılar, Bağcılar, Bahçelievler, Bakırköy, Başakşehir, Bayrampaşa, Beşiktaş, Beykoz, Beylikdüzü, Beyoğlu, Büyükçekmece, Çatalca, Çekmeköy, Esenler, Esenyurt, Eyüpsultan, Fatih, Gaziosmanpaşa, Güngören, Kadıköy, Kağıthane, Kartal, Küçükçekmece, Maltepe, Pendik, Sancaktepe, Sarıyer, Silivri, Sultanbeyli, Sultangazi, Şile, Şişli, Tuzla, Ümraniye, Üsküdar, Zeytinburnu
+
+- `ilce` alanı bu listedeki tam adla kaydedilir (serbest metin ilçe yok).
+- Slug’da ilçe ASCII formuna çevrilir (ör. `Kadıköy` → `kadikoy`, `Eyüpsultan` → `eyupsultan`, `Kağıthane` → `kagithane`).
+- Ana sayfa filtresi: “Tümü” + 39 ilçe (mobilde searchable select veya chip scroll).
 
 ---
 
@@ -77,7 +89,7 @@ Tüm kullanıcıya dönük path’ler Türkçe ve okunabilir olur. Token’lar o
 
 1. `/ilan-ver` sihirbazı (ilerleme çubuğu, tek soru/ekran veya gruplu adımlar).
 2. Adımlar:
-   1. **İlçe** (İstanbul ilçeleri listesi; mahalle opsiyonel serbest metin)
+   1. **İlçe** (39 İstanbul ilçesinden biri; zorunlu) + mahalle (opsiyonel serbest metin)
    2. **Kat sayısı** — “Kentsel dönüşümle kaç kat inşa edilecek? (zemin altı dahil)”  
       Seçenekler: `1` … `7`, `8+`
    3. **Daire sayısı** — “Binada kaç daire olacak?”  
@@ -323,6 +335,7 @@ Supabase
 | Malik panel | Gizli `/yonet/[token]`; status değiştiremez |
 | Anlaşma | Malik bildirir → admin onaylar |
 | Stack | Next.js + Supabase |
+| Coğrafya | Yalnızca İstanbul; 39 ilçenin tamamı |
 | Slug | Türkçe/okunabilir path + ASCII ilan slug |
 | Maliyet | Free tier; SMS yok |
 
