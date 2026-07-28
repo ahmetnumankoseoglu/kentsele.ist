@@ -180,3 +180,96 @@ h4 {
   border-radius: 2px;
   transition: width 0.25s ease;
 }
+
+/* —— Motion / FAQ —— */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(44, 179, 79, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(44, 179, 79, 0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.45s ease both;
+}
+
+.faq-item {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    border-color 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.faq-item:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow);
+}
+
+.faq-item[data-open="true"] {
+  border-left-color: var(--primary);
+  box-shadow: var(--card-shadow);
+}
+
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.faq-chevron {
+  transition:
+    transform 0.3s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.faq-item[data-open="true"] .faq-chevron {
+  transform: rotate(180deg);
+  animation: soft-pulse 1.6s ease 1;
+}
+
+.how-step {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.how-step:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
+}
+
+.news-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow);
+}

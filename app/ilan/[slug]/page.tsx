@@ -1,11 +1,38 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { StatusBadge } from "@/components/ilan/StatusBadge";
 import { ContactActions } from "@/components/ilan/ContactActions";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicListingBySlug } from "@/lib/listings/queries";
 import { ODEME_LABELS, type OdemeTercihi } from "@/lib/constants/listing";
+import { ilceToSeoSlug } from "@/lib/constants/istanbul-ilceler";
+import { breadcrumbSchema } from "@/lib/seo/schema";
+import { getSiteUrl } from "@/lib/seo/site";
 import type { PublicListing } from "@/types/listing";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const listing = await getPublicListingBySlug(slug);
+    if (!listing) return { title: "İlan bulunamadı" };
+    const title = `${listing.ilce} Kentsel Dönüşüm — ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`;
+    const description = listing.aciklama.slice(0, 155);
+    return {
+      title,
+      description,
+      openGraph: { title, description, type: "article", locale: "tr_TR" },
+      alternates: { canonical: `${getSiteUrl()}/ilan/${slug}` },
+    };
+  } catch {
+    return { title: "İlan" };
+  }
+}
 
 export default async function IlanDetailPage({
   params,
@@ -22,16 +49,43 @@ export default async function IlanDetailPage({
   }
   if (!listing) notFound();
 
+  const districtPath = `/${ilceToSeoSlug(listing.ilce)}`;
+  const schemas = [
+    breadcrumbSchema([
+      { name: "Ana sayfa", path: "/" },
+      { name: "İlanlar", path: "/ilanlar" },
+      { name: `${listing.ilce} Kentsel Dönüşüm`, path: districtPath },
+      { name: "İlan detayı", path: `/ilan/${listing.slug}` },
+    ]),
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      name: `${listing.ilce} kentsel dönüşüm — ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`,
+      description: listing.aciklama,
+      url: `${getSiteUrl()}/ilan/${listing.slug}`,
+      datePosted: listing.published_at ?? listing.created_at,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: listing.ilce,
+        addressRegion: "İstanbul",
+        addressCountry: "TR",
+      },
+    },
+  ];
+
   return (
     <AppShell showBottomCta={false}>
+      <JsonLd data={schemas} />
       <nav className="mb-4 text-xs text-[#6b7280]">
         <Link href="/" className="font-medium text-[#168f43]">
-          kentsele.ist
+          Ana sayfa
         </Link>
         <span className="mx-1.5">/</span>
-        <span>Kentsel Dönüşüm</span>
+        <Link href={districtPath} className="font-medium text-[#168f43]">
+          {listing.ilce} kentsel dönüşüm
+        </Link>
         <span className="mx-1.5">/</span>
-        <span className="text-[#111321]">{listing.ilce}</span>
+        <span className="text-[#111321]">İlan</span>
       </nav>
 
       <div className="mb-3 flex items-center justify-between gap-2">

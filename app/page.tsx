@@ -5,9 +5,21 @@ import { ListingCard } from "@/components/ilan/ListingCard";
 import { IlceFilter } from "@/components/ilan/IlceFilter";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
 import { HomeFooter } from "@/components/home/HomeFooter";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicListings } from "@/lib/listings/queries";
-import { isValidIstanbulIlce } from "@/lib/constants/istanbul-ilceler";
-import { ISTANBUL_ILCELER } from "@/lib/constants/istanbul-ilceler";
+import {
+  isValidIstanbulIlce,
+  ISTANBUL_ILCELER,
+  ilceToSeoSlug,
+} from "@/lib/constants/istanbul-ilceler";
+import { FAQ_ITEMS } from "@/lib/content/faq";
+import { getAllHaberler } from "@/lib/content/haberler";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  organizationSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
 import type { PublicListing } from "@/types/listing";
 
 const POPULAR_ILCELER = [
@@ -22,8 +34,16 @@ const POPULAR_ILCELER = [
   "Bahçelievler",
   "Küçükçekmece",
   "Pendik",
-  "Ümraniye",
+  "Bayrampaşa",
 ] as const;
+
+function formatDate(iso: string) {
+  return new Intl.DateTimeFormat("tr-TR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(iso));
+}
 
 export default async function HomePage({
   searchParams,
@@ -43,9 +63,19 @@ export default async function HomePage({
       "İlanlar yüklenemedi. Supabase yapılandırmasını kontrol edin.";
   }
 
+  const haberler = getAllHaberler().slice(0, 3);
+
+  const schemas = [
+    websiteSchema(),
+    organizationSchema(),
+    breadcrumbSchema([{ name: "Ana sayfa", path: "/" }]),
+    faqPageSchema([...FAQ_ITEMS]),
+  ];
+
   return (
     <AppShell fullBleed>
-      {/* Hero */}
+      <JsonLd data={schemas} />
+
       <section className="relative overflow-hidden bg-[#111321] text-white">
         <div
           className="absolute inset-0 opacity-40"
@@ -68,12 +98,20 @@ export default async function HomePage({
             Malikler ücretsiz ilan oluşturur. Müteahhitler listeden inceler ve
             doğrudan arar.
           </p>
-          <Link
-            href="/ilan-ver"
-            className="btn-primary mt-6 w-full max-w-xs !text-base"
-          >
-            BAŞLA
-          </Link>
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+            <Link
+              href="/ilan-ver"
+              className="btn-primary w-full max-w-xs !text-base"
+            >
+              BAŞLA
+            </Link>
+            <Link
+              href="/ilanlar"
+              className="inline-flex items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
+            >
+              İlanları Gör
+            </Link>
+          </div>
           <p className="mt-3 text-xs text-white/55">
             39 ilçe · Ücretsiz ilan · Üyeliksiz iletişim
           </p>
@@ -81,7 +119,6 @@ export default async function HomePage({
       </section>
 
       <div className="mx-auto max-w-lg px-4">
-        {/* Why */}
         <section className="py-8">
           <h2 className="section-title">Neden kentsele.ist?</h2>
           <div className="grid gap-3">
@@ -102,8 +139,12 @@ export default async function HomePage({
                 t: "Doğrudan iletişim",
                 d: "Müteahhitler Ara / WhatsApp ile malikle hemen görüşür.",
               },
-            ].map((item) => (
-              <div key={item.t} className="card flex gap-3 p-4">
+            ].map((item, i) => (
+              <div
+                key={item.t}
+                className="how-step card flex gap-3 p-4 animate-fade-up"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ee] text-sm font-bold text-[#168f43]">
                   ✓
                 </span>
@@ -118,7 +159,6 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* How it works */}
         <section className="pb-8">
           <h2 className="section-title">Nasıl çalışır?</h2>
           <div className="grid gap-3">
@@ -138,8 +178,12 @@ export default async function HomePage({
                 t: "Müteahhitler arasın",
                 d: "İlanı gören müteahhitler seni arar veya WhatsApp yazar.",
               },
-            ].map((s) => (
-              <div key={s.n} className="card flex gap-3 p-4">
+            ].map((s, i) => (
+              <div
+                key={s.n}
+                className="how-step card flex gap-3 p-4 animate-fade-up"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
                   {s.n}
                 </span>
@@ -155,21 +199,21 @@ export default async function HomePage({
           </Link>
         </section>
 
-        {/* Listings */}
         <section className="pb-8">
           <div className="mb-4 flex items-end justify-between gap-2">
             <h2 className="section-title mb-0 pb-2">
               {ilce ? `${ilce} ilanları` : "Güncel ilanlar"}
             </h2>
-            {!errorMsg && (
-              <span className="mb-2 text-xs font-bold text-[#6b7280]">
-                {listings.length} ilan
-              </span>
-            )}
+            <Link
+              href="/ilanlar"
+              className="mb-2 text-xs font-bold text-[#168f43]"
+            >
+              Tümünü gör →
+            </Link>
           </div>
 
           <Suspense fallback={null}>
-            <IlceFilter />
+            <IlceFilter basePath="/" />
           </Suspense>
 
           <div className="mt-4 flex flex-col gap-3">
@@ -188,29 +232,73 @@ export default async function HomePage({
                 </Link>
               </div>
             ) : (
-              listings.map((l) => <ListingCard key={l.id} listing={l} />)
+              listings.slice(0, 6).map((l, i) => (
+                <div
+                  key={l.id}
+                  className="animate-fade-up"
+                  style={{ animationDelay: `${i * 40}ms` }}
+                >
+                  <ListingCard listing={l} />
+                </div>
+              ))
             )}
+          </div>
+          {listings.length > 6 && (
+            <Link href="/ilanlar" className="btn-secondary mt-4 w-full">
+              Daha fazla ilan ({listings.length})
+            </Link>
+          )}
+        </section>
+
+        <section className="pb-8">
+          <div className="mb-4 flex items-end justify-between">
+            <h2 className="section-title mb-0 pb-2">Haberler</h2>
+            <Link
+              href="/haberler"
+              className="mb-2 text-xs font-bold text-[#168f43]"
+            >
+              Tümü →
+            </Link>
+          </div>
+          <div className="flex flex-col gap-3">
+            {haberler.map((h, i) => (
+              <Link
+                key={h.slug}
+                href={`/haberler/${h.slug}`}
+                className="news-card card animate-fade-up block p-4"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <time className="text-xs font-bold text-[#2cb34f]">
+                  {formatDate(h.datePublished)}
+                </time>
+                <h3 className="mt-1 text-sm font-bold leading-snug text-[#111321]">
+                  {h.title}
+                </h3>
+                <p className="mt-1 line-clamp-2 text-xs text-[#6b7280]">
+                  {h.description}
+                </p>
+              </Link>
+            ))}
           </div>
         </section>
 
-        {/* Popular districts */}
         <section className="pb-8">
           <h2 className="section-title">Popüler ilçeler</h2>
           <p className="mb-4 -mt-2 text-sm text-[#6b7280]">
-            İstanbul’un en çok aranan kentsel dönüşüm bölgelerine hızlı filtre.
+            SEO sayfaları: “Bayrampaşa kentsel dönüşüm” gibi ilçe rehberleri.
           </p>
           <div className="flex flex-wrap gap-2">
             {POPULAR_ILCELER.map((name) => (
               <Link
                 key={name}
-                href={`/?ilce=${encodeURIComponent(name)}`}
+                href={`/${ilceToSeoSlug(name)}`}
                 className="rounded-full border border-[#e3e4e6] bg-white px-3.5 py-2 text-xs font-semibold text-[#111321] transition hover:border-[#2cb34f] hover:text-[#168f43]"
               >
-                {name}
+                {name} kentsel dönüşüm
               </Link>
             ))}
             <Link
-              href="/"
+              href="/ilanlar"
               className="rounded-full bg-[#eaf8ee] px-3.5 py-2 text-xs font-bold text-[#168f43]"
             >
               Tüm {ISTANBUL_ILCELER.length} ilçe
@@ -218,7 +306,6 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* Mid CTA band */}
         <section className="mb-8 overflow-hidden rounded-lg bg-[#111321] px-5 py-7 text-center text-white">
           <h2 className="text-lg font-bold">
             Kentsel dönüşüm için teklif mi arıyorsun?
@@ -234,7 +321,6 @@ export default async function HomePage({
           </Link>
         </section>
 
-        {/* FAQ */}
         <section className="pb-8">
           <h2 className="section-title">Sıkça sorulan sorular</h2>
           <FaqAccordion />

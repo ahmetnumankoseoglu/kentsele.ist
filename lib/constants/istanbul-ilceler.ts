@@ -46,3 +46,42 @@ export type IstanbulIlce = (typeof ISTANBUL_ILCELER)[number];
 export function isValidIstanbulIlce(value: string): value is IstanbulIlce {
   return (ISTANBUL_ILCELER as readonly string[]).includes(value);
 }
+
+/** SEO path: bayrampasa-kentsel-donusum */
+export function ilceToSeoSlug(ilce: string): string {
+  const map: Record<string, string> = {
+    ç: "c",
+    Ç: "c",
+    ğ: "g",
+    Ğ: "g",
+    ı: "i",
+    İ: "i",
+    ö: "o",
+    Ö: "o",
+    ş: "s",
+    Ş: "s",
+    ü: "u",
+    Ü: "u",
+  };
+  const base = ilce
+    .split("")
+    .map((ch) => map[ch] ?? ch)
+    .join("")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return `${base}-kentsel-donusum`;
+}
+
+export function ilceFromSeoSlug(slug: string): IstanbulIlce | null {
+  for (const ilce of ISTANBUL_ILCELER) {
+    if (ilceToSeoSlug(ilce) === slug) return ilce;
+  }
+  return null;
+}
+
+export function allSeoDistrictSlugs(): string[] {
+  return ISTANBUL_ILCELER.map(ilceToSeoSlug);
+}

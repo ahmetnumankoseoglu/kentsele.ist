@@ -1,67 +1,74 @@
 "use client";
 
 import { useState } from "react";
+import { FAQ_ITEMS } from "@/lib/content/faq";
 
-const FAQ_ITEMS = [
-  {
-    q: "İlan vermek ücretli mi?",
-    a: "Hayır. kentsele.ist üzerinden kentsel dönüşüm ilanı oluşturmak, yayınlatmak ve müteahhitlerle iletişime geçmek tamamen ücretsizdir.",
-  },
-  {
-    q: "İlanım ne zaman yayınlanır?",
-    a: "İlanın inceleme sürecine alınır. Ekibimiz teyit için seni arayabilir. Onaylandıktan sonra İstanbul ilan listesinde görünür.",
-  },
-  {
-    q: "Telefon numaram herkese açık mı?",
-    a: "Yayındaki ilanlarda telefon ve WhatsApp görünür; böylece müteahhitler seni arayabilir. Anlaşma sağlandığında numaran kapatılır, ilan listede kalır.",
-  },
-  {
-    q: "Müteahhit misiniz? Nasıl ilan bulursunuz?",
-    a: "Üyelik gerekmez. Ana sayfadan ilçeye göre ilanları gezebilir, detayda Ara veya WhatsApp ile malikle iletişime geçebilirsin.",
-  },
-  {
-    q: "Sadece İstanbul mu?",
-    a: "Evet. kentsele.ist yalnızca İstanbul kentsel dönüşüm ilanları içindir. 39 ilçenin tamamı listelenir ve filtrelenebilir.",
-  },
-  {
-    q: "İlanımı nasıl düzenlerim veya anlaşma bildiririm?",
-    a: "İlan gönderildikten sonra sana özel bir yönetim linki verilir. Bu linkle ilanı güncelleyebilir, anlaşma sağlandığını admin paneline bildirebilirsin.",
-  },
-] as const;
-
-export function FaqAccordion() {
+export function FaqAccordion({
+  items = FAQ_ITEMS,
+}: {
+  items?: readonly { q: string; a: string }[];
+}) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="space-y-2">
-      {FAQ_ITEMS.map((item, i) => {
+    <div className="space-y-2.5">
+      {items.map((item, i) => {
         const isOpen = open === i;
         return (
-          <div key={item.q} className="card overflow-hidden">
+          <div
+            key={item.q}
+            data-open={isOpen}
+            className="faq-item card animate-fade-up overflow-hidden"
+            style={{ animationDelay: `${i * 60}ms` }}
+          >
             <button
               type="button"
               onClick={() => setOpen(isOpen ? null : i)}
-              className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
+              className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left"
               aria-expanded={isOpen}
             >
-              <span className="text-sm font-semibold text-[#111321]">
-                {i + 1}. {item.q}
+              <span className="flex min-w-0 items-start gap-3">
+                <span
+                  className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                    isOpen
+                      ? "bg-[#2cb34f] text-white"
+                      : "bg-[#eaf8ee] text-[#168f43]"
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                <span className="pt-0.5 text-sm font-semibold leading-snug text-[#111321]">
+                  {item.q}
+                </span>
               </span>
               <span
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-lg font-medium leading-none ${
+                className={`faq-chevron flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
                   isOpen
                     ? "bg-[#2cb34f] text-white"
                     : "bg-[#f8f8f8] text-[#6b7280]"
                 }`}
+                aria-hidden
               >
-                {isOpen ? "−" : "+"}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M3 5l4 4 4-4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
             </button>
-            {isOpen && (
-              <div className="border-t border-[#e3e4e6] px-4 py-3">
-                <p className="text-sm leading-relaxed text-[#6b7280]">{item.a}</p>
+            <div className="faq-panel" data-open={isOpen}>
+              <div className="faq-panel-inner">
+                <div className="border-t border-[#e3e4e6] px-4 pb-4 pt-3">
+                  <p className="pl-10 text-sm leading-relaxed text-[#6b7280]">
+                    {item.a}
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         );
       })}

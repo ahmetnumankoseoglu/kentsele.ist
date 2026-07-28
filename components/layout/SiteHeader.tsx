@@ -13,12 +13,26 @@ export function SiteHeader() {
             <span className="text-[#2cb34f]">.ist</span>
           </span>
         </Link>
-        <Link
-          href="/ilan-ver"
-          className="text-sm font-bold text-[#2cb34f] hover:text-[#1ca03e]"
-        >
-          İlan Ver
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/ilanlar"
+            className="text-sm font-semibold text-[#6b7280] hover:text-[#111321]"
+          >
+            İlanlar
+          </Link>
+          <Link
+            href="/haberler"
+            className="text-sm font-semibold text-[#6b7280] hover:text-[#111321]"
+          >
+            Haberler
+          </Link>
+          <Link
+            href="/ilan-ver"
+            className="text-sm font-bold text-[#2cb34f] hover:text-[#1ca03e]"
+          >
+            İlan Ver
+          </Link>
+        </div>
       </div>
     </header>
   );
