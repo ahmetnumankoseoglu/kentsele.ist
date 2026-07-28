@@ -72,9 +72,7 @@ export function organizationSchema() {
     url,
     logo: {
       "@type": "ImageObject",
-      url: `${url}/favicon.ico`,
-      width: 48,
-      height: 48,
+      url: `${url}/favicon.svg`,
     },
     image: DEFAULT_OG_IMAGE,
     description: SITE_DESCRIPTION,
@@ -193,7 +191,7 @@ export function newsArticleSchema(article: {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${url}/favicon.ico`,
+        url: `${url}/favicon.svg`,
       },
     },
     mainEntityOfPage: {
