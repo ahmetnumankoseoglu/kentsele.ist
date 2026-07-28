@@ -18,8 +18,8 @@ export function HomeFooter() {
           kentsele<span className="text-[#2cb34f]">.ist</span>
         </p>
         <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-          İstanbul kentsel dönüşüm ilan platformu. Malik ile müteahhit arasında
-          sade ve şeffaf buluşma noktası.
+          İstanbul kentsel dönüşüm ilan platformu. Malik ücretsiz ilan verir;
+          müteahhit belge onayı sonrası iletişime geçer.
         </p>
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
           <Link href="/ilan-ver" className="text-[#168f43]">

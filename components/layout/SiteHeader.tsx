@@ -23,8 +23,8 @@ function UserIcon({ className }: { className?: string }) {
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[#e3e4e6] bg-white/95 backdrop-blur">
-      <div className="flex h-14 items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-[#e3e4e6] bg-white">
+      <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-1.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
             k

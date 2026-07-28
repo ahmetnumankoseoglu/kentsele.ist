@@ -1,26 +1,26 @@
 export const FAQ_ITEMS = [
   {
     q: "İlan vermek ücretli mi?",
-    a: "Hayır. kentsele.ist üzerinden kentsel dönüşüm ilanı oluşturmak, yayınlatmak ve müteahhitlerle iletişime geçmek tamamen ücretsizdir.",
+    a: "Hayır. Malikler için kentsel dönüşüm ilanı oluşturmak tamamen ücretsizdir. Kayıt zorunlu değildir.",
   },
   {
-    q: "İlanım ne zaman yayınlanır?",
-    a: "İlanın inceleme sürecine alınır. Ekibimiz teyit için seni arayabilir. Onaylandıktan sonra İstanbul ilan listesinde görünür.",
+    q: "İlanımı düzenlemek için ne yapmalıyım?",
+    a: "İlan gönderildikten sonra sana özel yönetim linki verilir. Düzenlemek veya anlaşma bildirmek için giriş yapman / kayıt olman gerekir; link ilanı hesabına bağlar.",
   },
   {
     q: "Telefon numaram herkese açık mı?",
-    a: "Yayındaki ilanlarda telefon ve WhatsApp görünür; böylece müteahhitler seni arayabilir. Anlaşma sağlandığında numaran kapatılır, ilan listede kalır.",
+    a: "Hayır. Yayındaki ilanlarda numara herkese gösterilmez. Yalnızca belge yükleyip admin onayı almış müteahhit hesapları iletişim bilgisine erişebilir. Anlaşıldı durumuna geçen ilanlarda iletişim kapanır.",
   },
   {
-    q: "Müteahhit misiniz? Nasıl ilan bulursunuz?",
-    a: "Üyelik gerekmez. Ana sayfadan veya ilanlar sayfasından ilçeye göre ilanları gezebilir, detayda Ara veya WhatsApp ile malikle iletişime geçebilirsin.",
+    q: "Müteahhit misiniz? Nasıl çalışırsınız?",
+    a: "Müteahhit olarak kayıt olmanız zorunludur. Vergi levhası vb. belgeleri yükleyip onay alırsınız. Onay sonrası ilanlardaki malik numaralarını görebilirsiniz. Müteahhitler ilan veremez.",
   },
   {
     q: "Sadece İstanbul mu?",
     a: "Evet. kentsele.ist yalnızca İstanbul kentsel dönüşüm ilanları içindir. 39 ilçenin tamamı listelenir ve filtrelenebilir.",
   },
   {
-    q: "İlanımı nasıl düzenlerim veya anlaşma bildiririm?",
-    a: "İlan gönderildikten sonra sana özel bir yönetim linki verilir. Bu linkle ilanı güncelleyebilir, anlaşma sağlandığını admin paneline bildirebilirsin.",
+    q: "Haber yorumu için üyelik gerekir mi?",
+    a: "Evet. Haber yorumları için giriş yapmış (malik veya müteahhit) hesap gerekir. İlan vermek için ise kayıt şart değildir.",
   },
 ] as const;

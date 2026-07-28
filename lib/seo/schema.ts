@@ -96,7 +96,7 @@ export function serviceDistrictSchema(ilce: string, path: string) {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `${ilce} Kentsel Dönüşüm`,
-    description: `${ilce} kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir, müteahhitler ${ilce} bölgesindeki fırsatları inceler.`,
+    description: `${ilce} kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler ${ilce} bölgesindeki fırsatları inceler.`,
     provider: {
       "@type": "Organization",
       name: SITE_NAME,

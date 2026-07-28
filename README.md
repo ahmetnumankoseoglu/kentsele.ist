@@ -1,6 +1,6 @@
 # kentsele.ist
 
-İstanbul kentsel dönüşüm ilan panosu. Malikler bina/arsa ilanı verir; müteahhitler ücretsiz inceler ve iletişime geçer.
+İstanbul kentsel dönüşüm ilan panosu. Malikler ücretsiz ve kayıtsız ilan verir; müteahhitler kayıt + belge onayı sonrası iletişime geçer.
 
 ## Stack
 
@@ -32,6 +32,7 @@ cp .env.example .env.local
 Supabase SQL Editor’da migration’ı uygula:
 
 - [`supabase/migrations/001_listings.sql`](supabase/migrations/001_listings.sql)
+- [`supabase/migrations/002_auth_news_contractors.sql`](supabase/migrations/002_auth_news_contractors.sql)
 
 Adımlar için: [`supabase/README.md`](supabase/README.md)
 

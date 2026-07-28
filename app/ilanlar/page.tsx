@@ -25,8 +25,8 @@ export async function generateMetadata({
     ? `${ilce} Kentsel Dönüşüm İlanları`
     : "İstanbul Kentsel Dönüşüm İlanları";
   const description = ilce
-    ? `${ilce} kentsel dönüşüm ilanları. Malik ve müteahhitler için ücretsiz platform.`
-    : "İstanbul geneli kentsel dönüşüm ilanları. 39 ilçe, ücretsiz ilan ve iletişim.";
+    ? `${ilce} kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer.`
+    : "İstanbul geneli kentsel dönüşüm ilanları. 39 ilçe, ücretsiz malik ilanı, onaylı müteahhit iletişimi.";
 
   return {
     title,
@@ -93,7 +93,8 @@ export default async function IlanlarPage({
         {ilce ? `${ilce} kentsel dönüşüm ilanları` : "İstanbul kentsel dönüşüm ilanları"}
       </h1>
       <p className="mb-6 text-sm text-[#6b7280]">
-        Yayındaki tüm ilanlar. İlçeye göre filtrele, detaydan ara veya WhatsApp yaz.
+        Yayındaki tüm ilanlar. İlçeye göre filtrele. Malik numarası yalnızca
+        onaylı müteahhit hesaplarına açıktır.
       </p>
       <ListingsFeed
         listings={listings}

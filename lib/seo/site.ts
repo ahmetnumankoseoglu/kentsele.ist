@@ -8,4 +8,4 @@ export function getSiteUrl(): string {
 export const SITE_NAME = "kentsele.ist";
 export const SITE_LOCALE = "tr-TR";
 export const SITE_DESCRIPTION =
-  "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir, müteahhitler ücretsiz inceler ve arar.";
+  "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer.";

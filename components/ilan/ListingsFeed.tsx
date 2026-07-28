@@ -44,7 +44,7 @@ export function ListingsFeed({
               Bu filtrede henüz ilan yok
             </p>
             <p className="mt-1 text-sm text-[#6b7280]">
-              İlk ilanı sen ver, müteahhitler seni bulsun.
+              İlk ilanı sen ver; onaylı müteahhitler seni bulsun.
             </p>
             <Link href="/ilan-ver" className="btn-primary mt-5">
               Ücretsiz İlan Ver

@@ -95,8 +95,8 @@ export default async function HomePage({
             Kentsel dönüşüm ilanı ver, müteahhit bul.
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-white/80">
-            Malikler ücretsiz ilan oluşturur. Müteahhitler listeden inceler ve
-            doğrudan arar.
+            Malikler ücretsiz ve kayıtsız ilan verir. Müteahhitler belge onayı
+            sonrası malikle iletişime geçer.
           </p>
           <div className="mt-6 flex flex-col gap-2 sm:flex-row">
             <Link
@@ -113,7 +113,7 @@ export default async function HomePage({
             </Link>
           </div>
           <p className="mt-3 text-xs text-white/55">
-            39 ilçe · Ücretsiz ilan · Üyeliksiz iletişim
+            39 ilçe · Ücretsiz ilan · Onaylı müteahhit iletişimi
           </p>
         </div>
       </section>
@@ -128,16 +128,16 @@ export default async function HomePage({
                 d: "Sadece İstanbul kentsel dönüşüm ilanları. 39 ilçenin tamamı tek yerde.",
               },
               {
-                t: "Ücretsiz ve sade",
-                d: "İlan vermek, incelemek ve aramak ücretsiz. Karmaşık üyelik yok.",
+                t: "Ücretsiz malik ilanı",
+                d: "İlan vermek ücretsiz ve kayıtsız. Düzenlemek için hesap gerekir. Müteahhitler ilan veremez.",
               },
               {
                 t: "Teyitli yayın",
                 d: "İlanlar ekip teyidi sonrası yayına alınır; sahte ilan riski azalır.",
               },
               {
-                t: "Doğrudan iletişim",
-                d: "Müteahhitler Ara / WhatsApp ile malikle hemen görüşür.",
+                t: "Onaylı müteahhit iletişimi",
+                d: "Malik numarası herkese açık değildir. Yalnızca belge onayı almış müteahhitler arar.",
               },
             ].map((item, i) => (
               <div
@@ -166,7 +166,7 @@ export default async function HomePage({
               {
                 n: "1",
                 t: "İhtiyacını anlat",
-                d: "Birkaç kısa soruya yanıt ver, 2 dakikada ilanını oluştur.",
+                d: "Birkaç kısa soruya yanıt ver, 2 dakikada kayıtsız ilan oluştur.",
               },
               {
                 n: "2",
@@ -175,8 +175,8 @@ export default async function HomePage({
               },
               {
                 n: "3",
-                t: "Müteahhitler arasın",
-                d: "İlanı gören müteahhitler seni arar veya WhatsApp yazar.",
+                t: "Onaylı müteahhitler ulaşır",
+                d: "Belgesi onaylı müteahhitler ilanı görür ve seninle iletişime geçer.",
               },
             ].map((s, i) => (
               <div
@@ -225,7 +225,7 @@ export default async function HomePage({
                   Bu filtrede henüz ilan yok
                 </p>
                 <p className="mt-1 text-sm text-[#6b7280]">
-                  İlk ilanı sen ver, müteahhitler seni bulsun.
+                  İlk ilanı sen ver; onaylı müteahhitler seni bulsun.
                 </p>
                 <Link href="/ilan-ver" className="btn-primary mt-5">
                   Ücretsiz İlan Ver
@@ -311,7 +311,8 @@ export default async function HomePage({
             Kentsel dönüşüm için teklif mi arıyorsun?
           </h2>
           <p className="mt-2 text-sm text-white/70">
-            İlanını 2 dakikada oluştur; teyit sonrası müteahhitler seni arasın.
+            İlanını 2 dakikada oluştur; teyit sonrası onaylı müteahhitler seni
+            arasın.
           </p>
           <Link
             href="/ilan-ver"

@@ -28,7 +28,7 @@ export const HABERLER: Haber[] = [
     body: [
       "İstanbul’da kentsel dönüşüm, deprem riski altındaki yapı stokunun yenilenmesi için en kritik kentsel politikalardan biri olmaya devam ediyor. Malikler çoğu zaman sürecin nereden başlayacağını, hangi belgelerin gerektiğini ve müteahhit seçiminin nasıl yapılması gerektiğini merak ediyor.",
       "İlk adım genelde riskli yapı tespitidir. Yetkili kurumlarca yapılan tespit sonrasında malikler arasında mutabakat ve proje modeli (kat karşılığı, hasılat paylaşımı, peşin vb.) konuşulur. Bu aşamada şeffaf teklif karşılaştırması kritik önem taşır.",
-      "kentsele.ist üzerinde malikler ilçeye özel ücretsiz ilan oluşturabilir; müteahhitler de üyeliksiz şekilde ilanları inceleyip doğrudan iletişime geçebilir. Teyit sonrası yayınlanan ilanlar, hem SEO sayfalarında hem genel listede görünür.",
+      "kentsele.ist üzerinde malikler ilçeye özel ücretsiz ve kayıtsız ilan oluşturabilir. Müteahhitler kayıt olup belge onayı aldıktan sonra malik iletişim bilgisine erişebilir. Teyit sonrası yayınlanan ilanlar hem SEO sayfalarında hem genel listede görünür.",
       "2026 itibarıyla kamu destekleri ve yerel uygulamalar bölgeye göre değişebildiği için, kendi ilçenizdeki güncel projelere ve benzer ilanlara bakmak en sağlıklı başlangıçtır.",
     ],
   },

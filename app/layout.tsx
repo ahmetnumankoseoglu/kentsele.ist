@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s · kentsele.ist",
   },
   description:
-    "İstanbul kentsel dönüşüm ilanları. Malikler ilan verir, müteahhitler ücretsiz inceler ve arar.",
+    "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer.",
 };
 
 export default function RootLayout({

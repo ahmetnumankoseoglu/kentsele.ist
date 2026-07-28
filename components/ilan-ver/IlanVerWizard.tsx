@@ -25,7 +25,10 @@ const STEP_META = [
     title: "İhtiyaç detayı",
     sub: "Ada/parsel, mevcut durum, beklenti…",
   },
-  { title: "İletişim bilgilerin", sub: "Yayında telefon ve WhatsApp görünür" },
+  {
+    title: "İletişim bilgilerin",
+    sub: "Numara herkese açık olmaz; yalnızca onaylı müteahhitler görür",
+  },
 ];
 
 export function IlanVerWizard() {
