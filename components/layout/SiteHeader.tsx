@@ -8,10 +8,7 @@ export function SiteHeader() {
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
             k
           </span>
-          <span
-            className="text-[17px] font-bold tracking-tight text-[#111321]"
-            style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-          >
+          <span className="text-[17px] font-bold tracking-tight text-[#111321]">
             kentsele
             <span className="text-[#2cb34f]">.ist</span>
           </span>

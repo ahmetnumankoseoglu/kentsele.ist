@@ -6,10 +6,7 @@ export default function NotFound() {
     <AppShell showBottomCta={false}>
       <div className="card-elevated p-8 text-center">
         <p className="text-sm font-bold text-[#2cb34f]">404</p>
-        <h1
-          className="mt-2 text-xl font-bold text-[#111321]"
-          style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-        >
+        <h1 className="mt-2 text-xl font-bold text-[#111321]">
           Sayfa bulunamadı
         </h1>
         <p className="mt-2 text-sm text-[#6b7280]">

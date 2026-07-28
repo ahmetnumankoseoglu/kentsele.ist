@@ -21,10 +21,7 @@ export default function BasariliPage() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#eaf8ee] text-2xl text-[#2cb34f]">
         ✓
       </div>
-      <h1
-        className="mt-4 text-[22px] font-bold text-[#111321]"
-        style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-      >
+      <h1 className="mt-4 text-[22px] font-bold text-[#111321]">
         İlanın alındı
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">

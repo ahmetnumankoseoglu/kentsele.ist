@@ -42,10 +42,7 @@ export default async function IlanDetailPage({
         <StatusBadge status={listing.status} />
       </div>
 
-      <h1
-        className="text-[22px] font-bold leading-snug text-[#111321]"
-        style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-      >
+      <h1 className="text-[22px] font-bold leading-snug text-[#111321]">
         {listing.kat_sayisi} kat · {listing.daire_sayisi} daire
       </h1>
       <p className="mt-1 text-sm font-bold text-[#168f43]">

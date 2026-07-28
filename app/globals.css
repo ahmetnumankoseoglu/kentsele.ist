@@ -30,14 +30,14 @@
   --color-primary-active: var(--primary-active);
   --color-primary-soft: var(--primary-soft);
   --color-danger: var(--danger);
-  --font-sans: var(--font-roboto);
-  --font-display: var(--font-raleway);
+  --font-sans: var(--font-poppins);
+  --font-display: var(--font-poppins);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto), Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-poppins), Poppins, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -45,7 +45,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-raleway), Raleway, Helvetica, Arial, sans-serif;
+  font-family: var(--font-poppins), Poppins, Helvetica, Arial, sans-serif;
   font-weight: 700;
   letter-spacing: -0.01em;
 }

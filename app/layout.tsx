@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Raleway, Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const raleway = Raleway({
-  variable: "--font-raleway",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700"],
-});
-
-const roboto = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -29,11 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="tr"
-      className={`${raleway.variable} ${roboto.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-white text-[#111321]">
+    <html lang="tr" className={`${poppins.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-white font-sans text-[#111321]">
         {children}
       </body>
     </html>

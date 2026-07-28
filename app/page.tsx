@@ -3,9 +3,27 @@ import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { ListingCard } from "@/components/ilan/ListingCard";
 import { IlceFilter } from "@/components/ilan/IlceFilter";
+import { FaqAccordion } from "@/components/home/FaqAccordion";
+import { HomeFooter } from "@/components/home/HomeFooter";
 import { getPublicListings } from "@/lib/listings/queries";
 import { isValidIstanbulIlce } from "@/lib/constants/istanbul-ilceler";
+import { ISTANBUL_ILCELER } from "@/lib/constants/istanbul-ilceler";
 import type { PublicListing } from "@/types/listing";
+
+const POPULAR_ILCELER = [
+  "Kadıköy",
+  "Üsküdar",
+  "Beşiktaş",
+  "Bakırköy",
+  "Maltepe",
+  "Kartal",
+  "Fatih",
+  "Şişli",
+  "Bahçelievler",
+  "Küçükçekmece",
+  "Pendik",
+  "Ümraniye",
+] as const;
 
 export default async function HomePage({
   searchParams,
@@ -27,7 +45,7 @@ export default async function HomePage({
 
   return (
     <AppShell fullBleed>
-      {/* Hero — Armut service page style */}
+      {/* Hero */}
       <section className="relative overflow-hidden bg-[#111321] text-white">
         <div
           className="absolute inset-0 opacity-40"
@@ -43,10 +61,7 @@ export default async function HomePage({
           <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
             İstanbul · Kentsel Dönüşüm
           </p>
-          <h1
-            className="mt-2 text-[26px] font-bold leading-tight text-white"
-            style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-          >
+          <h1 className="mt-2 text-[26px] font-bold leading-tight text-white">
             Kentsel dönüşüm ilanı ver, müteahhit bul.
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-white/80">
@@ -59,12 +74,52 @@ export default async function HomePage({
           >
             BAŞLA
           </Link>
+          <p className="mt-3 text-xs text-white/55">
+            39 ilçe · Ücretsiz ilan · Üyeliksiz iletişim
+          </p>
         </div>
       </section>
 
       <div className="mx-auto max-w-lg px-4">
-        {/* How it works */}
+        {/* Why */}
         <section className="py-8">
+          <h2 className="section-title">Neden kentsele.ist?</h2>
+          <div className="grid gap-3">
+            {[
+              {
+                t: "İstanbul’a özel",
+                d: "Sadece İstanbul kentsel dönüşüm ilanları. 39 ilçenin tamamı tek yerde.",
+              },
+              {
+                t: "Ücretsiz ve sade",
+                d: "İlan vermek, incelemek ve aramak ücretsiz. Karmaşık üyelik yok.",
+              },
+              {
+                t: "Teyitli yayın",
+                d: "İlanlar ekip teyidi sonrası yayına alınır; sahte ilan riski azalır.",
+              },
+              {
+                t: "Doğrudan iletişim",
+                d: "Müteahhitler Ara / WhatsApp ile malikle hemen görüşür.",
+              },
+            ].map((item) => (
+              <div key={item.t} className="card flex gap-3 p-4">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ee] text-sm font-bold text-[#168f43]">
+                  ✓
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-[#111321]">{item.t}</p>
+                  <p className="mt-0.5 text-sm leading-snug text-[#6b7280]">
+                    {item.d}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section className="pb-8">
           <h2 className="section-title">Nasıl çalışır?</h2>
           <div className="grid gap-3">
             {[
@@ -95,10 +150,13 @@ export default async function HomePage({
               </div>
             ))}
           </div>
+          <Link href="/ilan-ver" className="btn-primary mt-5 w-full">
+            Hemen İlan Ver
+          </Link>
         </section>
 
         {/* Listings */}
-        <section className="pb-4">
+        <section className="pb-8">
           <div className="mb-4 flex items-end justify-between gap-2">
             <h2 className="section-title mb-0 pb-2">
               {ilce ? `${ilce} ilanları` : "Güncel ilanlar"}
@@ -134,7 +192,59 @@ export default async function HomePage({
             )}
           </div>
         </section>
+
+        {/* Popular districts */}
+        <section className="pb-8">
+          <h2 className="section-title">Popüler ilçeler</h2>
+          <p className="mb-4 -mt-2 text-sm text-[#6b7280]">
+            İstanbul’un en çok aranan kentsel dönüşüm bölgelerine hızlı filtre.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {POPULAR_ILCELER.map((name) => (
+              <Link
+                key={name}
+                href={`/?ilce=${encodeURIComponent(name)}`}
+                className="rounded-full border border-[#e3e4e6] bg-white px-3.5 py-2 text-xs font-semibold text-[#111321] transition hover:border-[#2cb34f] hover:text-[#168f43]"
+              >
+                {name}
+              </Link>
+            ))}
+            <Link
+              href="/"
+              className="rounded-full bg-[#eaf8ee] px-3.5 py-2 text-xs font-bold text-[#168f43]"
+            >
+              Tüm {ISTANBUL_ILCELER.length} ilçe
+            </Link>
+          </div>
+        </section>
+
+        {/* Mid CTA band */}
+        <section className="mb-8 overflow-hidden rounded-lg bg-[#111321] px-5 py-7 text-center text-white">
+          <h2 className="text-lg font-bold">
+            Kentsel dönüşüm için teklif mi arıyorsun?
+          </h2>
+          <p className="mt-2 text-sm text-white/70">
+            İlanını 2 dakikada oluştur; teyit sonrası müteahhitler seni arasın.
+          </p>
+          <Link
+            href="/ilan-ver"
+            className="btn-primary mt-5 inline-flex min-w-[200px]"
+          >
+            Ücretsiz İlan Ver
+          </Link>
+        </section>
+
+        {/* FAQ */}
+        <section className="pb-8">
+          <h2 className="section-title">Sıkça sorulan sorular</h2>
+          <FaqAccordion />
+          <Link href="/ilan-ver" className="btn-primary mt-6 w-full">
+            Hâlâ soruların mı var? İlan ver, arayalım
+          </Link>
+        </section>
       </div>
+
+      <HomeFooter />
     </AppShell>
   );
 }

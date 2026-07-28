@@ -110,10 +110,7 @@ export function IlanVerWizard() {
         <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
 
-      <h1
-        className="text-[22px] font-bold leading-snug text-[#111321]"
-        style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif" }}
-      >
+      <h1 className="text-[22px] font-bold leading-snug text-[#111321]">
         {meta.title}
       </h1>
       <p className="mt-1 text-sm text-[#6b7280]">{meta.sub}</p>

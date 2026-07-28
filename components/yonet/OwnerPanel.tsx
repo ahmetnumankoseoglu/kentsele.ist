@@ -335,7 +335,7 @@ export function OwnerPanel({
             type="button"
             disabled={loading}
             onClick={save}
-            className="h-12 w-full rounded-xl bg-[#0B6E4F] text-sm font-medium text-white disabled:opacity-60"
+            className="h-12 w-full rounded-xl bg-[#2cb34f] hover:bg-[#1ca03e] text-sm font-medium text-white disabled:opacity-60"
           >
             {loading ? "Kaydediliyor…" : "Kaydet"}
           </button>

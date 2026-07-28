@@ -374,7 +374,7 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
           type="button"
           disabled={saveLoading}
           onClick={saveFields}
-          className="h-12 w-full rounded-xl bg-[#0B6E4F] text-sm font-medium text-white disabled:opacity-60"
+          className="h-12 w-full rounded-xl bg-[#2cb34f] hover:bg-[#1ca03e] text-sm font-medium text-white disabled:opacity-60"
         >
           {saveLoading ? "Kaydediliyor…" : "Alanları kaydet"}
         </button>
