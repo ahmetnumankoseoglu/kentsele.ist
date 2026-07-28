@@ -58,16 +58,21 @@ export async function sendTemplateEmail(opts: {
   const templateId = getTemplateId(opts.alias);
   if (templateId) {
     try {
+      // Resend requires all template variables to be strings (not numbers)
+      const variables: Record<string, string> = {
+        YEAR: String(new Date().getFullYear()),
+      };
+      for (const [k, v] of Object.entries(opts.variables)) {
+        variables[k] = v == null ? "" : String(v);
+      }
+
       const { data, error } = await resend.emails.send({
         from: getEmailFrom(),
         to: opts.to,
         replyTo: opts.replyTo,
         template: {
           id: templateId,
-          variables: {
-            YEAR: new Date().getFullYear(),
-            ...opts.variables,
-          },
+          variables,
         },
       });
       if (error) {

@@ -5,8 +5,10 @@
  *   set RESEND_API_KEY=re_xxx
  *   node scripts/resend-import-templates.mjs
  *
- * Optional:
- *   EMAIL_FROM="Kentsele <onboarding@resend.dev>"
+ * Notes:
+ * - YEAR and all variables must be strings when sending.
+ * - previewText is embedded as preheader + PREVIEW_TEXT variable (inbox snippet).
+ * - HTML is a body fragment (no full document) so Resend visual editor keeps content.
  */
 
 import { writeFileSync, mkdirSync } from "fs";
@@ -41,92 +43,83 @@ const BRAND = {
   footer: "#9ca3af",
 };
 
-function layout({ preheader, title, bodyHtml, ctaLabel, ctaHrefVar, footerNote }) {
-  const pre = preheader
-    ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${preheader}</div>`
-    : "";
+/**
+ * Resend-friendly HTML fragment:
+ * - No <!DOCTYPE>/<html>/<head> (visual editor often treats full docs as empty)
+ * - Explicit preheader for inbox preview text
+ */
+function layout({ title, bodyHtml, ctaLabel, ctaHrefVar, footerNote }) {
   const cta = ctaLabel
-    ? `
-      <tr>
-        <td style="padding:8px 32px 28px;">
-          <a href="{{{${ctaHrefVar}}}}"
-             style="display:inline-block;background:${BRAND.primary};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:3px;">
-            ${ctaLabel}
-          </a>
-        </td>
-      </tr>`
-    : "";
-  const foot = footerNote
-    ? `<p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:${BRAND.footer};">${footerNote}</p>`
+    ? `<div style="margin:8px 0 24px;">
+        <a href="{{{${ctaHrefVar}}}}" style="display:inline-block;background:${BRAND.primary};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:3px;">
+          ${ctaLabel}
+        </a>
+      </div>`
     : "";
 
-  return `<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>${title}</title>
-</head>
-<body style="margin:0;padding:0;background:${BRAND.bg};">
-  ${pre}
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:${BRAND.bg};padding:24px 12px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:${BRAND.card};border-radius:4px;border:1px solid ${BRAND.border};overflow:hidden;">
-          <tr>
-            <td style="background:${BRAND.ink};padding:20px 32px;">
-              <a href="${SITE}" style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:700;color:#ffffff;text-decoration:none;">
-                kentsele<span style="color:${BRAND.primary};">.ist</span>
-              </a>
-              <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${BRAND.primary};">
-                İstanbul · Kentsel Dönüşüm
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:28px 32px 8px;font-family:Arial,Helvetica,sans-serif;">
-              <h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;color:${BRAND.ink};font-weight:700;">
-                ${title}
-              </h1>
-              <div style="font-size:14px;line-height:1.65;color:${BRAND.muted};">
-                ${bodyHtml}
-              </div>
-            </td>
-          </tr>
-          ${cta}
-          <tr>
-            <td style="padding:20px 32px 28px;border-top:1px solid ${BRAND.border};font-family:Arial,Helvetica,sans-serif;">
-              ${foot}
-              <p style="margin:0;font-size:12px;line-height:1.5;color:${BRAND.footer};">
-                © {{{YEAR}}} kentsele.ist · Yalnızca İstanbul<br/>
-                <a href="${SITE}" style="color:${BRAND.primaryDark};text-decoration:none;">kentsele.ist</a>
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+  const footNote = footerNote
+    ? `<p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:${BRAND.footer};font-family:Arial,Helvetica,sans-serif;">${footerNote}</p>`
+    : "";
+
+  return `<!--[if mso]><style type="text/css">body, table, td {font-family: Arial, Helvetica, sans-serif !important;}</style><![endif]-->
+<div style="display:none;font-size:1px;color:#f4f5f7;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">
+  {{{PREVIEW_TEXT}}}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${BRAND.bg};margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background:${BRAND.card};border:1px solid ${BRAND.border};border-radius:4px;">
+        <tr>
+          <td style="background:${BRAND.ink};padding:20px 28px;font-family:Arial,Helvetica,sans-serif;">
+            <p style="margin:0;font-size:18px;font-weight:700;color:#ffffff;line-height:1.2;">
+              kentsele<span style="color:${BRAND.primary};">.ist</span>
+            </p>
+            <p style="margin:6px 0 0;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${BRAND.primary};">
+              İstanbul · Kentsel Dönüşüm
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 28px 8px;font-family:Arial,Helvetica,sans-serif;">
+            <h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;color:${BRAND.ink};font-weight:700;">
+              ${title}
+            </h1>
+            <div style="font-size:14px;line-height:1.65;color:${BRAND.muted};">
+              ${bodyHtml}
+            </div>
+            ${cta}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 28px 28px;border-top:1px solid ${BRAND.border};font-family:Arial,Helvetica,sans-serif;">
+            ${footNote}
+            <p style="margin:0;font-size:12px;line-height:1.5;color:${BRAND.footer};">
+              © {{{YEAR}}} kentsele.ist · Yalnızca İstanbul<br/>
+              <a href="${SITE}" style="color:${BRAND.primaryDark};text-decoration:none;">kentsele.ist</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
 }
 
 function p(html) {
-  return `<p style="margin:0 0 14px;color:${BRAND.muted};font-size:14px;line-height:1.65;">${html}</p>`;
+  return `<p style="margin:0 0 14px;color:${BRAND.muted};font-size:14px;line-height:1.65;font-family:Arial,Helvetica,sans-serif;">${html}</p>`;
 }
 
 function metaBoxRows(rows) {
-  // rows: [{label, valueHtml}]
   const lines = rows
     .map(
       (r) => `<tr>
-          <td style="padding:6px 0;font-size:13px;color:${BRAND.footer};width:40%;">${r.label}</td>
-          <td style="padding:6px 0;font-size:13px;color:${BRAND.ink};font-weight:600;">${r.valueHtml}</td>
+          <td style="padding:6px 0;font-size:13px;color:${BRAND.footer};width:40%;font-family:Arial,Helvetica,sans-serif;">${r.label}</td>
+          <td style="padding:6px 0;font-size:13px;color:${BRAND.ink};font-weight:600;font-family:Arial,Helvetica,sans-serif;">${r.valueHtml}</td>
         </tr>`
     )
     .join("");
-  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 16px;background:#f8f8f8;border-radius:3px;border:1px solid ${BRAND.border};">
-    <tr><td style="padding:12px 16px;"><table role="presentation" width="100%">${lines}</table></td></tr>
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 16px;background:#f8f8f8;border-radius:3px;border:1px solid ${BRAND.border};">
+    <tr><td style="padding:12px 16px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">${lines}</table></td></tr>
   </table>`;
 }
 
@@ -139,10 +132,11 @@ const listingMeta = metaBoxRows([
 const str = (key, fallback = "") => ({
   key,
   type: "string",
-  fallbackValue: fallback,
+  fallbackValue: String(fallback ?? ""),
 });
 
 const commonListingVars = [
+  str("PREVIEW_TEXT", "İlanınız hakkında bilgilendirme"),
   str("NAME", "Malik"),
   str("ILCE", "İstanbul"),
   str("MAHALLE", "—"),
@@ -152,15 +146,28 @@ const commonListingVars = [
   str("YEAR", YEAR),
 ];
 
+function plainText(lines) {
+  return lines.filter(Boolean).join("\n\n");
+}
+
 const templates = [
   {
     alias: "listing-received",
     name: "Kentsele · İlan alındı (incelemede)",
     subject: "İlanınız incelemede · {{{ILCE}}} · kentsele.ist",
+    previewFallback: "İlanınız alındı ve ekibimiz inceliyor.",
     variables: commonListingVars,
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Kentsel dönüşüm ilanınızı aldık. Ekibimiz kısa bir teyit süreci yürütür; onay sonrası ilanınız yayına alınır.",
+      "İlçe: {{{ILCE}}}",
+      "Mahalle: {{{MAHALLE}}}",
+      "Bina: {{{BUILDING}}}",
+      "İlanını yönet: {{{MANAGE_URL}}}",
+    ]),
     html: layout({
       title: "İlanınız alındı — incelemede",
-      preheader: "{{{ILCE}}} ilanınız ekibimiz tarafından inceleniyor.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -181,10 +188,16 @@ const templates = [
     alias: "listing-published",
     name: "Kentsele · İlan yayında",
     subject: "İlanınız yayında · {{{ILCE}}} · kentsele.ist",
+    previewFallback: "İlanınız onaylandı ve yayında.",
     variables: commonListingVars,
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "İlanınız onaylandı ve İstanbul kentsel dönüşüm listesinde yayında.",
+      "İlanı gör: {{{PUBLIC_URL}}}",
+    ]),
     html: layout({
       title: "İlanınız yayında",
-      preheader: "{{{ILCE}}} ilanınız onaylandı ve yayında.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -200,10 +213,16 @@ const templates = [
     alias: "listing-back-to-review",
     name: "Kentsele · İlan yeniden incelemede",
     subject: "İlan yeniden incelemede · {{{ILCE}}}",
+    previewFallback: "Güncellemeniz nedeniyle ilan yeniden incelemede.",
     variables: commonListingVars,
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "İlanınız yeniden inceleme kuyruğuna alındı.",
+      "Yönet: {{{MANAGE_URL}}}",
+    ]),
     html: layout({
       title: "İlanınız yeniden incelemede",
-      preheader: "Yaptığınız güncelleme nedeniyle ilan yeniden incelenecek.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -219,10 +238,15 @@ const templates = [
     alias: "listing-agreed",
     name: "Kentsele · Anlaşma sağlandı",
     subject: "Anlaşma sağlandı · {{{ILCE}}}",
+    previewFallback: "İlanınız anlaşma sağlandı olarak işaretlendi.",
     variables: commonListingVars,
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "İlanınız Anlaşma sağlandı durumuna alındı.",
+    ]),
     html: layout({
       title: "Anlaşma sağlandı olarak işaretlendi",
-      preheader: "İlanınız artık teklife kapalı.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -238,13 +262,19 @@ const templates = [
     alias: "listing-removed",
     name: "Kentsele · İlan kaldırıldı",
     subject: "İlan kaldırıldı · {{{ILCE}}}",
+    previewFallback: "İlanınız yayından kaldırıldı.",
     variables: [
       ...commonListingVars,
       str("ILAN_VER_URL", `${SITE}/ilan-ver`),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "İlanınız yayından kaldırıldı.",
+      "Yeni ilan: {{{ILAN_VER_URL}}}",
+    ]),
     html: layout({
       title: "İlanınız yayından kaldırıldı",
-      preheader: "İlanınız artık listelerde görünmüyor.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -260,15 +290,22 @@ const templates = [
     alias: "activate-account",
     name: "Kentsele · Üyelik aktifleştir",
     subject: "Üyeliğini aktifleştir · kentsele.ist",
+    previewFallback: "Aynı e-posta ile kayıt ol, ilanını kolay yönet.",
     variables: [
+      str("PREVIEW_TEXT", "Aynı e-posta ile kayıt ol, ilanını kolay yönet."),
       str("NAME", "Malik"),
       str("USER_EMAIL", "ornek@example.com"),
       str("REGISTER_URL", `${SITE}/kayit`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "{{{USER_EMAIL}}} adresiyle ücretsiz hesap aç.",
+      "Kayıt: {{{REGISTER_URL}}}",
+    ]),
     html: layout({
       title: "Hesabını aktifleştir — ilanını kolay yönet",
-      preheader: "Aynı e-posta ile kayıt ol, ilanlarını tek yerden yönet.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -286,14 +323,21 @@ const templates = [
     alias: "welcome-malik",
     name: "Kentsele · Hoş geldin malik",
     subject: "Hoş geldin · kentsele.ist",
+    previewFallback: "Malik hesabın hazır — ücretsiz ilan ver.",
     variables: [
+      str("PREVIEW_TEXT", "Malik hesabın hazır — ücretsiz ilan ver."),
       str("NAME", "Malik"),
       str("ILAN_VER_URL", `${SITE}/ilan-ver`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Malik hesabın oluşturuldu.",
+      "İlan ver: {{{ILAN_VER_URL}}}",
+    ]),
     html: layout({
       title: "Hoş geldin — malik hesabın hazır",
-      preheader: "Ücretsiz ilan ver, onaylı müteahhitlerle buluş.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -308,15 +352,22 @@ const templates = [
     alias: "welcome-contractor",
     name: "Kentsele · Müteahhit kaydı",
     subject: "Müteahhit kaydın alındı · kentsele.ist",
+    previewFallback: "Belge yükle, onay sonrası iletişime geç.",
     variables: [
+      str("PREVIEW_TEXT", "Belge yükle, onay sonrası iletişime geç."),
       str("NAME", "Müteahhit"),
       str("COMPANY", "Firma"),
       str("MUTEAHHIT_URL", `${SITE}/muteahhit`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "{{{COMPANY}}} için müteahhit kaydın oluşturuldu.",
+      "Panel: {{{MUTEAHHIT_URL}}}",
+    ]),
     html: layout({
       title: "Müteahhit kaydın alındı",
-      preheader: "Belge yükle, onay sonrası malik iletişimini gör.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -334,14 +385,21 @@ const templates = [
     alias: "contractor-approved",
     name: "Kentsele · Müteahhit onaylandı",
     subject: "Müteahhit hesabın onaylandı · kentsele.ist",
+    previewFallback: "Hesabın onaylandı — malik iletişimleri açık.",
     variables: [
+      str("PREVIEW_TEXT", "Hesabın onaylandı — malik iletişimleri açık."),
       str("NAME", "Müteahhit"),
       str("ILANLAR_URL", `${SITE}/ilanlar`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Hesabın onaylandı.",
+      "İlanlar: {{{ILANLAR_URL}}}",
+    ]),
     html: layout({
       title: "Hesabın onaylandı — iletişim açık",
-      preheader: "Artık malik numaralarını görebilirsin.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -356,15 +414,23 @@ const templates = [
     alias: "contractor-rejected",
     name: "Kentsele · Müteahhit red",
     subject: "Müteahhit başvurusu güncellendi · kentsele.ist",
+    previewFallback: "Başvurun onaylanmadı — detaylara bak.",
     variables: [
+      str("PREVIEW_TEXT", "Başvurun onaylanmadı — detaylara bak."),
       str("NAME", "Müteahhit"),
       str("REASON", "Belgeleri paneldan yeniden yükleyebilirsin."),
       str("MUTEAHHIT_URL", `${SITE}/muteahhit`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Başvurun onaylanmadı.",
+      "Not: {{{REASON}}}",
+      "Panel: {{{MUTEAHHIT_URL}}}",
+    ]),
     html: layout({
       title: "Belge incelemesi tamamlanamadı",
-      preheader: "Hesabın onaylanmadı — detayları oku.",
       bodyHtml: [
         p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
         p(
@@ -382,18 +448,27 @@ const templates = [
     alias: "admin-contact",
     name: "Kentsele · Admin iletişim bildirimi",
     subject: "[İletişim] {{{SUBJECT}}}",
+    previewFallback: "Yeni iletişim formu mesajı.",
     variables: [
+      str("PREVIEW_TEXT", "Yeni iletişim formu mesajı."),
       str("CONTACT_NAME", "Ziyaretçi"),
       str("CONTACT_EMAIL", "ornek@example.com"),
       str("PHONE", "—"),
       str("SUBJECT", "Mesaj"),
-      str("BODY", ""),
+      str("BODY", "—"),
       str("ADMIN_URL", `${SITE}/yonetim/iletisim`),
       str("YEAR", YEAR),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Ad: {{{CONTACT_NAME}}}",
+      "E-posta: {{{CONTACT_EMAIL}}}",
+      "Telefon: {{{PHONE}}}",
+      "Konu: {{{SUBJECT}}}",
+      "{{{BODY}}}",
+    ]),
     html: layout({
       title: "Yeni iletişim mesajı",
-      preheader: "{{{SUBJECT}}}",
       bodyHtml: [
         metaBoxRows([
           { label: "Ad", valueHtml: "{{{CONTACT_NAME}}}" },
@@ -411,13 +486,18 @@ const templates = [
     alias: "admin-new-listing",
     name: "Kentsele · Admin yeni ilan",
     subject: "[İlan] {{{ILCE}}} · inceleme",
+    previewFallback: "Yeni ilan inceleme bekliyor.",
     variables: [
       ...commonListingVars,
       str("LISTING_ADMIN_URL", `${SITE}/yonetim/ilanlar`),
     ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Yeni ilan: {{{ILCE}}} · {{{NAME}}}",
+      "Admin: {{{LISTING_ADMIN_URL}}}",
+    ]),
     html: layout({
       title: "Yeni ilan — inceleme bekliyor",
-      preheader: "{{{ILCE}}} · {{{NAME}}}",
       bodyHtml: [
         p("Yeni bir kentsel dönüşüm ilanı oluşturuldu."),
         listingMeta,
@@ -428,6 +508,16 @@ const templates = [
     }),
   },
 ];
+
+// Ensure PREVIEW_TEXT default matches each template's previewFallback
+for (const t of templates) {
+  const pv = t.variables.find((v) => v.key === "PREVIEW_TEXT");
+  if (pv) pv.fallbackValue = t.previewFallback;
+  else
+    t.variables.unshift(
+      str("PREVIEW_TEXT", t.previewFallback || "kentsele.ist bilgilendirme")
+    );
+}
 
 async function listAll() {
   const all = [];
@@ -460,46 +550,73 @@ async function main() {
 
   for (const t of templates) {
     process.stdout.write(`→ ${t.alias} … `);
+    // Guard: html and text must never be empty
+    if (!t.html?.trim() || !t.text?.trim()) {
+      console.log("SKIP empty content in script definition");
+      results.push({ alias: t.alias, action: "skipped_empty_def" });
+      continue;
+    }
+
+    const payload = {
+      name: t.name,
+      alias: t.alias,
+      subject: t.subject,
+      from: FROM,
+      html: t.html,
+      text: t.text,
+      variables: t.variables,
+    };
+
     try {
       const found = byAlias.get(t.alias);
       if (found) {
-        const { data, error } = await resend.templates.update(found.id, {
-          name: t.name,
-          subject: t.subject,
-          html: t.html,
-          from: FROM,
-          alias: t.alias,
-          variables: t.variables,
-        });
+        const { error } = await resend.templates.update(found.id, payload);
         if (error) throw new Error(error.message);
         const pub = await resend.templates.publish(found.id);
         if (pub.error) throw new Error(pub.error.message);
-        console.log(`updated+published ${found.id}`);
+
+        // verify
+        const { data: got } = await resend.templates.get(found.id);
+        const ok =
+          got?.html &&
+          got.html.length > 100 &&
+          got.html.includes("kentsele") &&
+          got.text &&
+          got.text.length > 20;
+        console.log(
+          `updated+published ${found.id} html=${got?.html?.length || 0} text=${got?.text?.length || 0} ${ok ? "OK" : "WARN"}`
+        );
         results.push({
           alias: t.alias,
           id: found.id,
           action: "updated",
           subject: t.subject,
+          htmlLen: got?.html?.length || 0,
+          textLen: got?.text?.length || 0,
+          ok,
         });
       } else {
-        const published = await resend.templates
-          .create({
-            name: t.name,
-            alias: t.alias,
-            subject: t.subject,
-            from: FROM,
-            html: t.html,
-            variables: t.variables,
-          })
-          .publish();
+        const published = await resend.templates.create(payload).publish();
         if (published.error) throw new Error(published.error.message);
         const id = published.data?.id ?? null;
-        console.log(`created+published ${id || "?"}`);
+        let htmlLen = 0;
+        let textLen = 0;
+        if (id) {
+          const { data: got } = await resend.templates.get(id);
+          htmlLen = got?.html?.length || 0;
+          textLen = got?.text?.length || 0;
+        }
+        console.log(
+          `created+published ${id || "?"} html=${htmlLen} text=${textLen}`
+        );
         results.push({
           alias: t.alias,
           id,
           action: "created",
           subject: t.subject,
+          htmlLen,
+          textLen,
+          ok: htmlLen > 100,
         });
       }
     } catch (e) {
@@ -512,7 +629,6 @@ async function main() {
     }
   }
 
-  // Refresh IDs from list
   try {
     const listed = await listAll();
     for (const r of results) {
@@ -534,8 +650,11 @@ async function main() {
     ),
   };
 
-  const outPath = join(root, "lib", "email", "resend-template-ids.json");
-  writeFileSync(outPath, JSON.stringify(out, null, 2), "utf8");
+  writeFileSync(
+    join(root, "lib", "email", "resend-template-ids.json"),
+    JSON.stringify(out, null, 2),
+    "utf8"
+  );
   mkdirSync(join(root, "docs", "email-html"), { recursive: true });
   writeFileSync(
     join(root, "docs", "email-html", "resend-import-result.json"),
@@ -545,6 +664,11 @@ async function main() {
 
   console.log("\nSaved mapping → lib/email/resend-template-ids.json");
   console.log(JSON.stringify(out.byAlias, null, 2));
+  const bad = results.filter((r) => r.action === "failed" || r.ok === false);
+  if (bad.length) {
+    console.error("\nSome templates need attention:", bad);
+    process.exit(1);
+  }
 }
 
 main().catch((e) => {

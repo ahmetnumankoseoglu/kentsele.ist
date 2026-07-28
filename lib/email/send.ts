@@ -10,6 +10,7 @@ function listingVars(listing: Listing) {
       ? `${listing.kat_sayisi} kat · ${listing.daire_sayisi} daire`
       : "—";
   return {
+    PREVIEW_TEXT: `${listing.ilce} ilanınız hakkında bilgilendirme`,
     NAME: listing.iletisim_adi,
     ILCE: listing.ilce,
     MAHALLE: listing.mahalle?.trim() || "—",
@@ -66,6 +67,7 @@ export async function emailOnListingCreated(listing: Listing) {
       to,
       alias: "activate-account",
       variables: {
+        PREVIEW_TEXT: "Aynı e-posta ile kayıt ol, ilanını kolay yönet.",
         NAME: listing.iletisim_adi,
         USER_EMAIL: to,
         REGISTER_URL: registerUrl,
@@ -107,7 +109,10 @@ export async function emailOnListingStatusChange(
       await sendTemplateEmail({
         to,
         alias: "listing-published",
-        variables: vars,
+        variables: {
+          ...vars,
+          PREVIEW_TEXT: `${listing.ilce} ilanınız onaylandı ve yayında.`,
+        },
         fallback: { to, ...mail },
       });
     }
@@ -123,7 +128,10 @@ export async function emailOnListingStatusChange(
       await sendTemplateEmail({
         to,
         alias: "listing-back-to-review",
-        variables: vars,
+        variables: {
+          ...vars,
+          PREVIEW_TEXT: "Güncellemeniz nedeniyle ilan yeniden incelemede.",
+        },
         fallback: { to, ...mail },
       });
     }
@@ -134,7 +142,10 @@ export async function emailOnListingStatusChange(
     await sendTemplateEmail({
       to,
       alias: "listing-agreed",
-      variables: vars,
+      variables: {
+        ...vars,
+        PREVIEW_TEXT: "İlanınız anlaşma sağlandı olarak işaretlendi.",
+      },
       fallback: { to, ...mail },
     });
     return;
@@ -144,7 +155,10 @@ export async function emailOnListingStatusChange(
     await sendTemplateEmail({
       to,
       alias: "listing-removed",
-      variables: vars,
+      variables: {
+        ...vars,
+        PREVIEW_TEXT: "İlanınız yayından kaldırıldı.",
+      },
       fallback: { to, ...mail },
     });
   }
@@ -166,6 +180,7 @@ export async function emailOnSignup(opts: {
       to: opts.email,
       alias: "welcome-contractor",
       variables: {
+        PREVIEW_TEXT: "Belge yükle, onay sonrası iletişime geç.",
         NAME: opts.full_name,
         COMPANY: opts.company_name || "Firma",
         MUTEAHHIT_URL: `${site}/muteahhit`,
@@ -178,6 +193,7 @@ export async function emailOnSignup(opts: {
       to: opts.email,
       alias: "welcome-malik",
       variables: {
+        PREVIEW_TEXT: "Malik hesabın hazır — ücretsiz ilan ver.",
         NAME: opts.full_name,
         ILAN_VER_URL: `${site}/ilan-ver`,
       },
@@ -199,6 +215,7 @@ export async function emailOnContractorStatus(opts: {
       to: opts.email,
       alias: "contractor-approved",
       variables: {
+        PREVIEW_TEXT: "Hesabın onaylandı — malik iletişimleri açık.",
         NAME: opts.name,
         ILANLAR_URL: `${site}/ilanlar`,
       },
@@ -213,6 +230,7 @@ export async function emailOnContractorStatus(opts: {
       to: opts.email,
       alias: "contractor-rejected",
       variables: {
+        PREVIEW_TEXT: "Başvurun onaylanmadı — detaylara bak.",
         NAME: opts.name,
         REASON:
           opts.reason?.trim() ||
@@ -240,6 +258,7 @@ export async function emailAdminContactMessage(opts: {
     alias: "admin-contact",
     replyTo: opts.email,
     variables: {
+      PREVIEW_TEXT: `Yeni mesaj: ${opts.subject}`,
       CONTACT_NAME: opts.name,
       CONTACT_EMAIL: opts.email,
       PHONE: opts.phone?.trim() || "—",
