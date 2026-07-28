@@ -2,55 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 import { toTelHref, toWhatsAppUrl } from "@/lib/phone";
-
-/** İkisi de aynı stroke stili — dolu/boş karışımı yok */
-function PhoneIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.5 10.5c.3 1.4 1.6 2.7 3 3M14 9.5c.7.3 1.4.9 1.8 1.6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 const actionBtnClass =
   "btn-primary !flex w-full items-center justify-center gap-2 !px-3 !py-3 text-sm";
@@ -143,16 +97,16 @@ export function ContactActions({
   return (
     <div className="grid grid-cols-2 gap-2">
       <a href={toTelHref(telefon)} className={actionBtnClass}>
-        <PhoneIcon />
+        <Phone className="h-[18px] w-[18px] shrink-0" strokeWidth={2.25} aria-hidden />
         <span>Ara</span>
       </a>
       <a
         href={toWhatsAppUrl(telefon)}
         target="_blank"
         rel="noopener noreferrer"
-        className={actionBtnClass}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-[3px] bg-[#25D366] px-3 py-3 text-sm font-bold text-white transition hover:bg-[#1ebe57]"
       >
-        <WhatsAppIcon />
+        <FaWhatsapp className="h-5 w-5 shrink-0" aria-hidden />
         <span>WhatsApp</span>
       </a>
     </div>
