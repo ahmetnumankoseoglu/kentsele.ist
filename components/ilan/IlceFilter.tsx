@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ISTANBUL_ILCELER } from "@/lib/constants/istanbul-ilceler";
 
@@ -11,6 +12,22 @@ export function IlceFilter({
   const router = useRouter();
   const params = useSearchParams();
   const current = params.get("ilce") ?? "";
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Header subnav ile aynı: fare tekerleği dikey → yatay kaydırma (masaüstü)
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   function go(ilce?: string) {
     if (!ilce) {
@@ -21,7 +38,12 @@ export function IlceFilter({
   }
 
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div
+      ref={scrollRef}
+      className="subnav-scroll flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1.5"
+      role="listbox"
+      aria-label="İlçe filtresi"
+    >
       <button
         type="button"
         onClick={() => go()}
