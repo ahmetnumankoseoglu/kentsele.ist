@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 import { safeInternalPath } from "@/lib/auth/safe-next";
+import { formatPhoneInput, normalizeTrPhone } from "@/lib/phone";
 
 export default function KayitPage() {
   const router = useRouter();
@@ -29,6 +30,18 @@ export default function KayitPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    let phoneNormalized: string | undefined;
+    if (phone.trim()) {
+      const n = normalizeTrPhone(phone);
+      if (!n) {
+        setError("Geçerli bir cep telefonu girin (05xx…)");
+        setLoading(false);
+        return;
+      }
+      phoneNormalized = n;
+    }
+
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
@@ -37,7 +50,7 @@ export default function KayitPage() {
           email,
           password,
           full_name: fullName,
-          phone,
+          phone: phoneNormalized,
           role,
           company_name: company,
         }),
@@ -125,10 +138,12 @@ export default function KayitPage() {
           />
         )}
         <input
-          className="input-field"
-          placeholder="Telefon"
+          className="input-field tabular-nums"
+          placeholder="Cep telefonu"
+          inputMode="tel"
+          autoComplete="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
         />
         <input
           className="input-field"
