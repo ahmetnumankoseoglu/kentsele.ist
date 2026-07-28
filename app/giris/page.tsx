@@ -63,6 +63,14 @@ export default function GirisPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <div className="flex justify-end">
+          <Link
+            href="/sifremi-unuttum"
+            className="text-xs font-semibold text-[#168f43] hover:underline"
+          >
+            Şifremi unuttum
+          </Link>
+        </div>
         {error && <p className="text-sm text-[#ee401d]">{error}</p>}
         <button type="submit" disabled={loading} className="btn-primary w-full">
           {loading ? "Giriş…" : "Giriş yap"}

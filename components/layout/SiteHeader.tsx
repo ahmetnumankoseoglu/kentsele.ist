@@ -28,13 +28,12 @@ function UserIcon({ className }: { className?: string }) {
 const navLinkClass =
   "shrink-0 rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] transition-colors hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm";
 
-/** Short unique labels (avoid long / repeated anchors) */
 const SUBNAV = [
-  { href: "/rehber/kentsel-donusum-nedir", label: "Nedir?" },
-  { href: "/rehber/6306-sayili-kanun", label: "6306" },
-  { href: "/rehber/kira-yardimi", label: "Kira" },
-  { href: "/rehber/hibe-ve-kredi-hesaplama", label: "Hibe" },
-  { href: "/rehber", label: "Tümü" },
+  { href: "/rehber/kentsel-donusum-nedir", label: "Kentsel dönüşüm nedir" },
+  { href: "/rehber/6306-sayili-kanun", label: "6306 sayılı kanun" },
+  { href: "/rehber/kira-yardimi", label: "Kira yardımı" },
+  { href: "/rehber/hibe-ve-kredi-hesaplama", label: "Hibe & kredi" },
+  { href: "/rehber", label: "Rehber" },
 ] as const;
 
 export function SiteHeader() {
@@ -98,11 +97,11 @@ export function SiteHeader() {
             </Link>
           )}
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
-            <Link href="/ilanlar" className={navLinkClass} title="İlan listesi">
-              Liste
+            <Link href="/ilanlar" className={navLinkClass}>
+              İlanlar
             </Link>
-            <Link href="/haberler" className={navLinkClass} title="Haberler">
-              Haber
+            <Link href="/haberler" className={navLinkClass}>
+              Haberler
             </Link>
             <Link
               href="/hesabim"

@@ -17,6 +17,8 @@ export default function robots(): MetadataRoute.Robots {
           "/kayit",
           "/hesabim",
           "/muteahhit",
+          "/sifremi-unuttum",
+          "/sifre-yenile",
         ],
       },
       {
