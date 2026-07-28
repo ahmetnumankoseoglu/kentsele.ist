@@ -1,7 +1,25 @@
 import { getSiteUrl } from "@/lib/seo/site";
-import { getAdminNotifyEmail, sendEmail } from "./resend";
+import { getAdminNotifyEmail, sendTemplateEmail } from "./resend";
 import * as T from "./templates";
 import type { Listing } from "@/types/listing";
+
+function listingVars(listing: Listing) {
+  const site = getSiteUrl();
+  const building =
+    listing.kat_sayisi && listing.daire_sayisi
+      ? `${listing.kat_sayisi} kat · ${listing.daire_sayisi} daire`
+      : "—";
+  return {
+    NAME: listing.iletisim_adi,
+    ILCE: listing.ilce,
+    MAHALLE: listing.mahalle?.trim() || "—",
+    BUILDING: building,
+    MANAGE_URL: `${site}/yonet/${listing.manage_token}`,
+    PUBLIC_URL: `${site}/ilan/${listing.slug}`,
+    ILAN_VER_URL: `${site}/ilan-ver`,
+    LISTING_ADMIN_URL: `${site}/yonetim/ilanlar/${listing.id}`,
+  };
+}
 
 function listingCtx(listing: Listing) {
   const site = getSiteUrl();
@@ -25,18 +43,35 @@ function toEmail(listing: Listing): string | null {
 /** Fire after listing create — malik + optional admin */
 export async function emailOnListingCreated(listing: Listing) {
   const ctx = listingCtx(listing);
+  const vars = listingVars(listing);
   const to = toEmail(listing);
+  const site = getSiteUrl();
+
   if (to) {
     const received = T.templateListingReceived(ctx);
-    await sendEmail({ to, ...received });
+    await sendTemplateEmail({
+      to,
+      alias: "listing-received",
+      variables: vars,
+      fallback: { to, ...received },
+    });
 
-    // Invite to activate account (same address)
+    const registerUrl = `${site}/kayit?next=${encodeURIComponent(vars.MANAGE_URL)}`;
     const activate = T.templateActivateAccount({
       name: listing.iletisim_adi,
       email: to,
-      manageUrl: ctx.manageUrl,
+      manageUrl: vars.MANAGE_URL,
     });
-    await sendEmail({ to, ...activate });
+    await sendTemplateEmail({
+      to,
+      alias: "activate-account",
+      variables: {
+        NAME: listing.iletisim_adi,
+        USER_EMAIL: to,
+        REGISTER_URL: registerUrl,
+      },
+      fallback: { to, ...activate },
+    });
   }
 
   const adminTo = getAdminNotifyEmail();
@@ -45,7 +80,12 @@ export async function emailOnListingCreated(listing: Listing) {
       ...ctx,
       listingId: listing.id,
     });
-    await sendEmail({ to: adminTo, ...adminMail });
+    await sendTemplateEmail({
+      to: adminTo,
+      alias: "admin-new-listing",
+      variables: vars,
+      fallback: { to: adminTo, ...adminMail },
+    });
   }
 }
 
@@ -59,34 +99,54 @@ export async function emailOnListingStatusChange(
   const to = toEmail(listing);
   if (!to) return;
   const ctx = listingCtx(listing);
+  const vars = listingVars(listing);
 
   if (nextStatus === "yayinda" || nextStatus === "teklif_saglaniyor") {
     if (prevStatus !== "yayinda" && prevStatus !== "teklif_saglaniyor") {
       const mail = T.templateListingPublished(ctx);
-      await sendEmail({ to, ...mail });
+      await sendTemplateEmail({
+        to,
+        alias: "listing-published",
+        variables: vars,
+        fallback: { to, ...mail },
+      });
     }
     return;
   }
   if (nextStatus === "incelemede" && prevStatus !== "incelemede") {
-    // Only if was public before (edit re-review)
     if (
       prevStatus === "yayinda" ||
       prevStatus === "teklif_saglaniyor" ||
       prevStatus === "anlasildi"
     ) {
       const mail = T.templateListingBackToReview(ctx);
-      await sendEmail({ to, ...mail });
+      await sendTemplateEmail({
+        to,
+        alias: "listing-back-to-review",
+        variables: vars,
+        fallback: { to, ...mail },
+      });
     }
     return;
   }
   if (nextStatus === "anlasildi") {
     const mail = T.templateListingAgreed(ctx);
-    await sendEmail({ to, ...mail });
+    await sendTemplateEmail({
+      to,
+      alias: "listing-agreed",
+      variables: vars,
+      fallback: { to, ...mail },
+    });
     return;
   }
   if (nextStatus === "kaldirildi") {
     const mail = T.templateListingRemoved(ctx);
-    await sendEmail({ to, ...mail });
+    await sendTemplateEmail({
+      to,
+      alias: "listing-removed",
+      variables: vars,
+      fallback: { to, ...mail },
+    });
   }
 }
 
@@ -96,15 +156,33 @@ export async function emailOnSignup(opts: {
   role: "malik" | "muteahhit";
   company_name?: string;
 }) {
+  const site = getSiteUrl();
   if (opts.role === "muteahhit") {
     const mail = T.templateWelcomeContractor({
       name: opts.full_name,
       company: opts.company_name,
     });
-    await sendEmail({ to: opts.email, ...mail });
+    await sendTemplateEmail({
+      to: opts.email,
+      alias: "welcome-contractor",
+      variables: {
+        NAME: opts.full_name,
+        COMPANY: opts.company_name || "Firma",
+        MUTEAHHIT_URL: `${site}/muteahhit`,
+      },
+      fallback: { to: opts.email, ...mail },
+    });
   } else {
     const mail = T.templateWelcomeMalik({ name: opts.full_name });
-    await sendEmail({ to: opts.email, ...mail });
+    await sendTemplateEmail({
+      to: opts.email,
+      alias: "welcome-malik",
+      variables: {
+        NAME: opts.full_name,
+        ILAN_VER_URL: `${site}/ilan-ver`,
+      },
+      fallback: { to: opts.email, ...mail },
+    });
   }
 }
 
@@ -114,15 +192,35 @@ export async function emailOnContractorStatus(opts: {
   status: "approved" | "rejected" | "pending";
   reason?: string | null;
 }) {
+  const site = getSiteUrl();
   if (opts.status === "approved") {
     const mail = T.templateContractorApproved({ name: opts.name });
-    await sendEmail({ to: opts.email, ...mail });
+    await sendTemplateEmail({
+      to: opts.email,
+      alias: "contractor-approved",
+      variables: {
+        NAME: opts.name,
+        ILANLAR_URL: `${site}/ilanlar`,
+      },
+      fallback: { to: opts.email, ...mail },
+    });
   } else if (opts.status === "rejected") {
     const mail = T.templateContractorRejected({
       name: opts.name,
       reason: opts.reason,
     });
-    await sendEmail({ to: opts.email, ...mail });
+    await sendTemplateEmail({
+      to: opts.email,
+      alias: "contractor-rejected",
+      variables: {
+        NAME: opts.name,
+        REASON:
+          opts.reason?.trim() ||
+          "Belgeleri paneldan yeniden yükleyebilirsin.",
+        MUTEAHHIT_URL: `${site}/muteahhit`,
+      },
+      fallback: { to: opts.email, ...mail },
+    });
   }
 }
 
@@ -135,10 +233,24 @@ export async function emailAdminContactMessage(opts: {
 }) {
   const adminTo = getAdminNotifyEmail();
   if (!adminTo) return;
+  const site = getSiteUrl();
   const mail = T.templateAdminContactNotify(opts);
-  await sendEmail({
+  await sendTemplateEmail({
     to: adminTo,
+    alias: "admin-contact",
     replyTo: opts.email,
-    ...mail,
+    variables: {
+      CONTACT_NAME: opts.name,
+      CONTACT_EMAIL: opts.email,
+      PHONE: opts.phone?.trim() || "—",
+      SUBJECT: opts.subject,
+      BODY: opts.body,
+      ADMIN_URL: `${site}/yonetim/iletisim`,
+    },
+    fallback: {
+      to: adminTo,
+      replyTo: opts.email,
+      ...mail,
+    },
   });
 }

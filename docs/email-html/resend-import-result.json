@@ -1,0 +1,92 @@
+{
+  "importedAt": "2026-07-28T23:12:24.487Z",
+  "from": "Kentsele <onboarding@resend.dev>",
+  "templates": [
+    {
+      "alias": "listing-received",
+      "id": "c2dfb668-85d5-45cd-97d4-d523f3c8a1b4",
+      "action": "updated",
+      "subject": "İlanınız incelemede · {{{ILCE}}} · kentsele.ist"
+    },
+    {
+      "alias": "listing-published",
+      "id": "c0c0cd2f-2173-433f-86c1-ff38463e8fc0",
+      "action": "updated",
+      "subject": "İlanınız yayında · {{{ILCE}}} · kentsele.ist"
+    },
+    {
+      "alias": "listing-back-to-review",
+      "id": "2f67214a-00ea-44fa-b9b4-12c9013bd794",
+      "action": "updated",
+      "subject": "İlan yeniden incelemede · {{{ILCE}}}"
+    },
+    {
+      "alias": "listing-agreed",
+      "id": "641c5281-5f7f-4434-9dc8-095fe81a31d4",
+      "action": "updated",
+      "subject": "Anlaşma sağlandı · {{{ILCE}}}"
+    },
+    {
+      "alias": "listing-removed",
+      "id": "263a5cba-0e29-4dd4-91cd-b9cff229175c",
+      "action": "updated",
+      "subject": "İlan kaldırıldı · {{{ILCE}}}"
+    },
+    {
+      "alias": "activate-account",
+      "id": "99d53a0b-b9ba-49e4-bd88-8c2f1a7a54bd",
+      "action": "created",
+      "subject": "Üyeliğini aktifleştir · kentsele.ist"
+    },
+    {
+      "alias": "welcome-malik",
+      "id": "21f51036-9fb1-457e-b265-83d19e24b153",
+      "action": "updated",
+      "subject": "Hoş geldin · kentsele.ist"
+    },
+    {
+      "alias": "welcome-contractor",
+      "id": "6f21aa68-1b47-4995-aaf1-18dfd0814087",
+      "action": "updated",
+      "subject": "Müteahhit kaydın alındı · kentsele.ist"
+    },
+    {
+      "alias": "contractor-approved",
+      "id": "a8e86f42-e369-48ef-a5ae-8edd0f19aeb5",
+      "action": "updated",
+      "subject": "Müteahhit hesabın onaylandı · kentsele.ist"
+    },
+    {
+      "alias": "contractor-rejected",
+      "id": "d9f856a6-4a71-4872-a54b-b9833c6d2741",
+      "action": "updated",
+      "subject": "Müteahhit başvurusu güncellendi · kentsele.ist"
+    },
+    {
+      "alias": "admin-contact",
+      "id": "84f2a8aa-0b7d-4e59-8794-6c2e637631f5",
+      "action": "updated",
+      "subject": "[İletişim] {{{SUBJECT}}}"
+    },
+    {
+      "alias": "admin-new-listing",
+      "id": "6b6abd3b-cd6e-4df5-8391-0beb2ce539db",
+      "action": "updated",
+      "subject": "[İlan] {{{ILCE}}} · inceleme"
+    }
+  ],
+  "byAlias": {
+    "listing-received": "c2dfb668-85d5-45cd-97d4-d523f3c8a1b4",
+    "listing-published": "c0c0cd2f-2173-433f-86c1-ff38463e8fc0",
+    "listing-back-to-review": "2f67214a-00ea-44fa-b9b4-12c9013bd794",
+    "listing-agreed": "641c5281-5f7f-4434-9dc8-095fe81a31d4",
+    "listing-removed": "263a5cba-0e29-4dd4-91cd-b9cff229175c",
+    "activate-account": "99d53a0b-b9ba-49e4-bd88-8c2f1a7a54bd",
+    "welcome-malik": "21f51036-9fb1-457e-b265-83d19e24b153",
+    "welcome-contractor": "6f21aa68-1b47-4995-aaf1-18dfd0814087",
+    "contractor-approved": "a8e86f42-e369-48ef-a5ae-8edd0f19aeb5",
+    "contractor-rejected": "d9f856a6-4a71-4872-a54b-b9833c6d2741",
+    "admin-contact": "84f2a8aa-0b7d-4e59-8794-6c2e637631f5",
+    "admin-new-listing": "6b6abd3b-cd6e-4df5-8391-0beb2ce539db"
+  }
+}

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import templateIds from "./resend-template-ids.json";
 
 let client: Resend | null = null;
 
@@ -23,6 +24,12 @@ export function getAdminNotifyEmail(): string | null {
   return e || null;
 }
 
+/** Resend dashboard template id by alias (from import script) */
+export function getTemplateId(alias: string): string | null {
+  const map = (templateIds as { byAlias?: Record<string, string> }).byAlias;
+  return map?.[alias] ?? null;
+}
+
 export type SendEmailInput = {
   to: string | string[];
   subject: string;
@@ -30,6 +37,55 @@ export type SendEmailInput = {
   text?: string;
   replyTo?: string;
 };
+
+/**
+ * Prefer published Resend Template by alias; fall back to inline HTML.
+ */
+export async function sendTemplateEmail(opts: {
+  to: string | string[];
+  alias: string;
+  variables: Record<string, string | number>;
+  /** Used only if template id missing — inline fallback */
+  fallback?: SendEmailInput;
+  replyTo?: string;
+}): Promise<{ ok: boolean; id?: string; error?: string }> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY missing — skip:", opts.alias);
+    return { ok: false, error: "resend_not_configured" };
+  }
+
+  const templateId = getTemplateId(opts.alias);
+  if (templateId) {
+    try {
+      const { data, error } = await resend.emails.send({
+        from: getEmailFrom(),
+        to: opts.to,
+        replyTo: opts.replyTo,
+        template: {
+          id: templateId,
+          variables: {
+            YEAR: new Date().getFullYear(),
+            ...opts.variables,
+          },
+        },
+      });
+      if (error) {
+        console.error("[email] template send error:", error);
+        // fall through to HTML if provided
+      } else {
+        return { ok: true, id: data?.id };
+      }
+    } catch (e) {
+      console.error("[email] template send failed:", e);
+    }
+  }
+
+  if (opts.fallback) {
+    return sendEmail(opts.fallback);
+  }
+  return { ok: false, error: "template_missing" };
+}
 
 /**
  * Fire-and-forget safe send. Returns { ok, id? } — never throws to callers
