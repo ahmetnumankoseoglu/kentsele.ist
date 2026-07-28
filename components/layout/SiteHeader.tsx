@@ -21,30 +21,20 @@ function UserIcon({ className }: { className?: string }) {
   );
 }
 
+const navLinkClass =
+  "shrink-0 rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm";
+
 const SUBNAV = [
-  {
-    href: "/rehber/6306-sayili-kanun",
-    label: "6306 sayılı kanun",
-  },
-  {
-    href: "/rehber/kira-yardimi",
-    label: "Kira yardımı",
-  },
-  {
-    href: "/rehber/hibe-ve-kredi-hesaplama",
-    label: "Hibe & kredi",
-  },
-  {
-    href: "/rehber",
-    label: "Rehber",
-  },
+  { href: "/rehber/6306-sayili-kanun", label: "6306 sayılı kanun" },
+  { href: "/rehber/kira-yardimi", label: "Kira yardımı" },
+  { href: "/rehber/hibe-ve-kredi-hesaplama", label: "Hibe & kredi" },
+  { href: "/rehber", label: "Rehber" },
 ] as const;
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[#e3e4e6] bg-white">
       <div className="mx-auto max-w-lg">
-        {/* Ana bar */}
         <div className="flex h-12 items-center justify-between gap-2 px-4 sm:h-14">
           <Link
             href="/"
@@ -54,16 +44,10 @@ export function SiteHeader() {
             <span className="text-[#2cb34f]">.ist</span>
           </Link>
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
-            <Link
-              href="/ilanlar"
-              className="rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm"
-            >
+            <Link href="/ilanlar" className={navLinkClass}>
               İlanlar
             </Link>
-            <Link
-              href="/haberler"
-              className="rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm"
-            >
+            <Link href="/haberler" className={navLinkClass}>
               Haberler
             </Link>
             <Link
@@ -83,17 +67,12 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* Alt menü — faydalı rehberler */}
         <nav
-          className="flex gap-1 overflow-x-auto border-t border-[#f0f0f0] px-3 py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-0.5 overflow-x-auto border-t border-[#f0f0f0] px-4 py-1 sm:gap-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Rehber menüsü"
         >
           {SUBNAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold text-[#6b7280] transition hover:bg-[#eaf8ee] hover:text-[#168f43] sm:text-xs"
-            >
+            <Link key={item.href} href={item.href} className={navLinkClass}>
               {item.label}
             </Link>
           ))}
