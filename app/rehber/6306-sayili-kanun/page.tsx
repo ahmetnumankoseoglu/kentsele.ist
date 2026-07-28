@@ -2,33 +2,41 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RehberLayout } from "@/components/rehber/RehberLayout";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
-import { breadcrumbSchema, faqPageSchema } from "@/lib/seo/schema";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  howToSchema,
+  organizationSchema,
+  rehberArticleSchema,
+  rehberWebPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
+import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
-const TITLE = "6306 sayılı kanun nedir? Ne işe yarar?";
+const PATH = "/rehber/6306-sayili-kanun";
+const TITLE =
+  "6306 Sayılı Kanun Nedir? İstanbul Kentsel Dönüşüm ve Riskli Yapı";
 const DESCRIPTION =
-  "6306 sayılı Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun: riskli yapı, riskli alan, malik kararları, yıkım ve kentsel dönüşüm süreci.";
+  "6306 sayılı Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun: riskli yapı tespiti, malik hakları, itiraz, yıkım süreci. İstanbul kentsel dönüşüm rehberi.";
+const PUBLISHED = "2026-07-01T09:00:00+03:00";
+const MODIFIED = "2026-07-28T12:00:00+03:00";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
   description: DESCRIPTION,
+  path: PATH,
   keywords: [
     "6306 sayılı kanun",
     "6306 kentsel dönüşüm",
-    "riskli yapı kanunu",
+    "riskli yapı kanunu İstanbul",
     "afet riski altındaki alanlar",
     "kentsel dönüşüm malik hakları",
+    "İstanbul riskli yapı",
   ],
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    type: "article",
-    locale: "tr_TR",
-  },
-  alternates: {
-    canonical: `${getSiteUrl()}/rehber/6306-sayili-kanun`,
-  },
-};
+  datePublished: PUBLISHED,
+  dateModified: MODIFIED,
+});
 
 const FAQ = [
   {
@@ -41,7 +49,7 @@ const FAQ = [
   },
   {
     q: "Kat maliklerinin tamamı anlaşmak zorunda mı?",
-    a: "Uygulama tipine göre çoğunluk ve usuller yönetmelikle belirlenir. Pratikte mümkün olduğunca yüksek mutabakat (ideal olarak tam uzlaşı) süreci hızlandırır ve uyuşmazlık riskini azaltır. Güncel oran ve usuller için yürürlükteki yönetmelik ve idare rehberleri kontrol edilmelidir.",
+    a: "Uygulama tipine göre çoğunluk ve usuller yönetmelikle belirlenir. Pratikte mümkün olduğunca yüksek mutabakat süreci hızlandırır. Güncel oran ve usuller için yürürlükteki yönetmelik ve idare rehberleri kontrol edilmelidir.",
   },
   {
     q: "Riskli yapı kararına itiraz edilebilir mi?",
@@ -49,32 +57,70 @@ const FAQ = [
   },
   {
     q: "6306 ile kira yardımı veya hibe ilişkisi nedir?",
-    a: "Kanun dönüşüm uygulamalarına zemin hazırlar; kira yardımı, hibe ve faiz destekli krediler ise ilgili yönetmelikler ve dönemsel destek programlarıyla (ör. kira yardımı, yapım kredisi/hibe paketleri) yürütülür. Detaylar için hibe-kredi rehberimize bakın.",
+    a: "Kanun dönüşüm uygulamalarına zemin hazırlar; kira yardımı, hibe ve faiz destekli krediler yönetmelik ve dönemsel programlarla (ör. Yarısı Bizden) yürütülür. Detaylar için hibe-kredi ve kira yardımı rehberlerimize bakın.",
+  },
+  {
+    q: "İstanbul’da 6306 nasıl uygulanır?",
+    a: "İstanbul’da riskli yapı ve kentsel dönüşüm süreçleri ilgili belediyeler ile Kentsel Dönüşüm Başkanlığı koordinasyonunda yürür. İlçe bazlı ilan ve müteahhit eşleşmesi için kentsele.ist kullanılabilir.",
   },
 ] as const;
 
 export default function Kanun6306Page() {
   const schemas = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: TITLE,
+    websiteSchema(),
+    organizationSchema(),
+    rehberWebPageSchema({
+      title: TITLE,
       description: DESCRIPTION,
-      inLanguage: "tr-TR",
-      author: { "@type": "Organization", name: "kentsele.ist" },
-      publisher: {
-        "@type": "Organization",
-        name: "kentsele.ist",
-        url: getSiteUrl(),
-      },
-      mainEntityOfPage: `${getSiteUrl()}/rehber/6306-sayili-kanun`,
-    },
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+    }),
+    rehberArticleSchema({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+      keywords: [
+        "6306 sayılı kanun",
+        "İstanbul kentsel dönüşüm",
+        "riskli yapı",
+      ],
+    }),
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
       { name: "Rehber", path: "/rehber" },
-      { name: "6306 sayılı kanun", path: "/rehber/6306-sayili-kanun" },
+      { name: "6306 sayılı kanun", path: PATH },
     ]),
     faqPageSchema([...FAQ]),
+    howToSchema({
+      name: "İstanbul’da 6306 riskli yapı süreci adımları",
+      description:
+        "Riskli yapı tespitinden yeniden yapılaşmaya genel süreç adımları.",
+      steps: [
+        {
+          name: "Tespit",
+          text: "Lisanslı kurumlarla riskli yapı tespiti; malik talebi veya idare resen.",
+        },
+        {
+          name: "İdare onayı ve tapu şerhi",
+          text: "Uygun tespitler tapuya riskli yapı şerhi olarak işlenir.",
+        },
+        {
+          name: "Tebligat ve itiraz",
+          text: "Maliklere tebliğ; yasal süre içinde itiraz hakkı.",
+        },
+        {
+          name: "Tahliye ve yıkım",
+          text: "Anlaşma öncelikli olmak üzere tahliye ve yıkım takvimi.",
+        },
+        {
+          name: "Yeniden yapım",
+          text: "Kat karşılığı, hakediş veya diğer modellerle proje ve ruhsat.",
+        },
+      ],
+    }),
   ];
 
   return (
@@ -94,7 +140,8 @@ export default function Kanun6306Page() {
         “kentsel dönüşüm kanunu” olarak anılır. Amacı; can ve mal güvenliğini
         tehdit eden yapıların tespit edilmesi, gerektiğinde yıktırılması ve
         yerinde veya alternatif alanlarda sağlıklı, yaşanabilir yapılaşmanın
-        sağlanmasıdır.
+        sağlanmasıdır. <strong>İstanbul</strong>’da yoğun yapı stoku nedeniyle
+        bu kanun uygulamaları özel önem taşır.
       </p>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">
@@ -131,8 +178,8 @@ export default function Kanun6306Page() {
           ilgili tapu müdürlüğüne bildirilir; riskli yapı şerhi işlenir.
         </li>
         <li>
-          <strong>Tebligat ve itiraz:</strong> Maliklere tebliğ edilir.
-          Kanuni süre içinde itiraz hakkı vardır.
+          <strong>Tebligat ve itiraz:</strong> Maliklere tebliğ edilir. Kanuni
+          süre içinde itiraz hakkı vardır.
         </li>
         <li>
           <strong>Tahliye ve yıkım:</strong> Süreç tamamlandıktan sonra tahliye
@@ -146,22 +193,19 @@ export default function Kanun6306Page() {
       </ol>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">
-        Malikler için pratik anlamı
+        İstanbul malikleri için pratik anlamı
       </h2>
       <p>
         6306, maliklere hem <strong>güvenli yapı</strong> imkânı hem de süreç
-        disiplini getirir. Riskli yapı kararı sonrası belirsizlik azalır;
-        ancak malikler arasında mutabakat, proje modeli ve müteahhit seçimi
-        kritik hâle gelir. Yanlış sözleşme, eksik teminat veya belirsiz teslim
+        disiplini getirir. Riskli yapı kararı sonrası belirsizlik azalır; ancak
+        malikler arasında mutabakat, proje modeli ve müteahhit seçimi kritik
+        hâle gelir. Yanlış sözleşme, eksik teminat veya belirsiz teslim
         koşulları mağduriyet riskini artırır.
       </p>
       <p>
-        Bu nedenle süreçte; risk raporunu anlamak, malik kararlarını belgelemek,
-        birden fazla müteahhit teklifini karşılaştırmak ve yazılı sözleşme
-        şartlarını netleştirmek esastır. kentsele.ist üzerinde malikler
-        İstanbul ilçelerine özel <strong>ücretsiz ilan</strong> oluşturabilir;
-        iletişim bilgileri yalnızca <strong>onaylı müteahhit</strong>{" "}
-        hesaplarına açılır.
+        kentsele.ist üzerinde malikler İstanbul ilçelerine özel{" "}
+        <strong>ücretsiz ilan</strong> oluşturabilir; iletişim bilgileri
+        yalnızca <strong>onaylı müteahhit</strong> hesaplarına açılır.
       </p>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">
@@ -174,13 +218,12 @@ export default function Kanun6306Page() {
           düzenler.
         </li>
         <li>
-          Anlaşma öncelikli olmak üzere yeniden yapılaşma ve uygulama
-          araçlarını tanımlar.
+          Anlaşma öncelikli olmak üzere yeniden yapılaşma ve uygulama araçlarını
+          tanımlar.
         </li>
         <li>
           Kira yardımı, kredi ve hibe gibi destek programlarının dayandığı
-          yasal zeminle ilişkilidir (destek tutarları ayrı düzenlemelerle
-          belirlenir).
+          yasal zeminle ilişkilidir.
         </li>
       </ul>
 
@@ -188,8 +231,7 @@ export default function Kanun6306Page() {
         <strong className="text-[#111321]">Uyarı:</strong> Bu sayfa genel
         bilgilendirmedir; hukuki danışmanlık yerine geçmez. Kanun maddeleri,
         yönetmelik ve idare uygulamaları güncellenebilir. Karar öncesi güncel
-        mevzuat metni ve yetkili kurumlar (ilgili bakanlık, belediye, lisanslı
-        tespit kuruluşu, avukat) ile doğrulama yapılmalıdır.
+        mevzuat metni ve yetkili kurumlar ile doğrulama yapılmalıdır.
       </div>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">
@@ -198,18 +240,22 @@ export default function Kanun6306Page() {
       <FaqAccordion items={FAQ} />
 
       <p className="!mt-6">
-        Hibe, kira yardımı ve kredi tutarları için{" "}
+        Hibe, kredi ve taşınma tutarları için{" "}
         <Link
           href="/rehber/hibe-ve-kredi-hesaplama"
           className="font-bold text-[#168f43]"
         >
-          hibe ve kredi hesaplama rehberine
+          hibe ve kredi hesaplama
+        </Link>
+        ; kira/taşınma evrakları için{" "}
+        <Link href="/rehber/kira-yardimi" className="font-bold text-[#168f43]">
+          kira yardımı
         </Link>{" "}
-        göz atın. İstanbul’da dönüşüm ilanı vermek için{" "}
+        rehberine bakın. İstanbul’da dönüşüm ilanı:{" "}
         <Link href="/ilan-ver" className="font-bold text-[#168f43]">
-          ücretsiz ilan formunu
-        </Link>{" "}
-        kullanabilirsiniz.
+          ücretsiz ilan formu
+        </Link>
+        .
       </p>
     </RehberLayout>
   );

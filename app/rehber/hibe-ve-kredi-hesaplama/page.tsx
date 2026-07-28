@@ -3,70 +3,99 @@ import Link from "next/link";
 import { RehberLayout } from "@/components/rehber/RehberLayout";
 import { HibeKrediCalculator } from "@/components/rehber/HibeKrediCalculator";
 import { DESTEK_TUTARLARI, formatTRY } from "@/lib/content/destek-tutarlari";
-import { breadcrumbSchema } from "@/lib/seo/schema";
+import {
+  breadcrumbSchema,
+  organizationSchema,
+  rehberArticleSchema,
+  rehberWebPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
+import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const K = DESTEK_TUTARLARI.konut;
 const T = DESTEK_TUTARLARI.ticari;
+const PATH = "/rehber/hibe-ve-kredi-hesaplama";
+const TITLE =
+  "İstanbul Yarısı Bizden Hibe ve Kredi Hesaplama | Konut & İş Yeri";
+const DESCRIPTION = `İstanbul Yarısı Bizden: konut ${formatTRY(K.toplamBirim)} (hibe ${formatTRY(K.hibe)} + kredi ${formatTRY(K.kredi)} + taşınma ${formatTRY(K.tasinma)}), iş yeri ${formatTRY(T.toplamBirim)}. Konut+dükkân karışık hesap.`;
+const PUBLISHED = "2026-07-01T09:00:00+03:00";
+const MODIFIED = "2026-07-28T18:00:00+03:00";
 
-const TITLE = "Yarısı Bizden hibe ve kredi hesaplama (İstanbul)";
-const DESCRIPTION = `Konut birim: ${formatTRY(K.hibe)} hibe + ${formatTRY(K.kredi)} kredi + ${formatTRY(K.tasinma)} taşınma = ${formatTRY(K.toplamBirim)}. İş yeri birim: ${formatTRY(T.hibe)} + ${formatTRY(T.kredi)} + ${formatTRY(T.tasinma)} = ${formatTRY(T.toplamBirim)}. Her birim için aynı paket.`;
-
-export const metadata: Metadata = {
+export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
   description: DESCRIPTION,
+  path: PATH,
   keywords: [
-    "Yarısı Bizden",
+    "Yarısı Bizden İstanbul",
     "kentsel dönüşüm hibe 875000",
-    "kentsel dönüşüm kredi",
+    "kentsel dönüşüm kredi 875000",
     "1 milyon 875 bin destek",
     "iş yeri dönüşüm 1 milyon",
     "İstanbul kentsel dönüşüm destek",
+    "taşınma yardımı 125000",
   ],
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    type: "article",
-    locale: "tr_TR",
-  },
-  alternates: {
-    canonical: `${getSiteUrl()}/rehber/hibe-ve-kredi-hesaplama`,
-  },
-};
+  datePublished: PUBLISHED,
+  dateModified: MODIFIED,
+});
 
 export default function HibeKrediPage() {
+  const site = getSiteUrl();
   const schemas = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: TITLE,
+    websiteSchema(),
+    organizationSchema(),
+    rehberWebPageSchema({
+      title: TITLE,
       description: DESCRIPTION,
-      inLanguage: "tr-TR",
-      author: { "@type": "Organization", name: "kentsele.ist" },
-      publisher: {
-        "@type": "Organization",
-        name: "kentsele.ist",
-        url: getSiteUrl(),
-      },
-      mainEntityOfPage: `${getSiteUrl()}/rehber/hibe-ve-kredi-hesaplama`,
-    },
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+    }),
+    rehberArticleSchema({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+      keywords: [
+        "Yarısı Bizden",
+        "hibe",
+        "kredi",
+        "İstanbul",
+        "kentsel dönüşüm",
+      ],
+    }),
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      name: "Yarısı Bizden hibe-kredi hesaplayıcı",
+      "@id": `${site}${PATH}#app`,
+      name: "İstanbul Yarısı Bizden hibe-kredi hesaplayıcı",
       applicationCategory: "FinanceApplication",
       operatingSystem: "Web",
-      offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+      browserRequirements: "Requires JavaScript",
+      inLanguage: "tr-TR",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "TRY",
+      },
       description: DESCRIPTION,
-      url: `${getSiteUrl()}/rehber/hibe-ve-kredi-hesaplama`,
+      url: `${site}${PATH}`,
+      provider: { "@id": `${site}/#organization` },
+      areaServed: {
+        "@type": "City",
+        name: "İstanbul",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "İstanbul",
+          addressCountry: "TR",
+        },
+      },
     },
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
       { name: "Rehber", path: "/rehber" },
-      {
-        name: "Hibe ve kredi hesaplama",
-        path: "/rehber/hibe-ve-kredi-hesaplama",
-      },
+      { name: "Hibe ve kredi hesaplama", path: PATH },
     ]),
   ];
 
@@ -79,8 +108,8 @@ export default function HibeKrediPage() {
     >
       <p>
         <strong>Yarısı Bizden</strong> kampanyası, Kentsel Dönüşüm Başkanlığı
-        koordinesinde İstanbul’un tüm ilçelerini kapsayan destek programıdır.
-        Her konut ve her iş yeri birimi için{" "}
+        koordinesinde <strong>İstanbul</strong>’un tüm ilçelerini kapsayan
+        destek programıdır. Her konut ve her iş yeri birimi için{" "}
         <strong>hibe + kredi + taşınma</strong> birlikte hesaplanır.
       </p>
 
@@ -124,9 +153,7 @@ export default function HibeKrediPage() {
           Birim toplam: <strong>{formatTRY(T.toplamBirim)}</strong>
         </li>
       </ul>
-      <p>
-        Örnek: 2 dükkân → {formatTRY(T.toplamBirim * 2)}.
-      </p>
+      <p>Örnek: 2 dükkân → {formatTRY(T.toplamBirim * 2)}.</p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
         Konut + ticari karışık binalar

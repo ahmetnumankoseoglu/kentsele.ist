@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { siteGraphSchema } from "@/lib/seo/schema";
+import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -9,12 +12,11 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  ...istanbulGeoMetadata(),
   title: {
     default: "kentsele.ist — İstanbul Kentsel Dönüşüm İlanları",
     template: "%s · kentsele.ist",
   },
-  description:
-    "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer.",
 };
 
 export default function RootLayout({
@@ -23,8 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className={`${poppins.variable} h-full antialiased`}>
+    <html lang="tr-TR" className={`${poppins.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white font-sans text-[#111321]">
+        <JsonLd data={siteGraphSchema()} />
         {children}
       </body>
     </html>

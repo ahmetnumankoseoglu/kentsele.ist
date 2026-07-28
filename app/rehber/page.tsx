@@ -6,14 +6,31 @@ import {
   breadcrumbSchema,
   collectionPageSchema,
   itemListSchema,
+  organizationSchema,
+  websiteSchema,
+  istanbulPlaceSchema,
 } from "@/lib/seo/schema";
+import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
+const PATH = "/rehber";
+const TITLE =
+  "İstanbul Kentsel Dönüşüm Rehberi | 6306, Kira Yardımı, Hibe ve Kredi";
+const DESCRIPTION =
+  "İstanbul kentsel dönüşüm rehberi: 6306 sayılı kanun, kira ve taşınma yardımı evrak listeleri, Yarısı Bizden hibe-kredi hesaplama. 39 ilçe.";
+
 export const metadata: Metadata = {
-  title: "Kentsel Dönüşüm Rehberi | 6306, Kira, Hibe ve Kredi",
-  description:
-    "6306 sayılı kanun, kira yardımı evrak listesi, Yarısı Bizden hibe ve kredi hesaplama. İstanbul kentsel dönüşüm bilgi bankası.",
-  alternates: { canonical: `${getSiteUrl()}/rehber` },
+  ...istanbulGeoMetadata({
+    title: TITLE,
+    description: DESCRIPTION,
+    path: PATH,
+    keywords: [
+      "İstanbul kentsel dönüşüm rehberi",
+      "6306 sayılı kanun",
+      "kira yardımı İstanbul",
+      "Yarısı Bizden hesaplama",
+    ],
+  }),
 };
 
 const GUIDES = [
@@ -37,17 +54,19 @@ const GUIDES = [
 export default function RehberIndexPage() {
   const site = getSiteUrl();
   const schemas = [
-    collectionPageSchema(
-      "Kentsel Dönüşüm Rehberi",
-      "/rehber",
-      "6306 sayılı kanun, kira yardımı, hibe ve kredi"
-    ),
+    websiteSchema(),
+    organizationSchema(),
+    {
+      "@context": "https://schema.org",
+      ...istanbulPlaceSchema(),
+    },
+    collectionPageSchema(TITLE, PATH, DESCRIPTION),
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
-      { name: "Rehber", path: "/rehber" },
+      { name: "Rehber", path: PATH },
     ]),
     itemListSchema(
-      "Kentsel dönüşüm rehberleri",
+      "İstanbul kentsel dönüşüm rehberleri",
       GUIDES.map((g) => ({ name: g.title, url: `${site}${g.href}` }))
     ),
   ];
@@ -56,16 +75,15 @@ export default function RehberIndexPage() {
     <AppShell showBottomCta>
       <JsonLd data={schemas} />
       <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
-        Bilgi bankası
+        Bilgi bankası · İstanbul
       </p>
       <h1 className="mt-1 text-2xl font-bold text-[#111321]">
-        Kentsel dönüşüm rehberi
+        İstanbul kentsel dönüşüm rehberi
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        Malikler ve müteahhitler için 6306 sayılı kanun, kira–taşınma yardımı
-        evrakları ve Yarısı Bizden destek tutarları. Bilgiler genel
-        bilgilendirme amaçlıdır; güncel mevzuat ve resmî kurum açıklamaları
-        esas alınmalıdır.
+        6306 sayılı kanun, kira–taşınma yardımı evrakları ve Yarısı Bizden
+        destek tutarları. Bilgiler genel bilgilendirme amaçlıdır; güncel
+        mevzuat ve resmî kurum açıklamaları esas alınmalıdır.
       </p>
       <div className="mt-6 flex flex-col gap-3">
         {GUIDES.map((g) => (

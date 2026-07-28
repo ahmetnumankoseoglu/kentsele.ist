@@ -2,35 +2,42 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RehberLayout } from "@/components/rehber/RehberLayout";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
-import { breadcrumbSchema, faqPageSchema } from "@/lib/seo/schema";
-import { getSiteUrl } from "@/lib/seo/site";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  howToSchema,
+  organizationSchema,
+  rehberArticleSchema,
+  rehberWebPageSchema,
+  websiteSchema,
+} from "@/lib/seo/schema";
+import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 import { DESTEK_TUTARLARI, formatTRY } from "@/lib/content/destek-tutarlari";
 
-const TITLE = "Kentsel dönüşüm kira yardımı nedir? Nasıl alınır?";
+const PATH = "/rehber/kira-yardimi";
+const TITLE =
+  "İstanbul Kentsel Dönüşüm Kira Yardımı | Evrak Listesi ve Başvuru";
 const DESCRIPTION =
-  "Kira yardımı ve taşınma yardımı başvurusu: malik, konut kiracısı ve iş yeri kiracısı için istenen belgeler, başvuru adımları ve SSS.";
+  "İstanbul kira yardımı ve taşınma yardımı: malik (Ek-1), konut kiracısı (Ek-2), iş yeri kiracısı (Ek-3) belge listeleri, başvuru adımları ve SSS.";
+const PUBLISHED = "2026-07-01T09:00:00+03:00";
+const MODIFIED = "2026-07-28T18:00:00+03:00";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
   description: DESCRIPTION,
+  path: PATH,
   keywords: [
+    "İstanbul kira yardımı",
     "kentsel dönüşüm kira yardımı",
     "kira yardımı evrak listesi",
     "taşınma yardımı belgeler",
     "malik kira yardımı başvuru",
-    "kiracı taşınma yardımı",
+    "kiracı taşınma yardımı Ek-2 Ek-3",
     "6306 kira yardımı",
   ],
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    type: "article",
-    locale: "tr_TR",
-  },
-  alternates: {
-    canonical: `${getSiteUrl()}/rehber/kira-yardimi`,
-  },
-};
+  datePublished: PUBLISHED,
+  dateModified: MODIFIED,
+});
 
 const FAQ = [
   {
@@ -94,57 +101,55 @@ function BelgeListesi({
 
 export default function KiraYardimiPage() {
   const schemas = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: TITLE,
+    websiteSchema(),
+    organizationSchema(),
+    rehberWebPageSchema({
+      title: TITLE,
       description: DESCRIPTION,
-      inLanguage: "tr-TR",
-      author: { "@type": "Organization", name: "kentsele.ist" },
-      publisher: {
-        "@type": "Organization",
-        name: "kentsele.ist",
-        url: getSiteUrl(),
-      },
-      mainEntityOfPage: `${getSiteUrl()}/rehber/kira-yardimi`,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      name: "Kentsel dönüşüm kira yardımı başvurusu nasıl yapılır?",
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+    }),
+    rehberArticleSchema({
+      title: TITLE,
+      description: DESCRIPTION,
+      path: PATH,
+      datePublished: PUBLISHED,
+      dateModified: MODIFIED,
+      keywords: [
+        "kira yardımı",
+        "taşınma yardımı",
+        "İstanbul",
+        "Ek-1 Ek-2 Ek-3",
+      ],
+    }),
+    howToSchema({
+      name: "İstanbul kentsel dönüşüm kira / taşınma yardımı başvurusu",
       description:
         "Malik kira yardımı ve kiracı taşınma yardımı için genel başvuru adımları.",
-      step: [
+      steps: [
         {
-          "@type": "HowToStep",
-          position: 1,
           name: "Başvuru türünü belirle",
           text: "Malik kira yardımı (Ek-1), konut kiracısı taşınma (Ek-2) veya iş yeri kiracısı taşınma (Ek-3).",
         },
         {
-          "@type": "HowToStep",
-          position: 2,
           name: "Evrak listesini sıraya diz",
           text: "Kurumun istediği sıraya göre kimlik, tapu/ikamet, riskli yapı ve IBAN belgelerini hazırlayın.",
         },
         {
-          "@type": "HowToStep",
-          position: 3,
           name: "Formu kurumdan al ve doldur",
           text: "Ek-1 / Ek-2 / Ek-3 başvuru formu kurumda verilir.",
         },
         {
-          "@type": "HowToStep",
-          position: 4,
           name: "Başvuruyu teslim et",
           text: "İlgili kurum birimine eksiksiz dosyayı verin; eksik evrak tebligatını takip edin.",
         },
       ],
-    },
+    }),
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
       { name: "Rehber", path: "/rehber" },
-      { name: "Kira yardımı", path: "/rehber/kira-yardimi" },
+      { name: "Kira yardımı", path: PATH },
     ]),
     faqPageSchema([...FAQ]),
   ];
@@ -173,8 +178,8 @@ export default function KiraYardimiPage() {
           taşınma / tahliye desteği ({formatTRY(DESTEK_TUTARLARI.konut.tasinma)})
         </strong>{" "}
         hibe+kredi ile birlikte birim paketinde yer alır (1 konut{" "}
-        {formatTRY(DESTEK_TUTARLARI.konut.toplamIlk)}, 1 iş yeri{" "}
-        {formatTRY(DESTEK_TUTARLARI.ticari.toplamIlk)}). Bu sayfadaki{" "}
+        {formatTRY(DESTEK_TUTARLARI.konut.toplamBirim)}, 1 iş yeri{" "}
+        {formatTRY(DESTEK_TUTARLARI.ticari.toplamBirim)}). Bu sayfadaki{" "}
         <strong>kira yardımı / taşınma yardımı başvuruları</strong> ayrı evrak
         ve formlarla yürütülür. Paket tutarları için{" "}
         <Link
