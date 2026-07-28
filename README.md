@@ -27,7 +27,7 @@ cp .env.example .env.local
 | `ADMIN_SESSION_SECRET` | Cookie imzası için rastgele gizli dize |
 | `NEXT_PUBLIC_SITE_URL` | Canlı site kökü (`https://kentsele.ist`) — schema/canonical için; localhost kullanma |
 | `RESEND_API_KEY` | [Resend](https://resend.com) API key (`re_…`) — `re_xxxxxxxxx` yerine gerçek key |
-| `EMAIL_FROM` | Gönderen (test: `Kentsele <onboarding@resend.dev>`) |
+| `EMAIL_FROM` | Gönderen: `Kentsele.ist <noreply@kentsele.ist>` (domain Resend’de doğrulanmalı) |
 | `ADMIN_NOTIFY_EMAIL` | Yeni ilan / iletişim formu bildirim adresi |
 
 ### 2. Veritabanı

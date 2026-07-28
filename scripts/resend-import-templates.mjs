@@ -26,7 +26,7 @@ if (!API_KEY || API_KEY.includes("xxxxxxxxx")) {
 }
 
 const FROM =
-  process.env.EMAIL_FROM?.trim() || "Kentsele <onboarding@resend.dev>";
+  process.env.EMAIL_FROM?.trim() || "Kentsele.ist <noreply@kentsele.ist>";
 const SITE = "https://kentsele.ist";
 const YEAR = String(new Date().getFullYear());
 

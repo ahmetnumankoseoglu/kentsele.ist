@@ -124,7 +124,7 @@ Style like a premium Turkish proptech product: calm, green accent, no stock phot
 ## Resend dashboard notları
 
 1. **API key:** `.env` → `RESEND_API_KEY=re_...` (asla repo’ya commit etme; `re_xxxxxxxxx` placeholder bırakma).
-2. **From:** Domain verify sonrası örn. `Kentsele <bildirim@mail.kentsele.ist>`. Test için geçici `onboarding@resend.dev` + kendi hesabına `to`.
+2. **From:** `Kentsele.ist <noreply@kentsele.ist>` (Resend’de `kentsele.ist` domain verify zorunlu).
 3. **Test:** Admin veya script ile tek alıcı; production’da `ADMIN_NOTIFY_EMAIL` iç bildirim.
 4. **Supabase Auth e-postaları** (şifre sıfırlama) ayrı — istersen custom SMTP = Resend SMTP.
 

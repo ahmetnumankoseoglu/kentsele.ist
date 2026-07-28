@@ -15,7 +15,7 @@ export function getResend(): Resend | null {
 export function getEmailFrom(): string {
   return (
     process.env.EMAIL_FROM?.trim() ||
-    "Kentsele <onboarding@resend.dev>"
+    "Kentsele.ist <noreply@kentsele.ist>"
   );
 }
 
