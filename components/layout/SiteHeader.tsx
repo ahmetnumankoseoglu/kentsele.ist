@@ -53,13 +53,16 @@ export function SiteHeader() {
           ) : (
             <Link
               href="/"
-              className="inline-flex shrink-0 items-center gap-1 rounded-lg py-1.5 pr-2 text-sm font-bold text-[#111321] transition hover:bg-[#f8f8f8] hover:text-[#168f43]"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-bold text-[#111321] transition hover:bg-[#f8f8f8] hover:text-[#168f43] active:bg-[#eaf8ee]"
               aria-label="Ana sayfaya dön"
             >
-              <span className="text-lg leading-none text-[#2cb34f]" aria-hidden>
+              <span
+                className="inline-flex h-6 w-6 shrink-0 items-center justify-center text-base leading-none text-[#2cb34f]"
+                aria-hidden
+              >
                 ‹
               </span>
-              <span>Anasayfa</span>
+              <span className="pr-0.5">Anasayfa</span>
             </Link>
           )}
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
