@@ -198,6 +198,7 @@ export default function KiraYardimiPage() {
     <RehberLayout
       title={TITLE}
       description={DESCRIPTION}
+      path={PATH}
       breadcrumbLast="Kira yardımı"
       schemas={schemas}
     >

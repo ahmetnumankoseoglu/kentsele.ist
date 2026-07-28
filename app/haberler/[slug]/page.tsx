@@ -12,6 +12,7 @@ import {
 import { breadcrumbSchema, newsArticleSchema } from "@/lib/seo/schema";
 import { getSiteUrl } from "@/lib/seo/site";
 import { getCurrentProfile } from "@/lib/auth/session";
+import { ShareButtons } from "@/components/seo/ShareButtons";
 
 export async function generateStaticParams() {
   const items = await getPublishedNews();
@@ -156,7 +157,13 @@ export default async function HaberDetailPage({
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-2">
+        <ShareButtons
+          className="mt-8"
+          url={`${getSiteUrl()}/haberler/${haber.slug}`}
+          title={haber.title}
+        />
+
+        <div className="mt-6 flex flex-col gap-2">
           <Link href="/ilan-ver" className="btn-primary w-full">
             Ücretsiz kentsel dönüşüm ilanı ver
           </Link>

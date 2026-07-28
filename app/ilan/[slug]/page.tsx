@@ -24,6 +24,7 @@ import {
   getSessionUser,
 } from "@/lib/auth/session";
 import { canOwnerEditListing } from "@/lib/listings/ownership";
+import { ShareButtons } from "@/components/seo/ShareButtons";
 import type { PublicListing } from "@/types/listing";
 
 export async function generateMetadata({
@@ -37,11 +38,15 @@ export async function generateMetadata({
     if (!listing) return { title: "İlan bulunamadı" };
     const title = `${listing.ilce} Kentsel Dönüşüm — ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`;
     const description = listing.aciklama.slice(0, 155);
+    const pageUrl = `${getSiteUrl()}/ilan/${slug}`;
     return {
       title,
       description,
       openGraph: { title, description, type: "article", locale: "tr_TR" },
-      alternates: { canonical: `${getSiteUrl()}/ilan/${slug}` },
+      alternates: {
+        canonical: pageUrl,
+        languages: { "tr-TR": pageUrl, "x-default": pageUrl },
+      },
     };
   } catch {
     return { title: "İlan" };
@@ -126,8 +131,12 @@ export default async function IlanDetailPage({
           Ana sayfa
         </Link>
         <span className="mx-1.5">/</span>
-        <Link href={districtPath} className="font-medium text-[#168f43]">
-          {listing.ilce} kentsel dönüşüm
+        <Link
+          href={districtPath}
+          className="font-medium text-[#168f43]"
+          title={`${listing.ilce} kentsel dönüşüm`}
+        >
+          {listing.ilce}
         </Link>
         <span className="mx-1.5">/</span>
         <span className="text-[#111321]">İlan</span>
@@ -207,6 +216,12 @@ export default async function IlanDetailPage({
           canViewContact={canViewContact}
         />
       </div>
+
+      <ShareButtons
+        className="mt-6"
+        url={`${getSiteUrl()}/ilan/${listing.slug}`}
+        title={`${listing.ilce} · ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`}
+      />
 
       {ownerManagePath ? (
         <Link href={ownerManagePath} className="btn-primary mt-6 w-full">

@@ -4,14 +4,14 @@ import { AppShell } from "@/components/layout/AppShell";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "Hakkımızda | kentsele.ist",
+  title: "Hakkımızda | İstanbul Kentsel Dönüşüm Platformu",
   description:
-    "kentsele.ist: İstanbul kentsel dönüşümde malikleri ve onaylı müteahhitleri buluşturan platform. Misyon, vizyon ve neden biz.",
+    "Kentsele: İstanbul kentsel dönüşümde malikleri ve onaylı müteahhitleri buluşturan platform. Misyon, vizyon ve neden biz.",
   path: "/hakkimizda",
   keywords: [
     "kentsele hakkında",
     "kentsel dönüşüm platformu İstanbul",
-    "kentsele.ist misyon",
+    "kentsele misyon",
   ],
 });
 

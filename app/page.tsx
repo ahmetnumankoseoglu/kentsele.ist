@@ -135,7 +135,7 @@ export default async function HomePage({
 
       <div className="mx-auto max-w-lg px-4">
         <section className="py-8">
-          <h2 className="section-title">Neden kentsele.ist?</h2>
+          <h2 className="section-title">Neden Kentsele?</h2>
           <div className="grid gap-3">
             {[
               {

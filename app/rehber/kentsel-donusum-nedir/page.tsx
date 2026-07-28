@@ -153,6 +153,7 @@ export default function KentselDonusumNedirPage() {
     <RehberLayout
       title={TITLE}
       description={DESCRIPTION}
+      path={PATH}
       breadcrumbLast="Kentsel dönüşüm nedir"
       schemas={schemas}
     >

@@ -4,9 +4,9 @@ import { ContactForm } from "@/components/iletisim/ContactForm";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "İletişim | kentsele.ist",
+  title: "İletişim | Sorularınızı Bize Yazın",
   description:
-    "kentsele.ist iletişim formu. Sorularınız, önerileriniz ve destek talepleriniz için bize yazın.",
+    "Kentsele iletişim formu. Sorularınız, önerileriniz ve destek talepleriniz için bize yazın.",
   path: "/iletisim",
   keywords: ["kentsele iletişim", "kentsel dönüşüm iletişim İstanbul"],
 });

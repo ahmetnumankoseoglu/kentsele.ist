@@ -143,6 +143,7 @@ export default function Kanun6306Page() {
     <RehberLayout
       title={TITLE}
       description={DESCRIPTION}
+      path={PATH}
       breadcrumbLast="6306 sayılı kanun"
       schemas={schemas}
     >
@@ -220,9 +221,18 @@ export default function Kanun6306Page() {
         koşulları mağduriyet riskini artırır.
       </p>
       <p>
-        kentsele.ist üzerinde malikler İstanbul ilçelerine özel{" "}
+        Bu platformda malikler İstanbul ilçelerine özel{" "}
         <strong>ücretsiz ilan</strong> oluşturabilir; iletişim bilgileri
-        yalnızca <strong>onaylı müteahhit</strong> hesaplarına açılır.
+        yalnızca <strong>onaylı müteahhit</strong> hesaplarına açılır.{" "}
+        <a
+          href="https://www.mevzuat.gov.tr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-[#168f43]"
+        >
+          Güncel kanun metni (mevzuat.gov.tr)
+        </a>
+        .
       </p>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">

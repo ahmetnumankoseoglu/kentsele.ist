@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "İstanbul kentsel dönüşüm haberleri, rehberler ve piyasa notları. Google News uyumlu güncel içerikler.",
   openGraph: {
-    title: "İstanbul Kentsel Dönüşüm Haberleri | kentsele.ist",
+    title: "İstanbul Kentsel Dönüşüm Haberleri",
     description:
       "İstanbul kentsel dönüşüm haberleri ve rehberler. Malikler ve müteahhitler için güncel içerik.",
     locale: "tr_TR",
@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${getSiteUrl()}/haberler`,
+    languages: {
+      "tr-TR": `${getSiteUrl()}/haberler`,
+      "x-default": `${getSiteUrl()}/haberler`,
+    },
     types: {
       "application/rss+xml": `${getSiteUrl()}/haberler/rss.xml`,
     },

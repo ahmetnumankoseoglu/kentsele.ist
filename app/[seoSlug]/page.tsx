@@ -23,6 +23,8 @@ import {
   serviceDistrictSchema,
 } from "@/lib/seo/schema";
 import { getSiteUrl } from "@/lib/seo/site";
+import { ShareButtons } from "@/components/seo/ShareButtons";
+import { OfficialSources } from "@/components/seo/OfficialSources";
 import type { PublicListing } from "@/types/listing";
 
 export function generateStaticParams() {
@@ -39,8 +41,9 @@ export async function generateMetadata({
   if (!ilce) return { title: "Sayfa bulunamadı" };
 
   const meta = getDistrictMeta(ilce, ISTANBUL_ILCELER);
-  const title = `${ilce} Kentsel Dönüşüm 2026 | İlan Ver, Müteahhit Bul | kentsele.ist`;
+  const title = `${ilce} Kentsel Dönüşüm 2026 | İlan Ver, Müteahhit Bul`;
   const description = `${ilce} kentsel dönüşüm rehberi (${meta.side}). ${ilce}’da riskli yapı, kat karşılığı ve hakediş süreçleri. Ücretsiz ilan verin; onaylı müteahhitler sizi arasın.`;
+  const pageUrl = `${getSiteUrl()}/${seoSlug}`;
 
   return {
     title,
@@ -56,12 +59,12 @@ export async function generateMetadata({
       `${meta.side} kentsel dönüşüm`,
     ],
     openGraph: {
-      title: `${ilce} Kentsel Dönüşüm | kentsele.ist`,
+      title: `${ilce} Kentsel Dönüşüm`,
       description,
       locale: "tr_TR",
       type: "website",
-      url: `${getSiteUrl()}/${seoSlug}`,
-      siteName: "kentsele.ist",
+      url: pageUrl,
+      siteName: "Kentsele",
     },
     twitter: {
       card: "summary_large_image",
@@ -69,7 +72,11 @@ export async function generateMetadata({
       description,
     },
     alternates: {
-      canonical: `${getSiteUrl()}/${seoSlug}`,
+      canonical: pageUrl,
+      languages: {
+        "tr-TR": pageUrl,
+        "x-default": pageUrl,
+      },
     },
     robots: {
       index: true,
@@ -190,14 +197,19 @@ export default async function DistrictSeoPage({
             Ücretsiz malik ilanları; iletişim yalnızca onaylı müteahhitlere açık.
           </p>
           <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row">
-            <Link href="/ilan-ver" className="btn-primary w-full flex-1">
-              {ilce}’da ücretsiz ilan ver
+            <Link
+              href="/ilan-ver"
+              className="btn-primary w-full flex-1"
+              title={`${ilce} ücretsiz kentsel dönüşüm ilanı`}
+            >
+              İlan ver
             </Link>
             <Link
               href={`/ilanlar?ilce=${encodeURIComponent(ilce)}`}
               className="inline-flex w-full flex-1 items-center justify-center rounded-[3px] bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
+              title={`${ilce} ilan listesi`}
             >
-              {ilce} ilanlarını gör ({listings.length})
+              İlanları gör ({listings.length})
             </Link>
           </div>
         </div>
@@ -338,8 +350,12 @@ export default async function DistrictSeoPage({
             2 dakikada ücretsiz ilan oluştur. Teyit sonrası onaylı müteahhitler
             seni arasın.
           </p>
-          <Link href="/ilan-ver" className="btn-primary mt-5 w-full sm:w-auto sm:min-w-[200px]">
-            {ilce} ilanı ver
+          <Link
+            href="/ilan-ver"
+            className="btn-primary mt-5 w-full sm:w-auto sm:min-w-[200px]"
+            title={`${ilce} ücretsiz ilan`}
+          >
+            Ücretsiz ilan aç
           </Link>
         </section>
 
@@ -361,8 +377,15 @@ export default async function DistrictSeoPage({
           </p>
         </section>
 
+        <OfficialSources className="mb-8" />
+        <ShareButtons
+          className="mb-8"
+          url={`${site}${path}`}
+          title={`${ilce} Kentsel Dönüşüm`}
+        />
+
         <section className="mb-4">
-          <h2 className="section-title">İstanbul ilçe kentsel dönüşüm sayfaları</h2>
+          <h2 className="section-title">Diğer ilçe rehberleri</h2>
           <p className="mb-4 -mt-2 text-sm text-[#6b7280]">
             Yakın bölgeler: {districtMeta.neighboring.join(", ")}. Tüm 39 ilçe
             için ayrı rehber sayfaları:

@@ -29,7 +29,7 @@ export function istanbulGeoMetadata(overrides?: {
   const path = overrides?.path ?? "/";
   const url = `${site}${path === "/" ? "" : path}`;
   const title =
-    overrides?.title ?? "kentsele.ist — İstanbul Kentsel Dönüşüm İlanları";
+    overrides?.title ?? "İstanbul Kentsel Dönüşüm İlanları | Ücretsiz Malik İlanı";
   const description = overrides?.description ?? SITE_DESCRIPTION;
   const keywords = [
     ...CORE_KEYWORDS,
@@ -46,10 +46,12 @@ export function istanbulGeoMetadata(overrides?: {
     category: "Kentsel Dönüşüm",
     applicationName: SITE_NAME,
     metadataBase: new URL(site),
+    // Self-referencing hreflang + x-default (single-locale TR site)
     alternates: {
       canonical: url,
       languages: {
         "tr-TR": url,
+        "x-default": url,
       },
     },
     openGraph: {

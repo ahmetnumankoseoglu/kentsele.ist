@@ -9,9 +9,9 @@ import { getAllHaberler } from "@/lib/content/haberler";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "Site Haritası | kentsele.ist",
+  title: "Site Haritası | Tüm Sayfalar",
   description:
-    "kentsele.ist site haritası: ilanlar, rehber, haberler, ilçe sayfaları ve iletişim.",
+    "Kentsele site haritası: ilanlar, rehber, haberler, ilçe sayfaları ve iletişim.",
   path: "/site-haritasi",
 });
 
@@ -50,16 +50,21 @@ export default function SiteHaritasiPage() {
       <section className="mt-8">
         <h2 className="section-title">Haberler</h2>
         <ul className="space-y-1.5">
-          {haberler.map((h) => (
-            <li key={h.slug}>
-              <Link
-                href={`/haberler/${h.slug}`}
-                className="text-sm font-medium text-[#168f43]"
-              >
-                {h.title}
-              </Link>
-            </li>
-          ))}
+          {haberler.map((h) => {
+            const short =
+              h.title.length > 48 ? `${h.title.slice(0, 45).trim()}…` : h.title;
+            return (
+              <li key={h.slug}>
+                <Link
+                  href={`/haberler/${h.slug}`}
+                  className="text-sm font-medium text-[#168f43]"
+                  title={h.title}
+                >
+                  {short}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </section>
 

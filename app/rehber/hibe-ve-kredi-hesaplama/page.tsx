@@ -102,6 +102,7 @@ export default function HibeKrediPage() {
     <RehberLayout
       title={TITLE}
       description={DESCRIPTION}
+      path={PATH}
       breadcrumbLast="Hibe & kredi"
       schemas={schemas}
     >
