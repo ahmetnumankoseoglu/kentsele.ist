@@ -24,6 +24,16 @@ The migration is idempotent where possible (`if not exists`, `create or replace`
 
 Writes (insert/update/delete) are intended to go through the service role or server-side code, not the public client.
 
+## Seed (optional, dev only)
+
+After the migration, you can load 1–2 sample **published** listings:
+
+1. Open **SQL Editor**.
+2. Paste the contents of `seed.sql`.
+3. Click **Run**.
+
+`seed.sql` uses fixed `manage_token` values for local testing (e.g. `/yonet/dev-manage-token-kadikoy-a1b2`). Do not use these tokens in production.
+
 ## CLI (optional)
 
 If you use the Supabase CLI and have linked the project:

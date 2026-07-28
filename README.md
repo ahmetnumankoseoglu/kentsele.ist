@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# kentsele.ist
 
-## Getting Started
+İstanbul kentsel dönüşüm ilan panosu. Malikler bina/arsa ilanı verir; müteahhitler ücretsiz inceler ve iletişime geçer.
 
-First, run the development server:
+## Stack
+
+- **Next.js** (App Router, TypeScript, Tailwind CSS)
+- **Supabase** (Postgres + RLS; public okuma `listings_public` view üzerinden)
+- **Zod** validasyon, **Vitest** unit testler
+
+## Kurulum
+
+### 1. Ortam değişkenleri
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env.local` içinde doldur:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Değişken | Açıklama |
+|----------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase proje URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon (public) key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (sadece sunucu; gizli tut) |
+| `ADMIN_PASSWORD` | Admin paneli şifresi |
+| `ADMIN_SESSION_SECRET` | Cookie imzası için rastgele gizli dize |
+| `NEXT_PUBLIC_SITE_URL` | Site kökü (örn. `http://localhost:3000`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Veritabanı
 
-## Learn More
+Supabase SQL Editor’da migration’ı uygula:
 
-To learn more about Next.js, take a look at the following resources:
+- [`supabase/migrations/001_listings.sql`](supabase/migrations/001_listings.sql)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Adımlar için: [`supabase/README.md`](supabase/README.md)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+İsteğe bağlı örnek veri (migration’dan sonra):
 
-## Deploy on Vercel
+```bash
+# SQL Editor’da seed.sql içeriğini çalıştır
+# veya: supabase db execute --file supabase/seed.sql
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Bağımlılıklar ve geliştirme sunucusu
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm install
+npm run dev
+```
+
+[http://localhost:3000](http://localhost:3000)
+
+### 4. Test
+
+```bash
+npm test
+```
+
+### 5. Production build
+
+```bash
+npm run build
+npm start
+```
+
+## Admin
+
+- Giriş: [`/yonetim`](http://localhost:3000/yonetim)
+- Şifre: `.env.local` içindeki `ADMIN_PASSWORD`
+- İlan listesi ve durum yönetimi: `/yonetim/ilanlar`
+
+## Rotalar
+
+| Rota | Açıklama |
+|------|----------|
+| `/` | Ana sayfa — yayındaki ilanlar, ilçe filtresi |
+| `/ilanlar` | Liste alias (ana sayfaya yönlendirir) |
+| `/ilan/[slug]` | İlan detay |
+| `/ilan-ver` | Yeni ilan formu (wizard) |
+| `/ilan-ver/basarili` | Başarılı gönderim + yönetim linki |
+| `/yonet/[token]` | Malik paneli (manage token ile) |
+| `/yonetim` | Admin giriş |
+| `/yonetim/ilanlar` | Admin ilan listesi |
+| `/yonetim/ilanlar/[id]` | Admin ilan detay / durum |
+| `POST /api/ilanlar` | Yeni ilan oluştur |
+| `PATCH /api/yonet/[token]` | Malik güncelleme / anlaşma bildirimi |
+| `POST /api/yonetim/login` | Admin oturum aç |
+| `POST /api/yonetim/logout` | Admin oturum kapat |
+| `PATCH /api/yonetim/ilanlar/[id]` | Admin ilan güncelle |
+
+## Scripts
+
+| Script | Komut |
+|--------|--------|
+| Geliştirme | `npm run dev` |
+| Build | `npm run build` |
+| Prod sunucu | `npm start` |
+| Lint | `npm run lint` |
+| Test | `npm test` |
+| Test (watch) | `npm run test:watch` |
+
+## Notlar
+
+- Public okumalar `listings_public` view kullanır; `anlasildi` durumunda telefon/e-posta gizlenir.
+- Yazma işlemleri service role ile sunucu tarafında yapılır; `listings` tablosuna anon erişim yoktur.
+- Malik erişimi `manage_token` ile secret URL üzerinden sağlanır.
