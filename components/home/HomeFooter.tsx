@@ -31,6 +31,9 @@ export function HomeFooter() {
           <Link href="/rehber/6306-sayili-kanun" className="text-[#6b7280]">
             6306 kanun
           </Link>
+          <Link href="/rehber/kira-yardimi" className="text-[#6b7280]">
+            Kira yardımı
+          </Link>
           <Link
             href="/rehber/hibe-ve-kredi-hesaplama"
             className="text-[#6b7280]"

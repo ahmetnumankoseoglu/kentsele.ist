@@ -23,9 +23,14 @@ const GUIDES = [
     desc: "Afet riski altındaki alanların dönüşümü kanunu: riskli yapı, malik hakları, süreç ve sık sorular.",
   },
   {
+    href: "/rehber/kira-yardimi",
+    title: "Kira yardımı nedir? Nasıl alınır?",
+    desc: "Kentsel dönüşüm kira yardımı kimlere verilir, nasıl başvurulur, hangi belgeler gerekir?",
+  },
+  {
     href: "/rehber/hibe-ve-kredi-hesaplama",
     title: "Hibe ve kredi hesaplama",
-    desc: "Kentsel dönüşümde kira yardımı, hibe, faiz destekli kredi ve yaklaşık tutarları anlama rehberi.",
+    desc: "Konut 1.750.000 ₺ (875k hibe + 875k kredi), ticari 875.000 ₺ (437,5k + 437,5k) birim paketleri.",
   },
 ] as const;
 

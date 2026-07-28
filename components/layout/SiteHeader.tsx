@@ -27,6 +27,10 @@ const SUBNAV = [
     label: "6306 sayılı kanun",
   },
   {
+    href: "/rehber/kira-yardimi",
+    label: "Kira yardımı",
+  },
+  {
     href: "/rehber/hibe-ve-kredi-hesaplama",
     label: "Hibe & kredi",
   },
@@ -52,13 +56,13 @@ export function SiteHeader() {
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
             <Link
               href="/ilanlar"
-              className="hidden rounded-lg px-2 py-1.5 text-sm font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:inline"
+              className="rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm"
             >
               İlanlar
             </Link>
             <Link
               href="/haberler"
-              className="hidden rounded-lg px-2 py-1.5 text-sm font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] xs:inline sm:inline"
+              className="rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm"
             >
               Haberler
             </Link>
@@ -93,18 +97,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/ilanlar"
-            className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold text-[#6b7280] transition hover:bg-[#eaf8ee] hover:text-[#168f43] sm:hidden sm:text-xs"
-          >
-            İlanlar
-          </Link>
-          <Link
-            href="/haberler"
-            className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold text-[#6b7280] transition hover:bg-[#eaf8ee] hover:text-[#168f43] sm:hidden sm:text-xs"
-          >
-            Haberler
-          </Link>
         </nav>
       </div>
     </header>

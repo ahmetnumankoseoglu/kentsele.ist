@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RehberLayout } from "@/components/rehber/RehberLayout";
 import { HibeKrediCalculator } from "@/components/rehber/HibeKrediCalculator";
+import { DESTEK_TUTARLARI, formatTRY } from "@/lib/content/destek-tutarlari";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const TITLE = "Kentsel dönüşüm hibe ve kredi hesaplama";
-const DESCRIPTION =
-  "Kentsel dönüşümde kira yardımı, hibe ve faiz destekli krediyi anlama rehberi. Yaklaşık hesap aracı ile senaryo planla. Bilgilendirme amaçlıdır.";
+const DESCRIPTION = `Konut: ${formatTRY(DESTEK_TUTARLARI.konut.hibe)} hibe + ${formatTRY(DESTEK_TUTARLARI.konut.kredi)} kredi = ${formatTRY(DESTEK_TUTARLARI.konut.toplam)}. Ticari: ${formatTRY(DESTEK_TUTARLARI.ticari.hibe)} hibe + ${formatTRY(DESTEK_TUTARLARI.ticari.kredi)} kredi = ${formatTRY(DESTEK_TUTARLARI.ticari.toplam)}.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   keywords: [
     "kentsel dönüşüm hibe",
     "kentsel dönüşüm kredi",
-    "kira yardımı hesaplama",
-    "yarısı bizden",
-    "kentsel dönüşüm faiz desteği",
+    "875000 hibe",
+    "kentsel dönüşüm 1750000",
+    "ticari hibe kredi",
     "6306 hibe kredi",
   ],
   openGraph: {
@@ -75,13 +75,51 @@ export default function HibeKrediPage() {
       schemas={schemas}
     >
       <p>
-        Kentsel dönüşüm sürecinde malikler çoğu zaman iki soruyu bir arada
-        sorar: <em>“Devlet ne kadar destek veriyor?”</em> ve{" "}
-        <em>“Kredi taksitim ne olur?”</em> Bu rehber, 6306 sayılı kanun
-        kapsamındaki uygulamalara eşlik eden{" "}
-        <strong>kira yardımı</strong>, <strong>hibe / yapım yardımı</strong> ve{" "}
-        <strong>faiz destekli kredi</strong> kalemlerini sade bir dille
-        açıklar; ardından yaklaşık bir senaryo hesaplayıcısı sunar.
+        Kentsel dönüşüm destek paketinde birim başına hibe ve kredi tutarları
+        netleştirilmiştir. Hesaplayıcı bu sabitleri kullanır; kafadan oran veya
+        rastgele faiz senaryosu üretmez.
+      </p>
+
+      <h2 className="!mt-6 text-base font-bold text-[#111321]">
+        Birim başına destek tutarları
+      </h2>
+      <div className="not-prose mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="card p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#168f43]">
+            Konut
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-[#374151]">
+            <li>Hibe: <strong>{formatTRY(DESTEK_TUTARLARI.konut.hibe)}</strong></li>
+            <li>Kredi: <strong>{formatTRY(DESTEK_TUTARLARI.konut.kredi)}</strong></li>
+            <li className="pt-1 font-bold text-[#111321]">
+              Toplam: {formatTRY(DESTEK_TUTARLARI.konut.toplam)}
+            </li>
+          </ul>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#168f43]">
+            Ticari
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-[#374151]">
+            <li>Hibe: <strong>{formatTRY(DESTEK_TUTARLARI.ticari.hibe)}</strong></li>
+            <li>
+              Kredi: <strong>{formatTRY(DESTEK_TUTARLARI.ticari.kredi)}</strong>
+            </li>
+            <li className="pt-1 font-bold text-[#111321]">
+              Toplam: {formatTRY(DESTEK_TUTARLARI.ticari.toplam)}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p className="!mt-4">
+        Örnek: 4 konut birimi → hibe{" "}
+        {formatTRY(DESTEK_TUTARLARI.konut.hibe * 4)}, kredi{" "}
+        {formatTRY(DESTEK_TUTARLARI.konut.kredi * 4)}, genel toplam{" "}
+        {formatTRY(DESTEK_TUTARLARI.konut.toplam * 4)}. 2 ticari birim → hibe{" "}
+        {formatTRY(DESTEK_TUTARLARI.ticari.hibe * 2)}, kredi{" "}
+        {formatTRY(DESTEK_TUTARLARI.ticari.kredi * 2)}, genel toplam{" "}
+        {formatTRY(DESTEK_TUTARLARI.ticari.toplam * 2)}.
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
@@ -89,61 +127,41 @@ export default function HibeKrediPage() {
       </h2>
       <ul className="list-disc space-y-2 pl-5">
         <li>
-          <strong>Kira yardımı:</strong> Riskli yapı nedeniyle tahliye olan
-          malik/kiracıya (şartlara göre) belirli süre aylık destek.
+          <strong>Hibe:</strong> Geri ödemesiz kamu katkısı (hak sahipliği ve
+          program şartlarına bağlı).
         </li>
         <li>
-          <strong>Hibe / yapım yardımı:</strong> Dönemsel programlarda konut
-          birimi başına hibe veya eş finansman (kampanya şartları değişkendir).
+          <strong>Kredi:</strong> Banka üzerinden kullanılan, faiz/şartları
+          programa göre belirlenen finansman.
         </li>
         <li>
-          <strong>Faiz destekli kredi:</strong> Banka kredisinde kamu faiz
-          desteği; tavan tutar ve vade programa bağlıdır.
+          <strong>Kira yardımı:</strong> Ayrı bir destek kalemidir; detay için{" "}
+          <Link href="/rehber/kira-yardimi" className="font-bold text-[#168f43]">
+            kira yardımı rehberine
+          </Link>{" "}
+          bakın.
         </li>
       </ul>
 
       <p>
-        Destekler genellikle riskli yapı / riskli alan / rezerv yapı alanı
-        statüsüne ve başvuru belgelerine bağlanır. Hukuki çerçeve için{" "}
+        Hukuki çerçeve için{" "}
         <Link
           href="/rehber/6306-sayili-kanun"
           className="font-bold text-[#168f43]"
         >
-          6306 sayılı kanun sayfasını
+          6306 sayılı kanun
         </Link>{" "}
-        okuyun.
+        sayfasını inceleyin. Başvuru ve ödeme takvimi resmî kurum / banka
+        süreçlerine tabidir.
       </p>
 
-      <h2 className="!mt-6 text-base font-bold text-[#111321]">
-        Hesabı ne etkiler?
-      </h2>
-      <ul className="list-disc space-y-1.5 pl-5">
-        <li>Bağımsız bölüm adedi ve malik profili</li>
-        <li>İl / ilçe ve dönemsel program limitleri</li>
-        <li>Riskli yapı veya rezerv alan statüsü</li>
-        <li>Hane geliri, ikamet ve birden fazla konut sahipliği</li>
-        <li>Banka ekspertiz ve teminat koşulları</li>
-      </ul>
-
       <div className="card mt-4 border-l-4 border-l-[#ee401d] bg-[#fef2f2] p-4 text-sm text-[#6b7280]">
-        <strong className="text-[#111321]">Önemli:</strong> Aşağıdaki araç
-        resmî teklif değildir. Güncel tutarlar bakanlık/başkanlık, belediye ve
-        banka kanallarından doğrulanmalıdır.
+        <strong className="text-[#111321]">Önemli:</strong> Bu sayfadaki tutarlar
+        bilgilendirme amaçlıdır. Nihai hak sahipliği, başvuru ve ödeme için
+        yetkili kurum ve banka kanallarını kullanın.
       </div>
 
       <HibeKrediCalculator />
-
-      <h2 className="!mt-8 text-base font-bold text-[#111321]">
-        Hesabı nasıl okumalısın?
-      </h2>
-      <p>
-        <strong>Kira + hibe paketi</strong>, inşaat süresince nakit akışına
-        katkı sunan kalemlerin kabaca toplamıdır.{" "}
-        <strong>Faiz desteği farkı</strong> ise aynı kredi tutarında piyasa
-        faiziyle destekli faiz arasındaki toplam ödeme farkının yaklaşık
-        ifadesidir. Banka, teminat ve sigorta taksiti değiştirir; hibe ve kira
-        tutarları yıl içinde güncellenebilir.
-      </p>
     </RehberLayout>
   );
 }
