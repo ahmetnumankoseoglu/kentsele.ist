@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-/** Apple touch icon (iOS home screen) */
+/** Apple touch icon — matches public/favicon.svg brand mark */
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -14,24 +14,21 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#111321",
-          borderRadius: 36,
+          background: "#3eac50",
+          borderRadius: 40,
         }}
       >
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            color: "white",
+            color: "#ffffff",
+            fontSize: 96,
             fontWeight: 800,
-            fontSize: 42,
-            letterSpacing: -1,
             fontFamily: "system-ui, sans-serif",
+            lineHeight: 1,
           }}
         >
-          <span>kentsele</span>
-          <span style={{ color: "#2cb34f", fontSize: 36 }}>.ist</span>
+          K
         </div>
       </div>
     ),
