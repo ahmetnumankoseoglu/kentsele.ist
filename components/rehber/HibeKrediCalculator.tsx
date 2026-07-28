@@ -12,7 +12,7 @@ import {
 } from "@/lib/utils/numeric-input";
 
 export function HibeKrediCalculator() {
-  const [konutRaw, setKonutRaw] = useState("1");
+  const [konutRaw, setKonutRaw] = useState("0");
   const [ticariRaw, setTicariRaw] = useState("0");
 
   const konutAdet = parseDigitInput(konutRaw, 0);
@@ -31,39 +31,32 @@ export function HibeKrediCalculator() {
         Yarısı Bizden · destek hesaplayıcı
       </h2>
       <p className="mt-1 text-xs leading-relaxed text-[#6b7280]">
-        Binanızda hem konut hem dükkân olabilir. Konut ve ticari adedini
-        birlikte girin; tutarlar sabit kampanya rakamlarına göre hesaplanır.
+        Her birim için hibe + kredi + taşınma uygulanır. Konut ve dükkân
+        adedini birlikte girebilirsiniz.
       </p>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <div className="rounded-[3px] border border-[#e3e4e6] bg-[#f8f8f8] p-3 text-xs">
-          <p className="font-bold text-[#168f43]">1 konut (ilk birim)</p>
+          <p className="font-bold text-[#168f43]">Konut (birim başına)</p>
           <ul className="mt-1.5 space-y-0.5 text-[#374151]">
             <li>Hibe {formatTRY(DESTEK_TUTARLARI.konut.hibe)}</li>
             <li>Kredi {formatTRY(DESTEK_TUTARLARI.konut.kredi)}</li>
             <li>Taşınma {formatTRY(DESTEK_TUTARLARI.konut.tasinma)}</li>
             <li className="font-bold">
-              Toplam {formatTRY(DESTEK_TUTARLARI.konut.toplamIlk)}
+              Toplam {formatTRY(DESTEK_TUTARLARI.konut.toplamBirim)}
             </li>
           </ul>
-          <p className="mt-2 text-[11px] text-[#6b7280]">
-            Ek her konut: {formatTRY(DESTEK_TUTARLARI.konut.ekKonutKredi)} kredi
-          </p>
         </div>
         <div className="rounded-[3px] border border-[#e3e4e6] bg-[#f8f8f8] p-3 text-xs">
-          <p className="font-bold text-[#168f43]">1 iş yeri (ilk birim)</p>
+          <p className="font-bold text-[#168f43]">İş yeri (birim başına)</p>
           <ul className="mt-1.5 space-y-0.5 text-[#374151]">
             <li>Hibe {formatTRY(DESTEK_TUTARLARI.ticari.hibe)}</li>
             <li>Kredi {formatTRY(DESTEK_TUTARLARI.ticari.kredi)}</li>
             <li>Taşınma {formatTRY(DESTEK_TUTARLARI.ticari.tasinma)}</li>
             <li className="font-bold">
-              Toplam {formatTRY(DESTEK_TUTARLARI.ticari.toplamIlk)}
+              Toplam {formatTRY(DESTEK_TUTARLARI.ticari.toplamBirim)}
             </li>
           </ul>
-          <p className="mt-2 text-[11px] text-[#6b7280]">
-            Ek her dükkân: {formatTRY(DESTEK_TUTARLARI.ticari.ekDukkanKredi)}{" "}
-            kredi
-          </p>
         </div>
       </div>
 
@@ -78,9 +71,7 @@ export function HibeKrediCalculator() {
             className="input-field mt-1 tabular-nums"
             value={konutRaw}
             onChange={(e) => setKonutRaw(sanitizeDigitInput(e.target.value))}
-            onBlur={() => {
-              if (konutRaw.trim() === "") setKonutRaw("0");
-            }}
+            onFocus={(e) => e.target.select()}
           />
         </label>
         <label className="block text-xs font-bold text-[#6b7280]">
@@ -95,9 +86,7 @@ export function HibeKrediCalculator() {
             onChange={(e) =>
               setTicariRaw(sanitizeDigitInput(e.target.value))
             }
-            onBlur={() => {
-              if (ticariRaw.trim() === "") setTicariRaw("0");
-            }}
+            onFocus={(e) => e.target.select()}
           />
         </label>
       </div>
@@ -117,27 +106,14 @@ export function HibeKrediCalculator() {
             {sonuc.ticariAdet > 0 ? ` · ${sonuc.ticariAdet} ticari` : ""}
           </p>
           <Row label="Toplam hibe" value={formatTRY(sonuc.hibe)} />
+          <Row label="Toplam kredi" value={formatTRY(sonuc.kredi)} />
           <Row
-            label="Toplam kredi (ilk birimler)"
-            value={formatTRY(sonuc.kredi)}
-          />
-          <Row
-            label="Toplam taşınma / tahliye"
+            label="Toplam taşınma (birim × 125.000 ₺)"
             value={formatTRY(sonuc.tasinma)}
           />
-          {sonuc.ekKredi > 0 && (
-            <Row
-              label="Ek birimler için kredi imkânı"
-              value={formatTRY(sonuc.ekKredi)}
-            />
-          )}
           <div className="my-2 border-t border-[#2cb34f]/20" />
           <Row
-            label="İlk paket (hibe + kredi + taşınma)"
-            value={formatTRY(sonuc.ilkPaketToplam)}
-          />
-          <Row
-            label="Genel toplam (tüm kalemler)"
+            label="Genel toplam"
             value={formatTRY(sonuc.genelToplam)}
             strong
           />
@@ -149,7 +125,7 @@ export function HibeKrediCalculator() {
         <a href="/rehber/kira-yardimi" className="font-semibold text-[#168f43]">
           kira yardımı rehberi
         </a>
-        ne bakın. Nihai hak ve ödeme resmî başvuruya bağlıdır.
+        . Nihai hak ve ödeme resmî başvuruya bağlıdır.
       </p>
     </section>
   );

@@ -1,54 +1,32 @@
 /**
- * "Yarısı Bizden" kampanyası destek tutarları (İstanbul)
- * Kaynak: Cumhurbaşkanı açıklaması / Kentsel Dönüşüm Başkanlığı koordinasyonu
- * — Hibe 700.000 → 875.000 ₺
- * — Kredi 700.000 → 875.000 ₺
- * — Taşınma 100.000 → 125.000 ₺
- * — 1 konut toplam: 1.875.000 ₺
- * — İş yeri hibe/kredi 350.000 → 437.500 ₺; taşınma 125.000 ₺; toplam 1.000.000 ₺
- * — Ek konut: 1.750.000 ₺ kredi imkânı
- * — Ek dükkân: 875.000 ₺ kredi imkânı
+ * "Yarısı Bizden" kampanyası — birim başına sabit tutarlar (İstanbul)
  *
- * Not: Bilgilendirme amaçlıdır; resmî başvuru şartları esas alınır.
+ * Konut birim: 875.000 hibe + 875.000 kredi + 125.000 taşınma = 1.875.000 ₺
+ * Ticari birim: 437.500 hibe + 437.500 kredi + 125.000 taşınma = 1.000.000 ₺
+ *
+ * Her birim için aynı paket uygulanır (ayrı “ilk birim / ek birim” yok).
+ * Bilgilendirme amaçlıdır; resmî başvuru şartları esas alınır.
  */
 export const DESTEK_TUTARLARI = {
   kampanya: "Yarısı Bizden",
   sehir: "İstanbul",
   konut: {
     label: "Konut",
-    /** İlk / birim konut hibe */
     hibe: 875_000,
-    /** İlk / birim konut kredi */
     kredi: 875_000,
-    /** Taşınma / tahliye desteği (bir kerelik) */
     tasinma: 125_000,
-    /** İlk konut paket toplamı (hibe + kredi + taşınma) */
-    get toplamIlk() {
+    get toplamBirim() {
       return this.hibe + this.kredi + this.tasinma;
     },
-    /** Hibe + kredi (taşınma hariç) — ek konut paketinde kullanılan baz */
-    get hibeKrediToplam() {
-      return this.hibe + this.kredi;
-    },
-    /**
-     * Hak sahibinin diğer her bir konutu için sunulan kredi imkânı
-     * (açıklama: 1.750.000 ₺ kredi)
-     */
-    ekKonutKredi: 1_750_000,
   },
   ticari: {
     label: "Ticari / iş yeri",
     hibe: 437_500,
     kredi: 437_500,
     tasinma: 125_000,
-    get toplamIlk() {
+    get toplamBirim() {
       return this.hibe + this.kredi + this.tasinma;
     },
-    get hibeKrediToplam() {
-      return this.hibe + this.kredi;
-    },
-    /** Diğer her bir dükkân için kredi imkânı */
-    ekDukkanKredi: 875_000,
   },
 } as const;
 
@@ -60,35 +38,15 @@ export function formatTRY(n: number) {
   }).format(n);
 }
 
-/**
- * Karışık bina: konut + ticari birim sayısına göre paket.
- * - İlk konut: hibe+kredi+taşınma (1.875.000)
- * - Ek konutlar: her biri için 1.750.000 kredi imkânı
- * - İlk ticari: hibe+kredi+taşınma (1.000.000)
- * - Ek dükkânlar: her biri için 875.000 kredi imkânı
- */
+/** Her konut ve her ticari birim için tam paket (hibe + kredi + taşınma) */
 export function hesaplaYarisiBizden(konutAdet: number, ticariAdet: number) {
   const k = Math.max(0, Math.floor(konutAdet));
   const t = Math.max(0, Math.floor(ticariAdet));
   const { konut, ticari } = DESTEK_TUTARLARI;
 
-  let hibe = 0;
-  let kredi = 0;
-  let tasinma = 0;
-  let ekKredi = 0;
-
-  if (k >= 1) {
-    hibe += konut.hibe;
-    kredi += konut.kredi;
-    tasinma += konut.tasinma;
-    if (k > 1) ekKredi += (k - 1) * konut.ekKonutKredi;
-  }
-  if (t >= 1) {
-    hibe += ticari.hibe;
-    kredi += ticari.kredi;
-    tasinma += ticari.tasinma;
-    if (t > 1) ekKredi += (t - 1) * ticari.ekDukkanKredi;
-  }
+  const hibe = k * konut.hibe + t * ticari.hibe;
+  const kredi = k * konut.kredi + t * ticari.kredi;
+  const tasinma = k * konut.tasinma + t * ticari.tasinma;
 
   return {
     konutAdet: k,
@@ -96,9 +54,6 @@ export function hesaplaYarisiBizden(konutAdet: number, ticariAdet: number) {
     hibe,
     kredi,
     tasinma,
-    ekKredi,
-    /** İlk birim paketleri (hibe+kredi+taşınma) + ek birim kredileri */
-    genelToplam: hibe + kredi + tasinma + ekKredi,
-    ilkPaketToplam: hibe + kredi + tasinma,
+    genelToplam: hibe + kredi + tasinma,
   };
 }

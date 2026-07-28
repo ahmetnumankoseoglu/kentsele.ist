@@ -10,7 +10,7 @@ const K = DESTEK_TUTARLARI.konut;
 const T = DESTEK_TUTARLARI.ticari;
 
 const TITLE = "Yarısı Bizden hibe ve kredi hesaplama (İstanbul)";
-const DESCRIPTION = `Konut: ${formatTRY(K.hibe)} hibe + ${formatTRY(K.kredi)} kredi + ${formatTRY(K.tasinma)} taşınma = ${formatTRY(K.toplamIlk)}. İş yeri: ${formatTRY(T.hibe)} + ${formatTRY(T.kredi)} + ${formatTRY(T.tasinma)} = ${formatTRY(T.toplamIlk)}.`;
+const DESCRIPTION = `Konut birim: ${formatTRY(K.hibe)} hibe + ${formatTRY(K.kredi)} kredi + ${formatTRY(K.tasinma)} taşınma = ${formatTRY(K.toplamBirim)}. İş yeri birim: ${formatTRY(T.hibe)} + ${formatTRY(T.kredi)} + ${formatTRY(T.tasinma)} = ${formatTRY(T.toplamBirim)}. Her birim için aynı paket.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -78,96 +78,82 @@ export default function HibeKrediPage() {
       schemas={schemas}
     >
       <p>
-        <strong>Yarısı Bizden</strong> kampanyası, Çevre, Şehircilik ve İklim
-        Değişikliği Bakanlığı’na bağlı{" "}
-        <strong>Kentsel Dönüşüm Başkanlığı</strong> koordinesinde 2023’te
-        başlatılan ve İstanbul’un tüm ilçelerini kapsayan bir dönüşüm destek
-        programıdır. Evini veya iş yerini dönüştürmek isteyen vatandaşlara{" "}
-        <strong>hibe</strong>, <strong>kredi</strong> ve{" "}
-        <strong>taşınma (tahliye) yardımı</strong> ödenir.
-      </p>
-      <p>
-        Cumhurbaşkanı Recep Tayyip Erdoğan’ın açıkladığı güncelleme ile destek
-        tutarları artırılmıştır. Bu sayfadaki rakamlar o açıklamaya göre
-        sabittir; sitede uydurma oran kullanılmaz.
+        <strong>Yarısı Bizden</strong> kampanyası, Kentsel Dönüşüm Başkanlığı
+        koordinesinde İstanbul’un tüm ilçelerini kapsayan destek programıdır.
+        Her konut ve her iş yeri birimi için{" "}
+        <strong>hibe + kredi + taşınma</strong> birlikte hesaplanır.
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
-        1 konut için destek: {formatTRY(K.toplamIlk)}
+        Konut birim: {formatTRY(K.toplamBirim)}
       </h2>
       <ul className="list-disc space-y-1.5 pl-5">
         <li>
-          Hibe: <strong>{formatTRY(K.hibe)}</strong> (önceki 700.000 ₺)
+          Hibe: <strong>{formatTRY(K.hibe)}</strong>
         </li>
         <li>
-          Kredi: <strong>{formatTRY(K.kredi)}</strong> (önceki 700.000 ₺)
+          Kredi: <strong>{formatTRY(K.kredi)}</strong>
         </li>
         <li>
-          Taşınma / tahliye desteği: <strong>{formatTRY(K.tasinma)}</strong>{" "}
-          (önceki 100.000 ₺)
+          Taşınma: <strong>{formatTRY(K.tasinma)}</strong> (her birim için)
         </li>
         <li>
-          Toplam: <strong>{formatTRY(K.toplamIlk)}</strong>
+          Birim toplam: <strong>{formatTRY(K.toplamBirim)}</strong>
         </li>
       </ul>
       <p>
-        Hak sahiplerinin <strong>diğer her bir konutu</strong> için ayrıca{" "}
-        <strong>{formatTRY(K.ekKonutKredi)}</strong> kredi imkânı sunulur
-        (hibe+kredi 1.750.000 ₺ bandı; taşınma ilk birim paketinde).
+        Örnek: 4 konut → {formatTRY(K.toplamBirim * 4)} (
+        {formatTRY(K.hibe * 4)} hibe + {formatTRY(K.kredi * 4)} kredi +{" "}
+        {formatTRY(K.tasinma * 4)} taşınma).
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
-        1 iş yeri için destek: {formatTRY(T.toplamIlk)}
+        İş yeri birim: {formatTRY(T.toplamBirim)}
       </h2>
       <ul className="list-disc space-y-1.5 pl-5">
         <li>
-          Hibe: <strong>{formatTRY(T.hibe)}</strong> (önceki 350.000 ₺)
+          Hibe: <strong>{formatTRY(T.hibe)}</strong>
         </li>
         <li>
-          Kredi: <strong>{formatTRY(T.kredi)}</strong> (önceki 350.000 ₺)
+          Kredi: <strong>{formatTRY(T.kredi)}</strong>
         </li>
         <li>
-          Taşınma yardımı: <strong>{formatTRY(T.tasinma)}</strong>
+          Taşınma: <strong>{formatTRY(T.tasinma)}</strong> (her birim için)
         </li>
         <li>
-          Toplam: <strong>{formatTRY(T.toplamIlk)}</strong>
+          Birim toplam: <strong>{formatTRY(T.toplamBirim)}</strong>
         </li>
       </ul>
       <p>
-        Hak sahiplerinin <strong>diğer her bir dükkânı</strong> için{" "}
-        <strong>{formatTRY(T.ekDukkanKredi)}</strong> kredi imkânı sunulur.
+        Örnek: 2 dükkân → {formatTRY(T.toplamBirim * 2)}.
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
         Konut + ticari karışık binalar
       </h2>
       <p>
-        Birçok İstanbul binasında zemin veya bodrum <strong>dükkân</strong>,
-        üst katlar <strong>konut</strong>tur. Hesaplayıcıda konut ve ticari
-        adedini <strong>aynı anda</strong> girebilirsiniz; ilk birimler için
-        hibe+kredi+taşınma, ek birimler için açıklanan ek kredi imkânları
-        toplanır.
+        Zemin dükkân, üst kat konut gibi durumlarda her iki adedi de girin.
+        Örnek: 6 konut + 2 ticari → 6 × {formatTRY(K.toplamBirim)} + 2 ×{" "}
+        {formatTRY(T.toplamBirim)} ={" "}
+        {formatTRY(K.toplamBirim * 6 + T.toplamBirim * 2)}.
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
         Taşınma desteği ≠ aylık kira yardımı
       </h2>
       <p>
-        Bu paketteki <strong>{formatTRY(K.tasinma)} taşınma / tahliye
-        desteği</strong> bir kerelik (veya programda tanımlı) taşınma
-        yardımını ifade eder. Aylık ödenen{" "}
-        <strong>kira yardımı</strong> ayrı bir destek kalemidir; detay ve
-        başvuru için{" "}
+        Taşınma ({formatTRY(K.tasinma)} / birim) paket içindedir. Aylık kira
+        yardımı ayrı destektir —{" "}
         <Link href="/rehber/kira-yardimi" className="font-bold text-[#168f43]">
-          kira yardımı rehberine
-        </Link>{" "}
-        bakın.
+          kira yardımı rehberi
+        </Link>
+        .
       </p>
 
       <div className="card mt-4 border-l-4 border-l-[#ee401d] bg-[#fef2f2] p-4 text-sm text-[#6b7280]">
         <strong className="text-[#111321]">Önemli:</strong> Tutarlar
-        bilgilendirme amaçlıdır. Hak sahipliği, başvuru sırası, ödeme planı ve
-        banka kredisi şartları resmî kurum ve banka süreçlerine tabidir.
+        bilgilendirme amaçlıdır. Hak sahipliği ve ödeme resmî kurum / banka
+        süreçlerine tabidir.
       </div>
 
       <HibeKrediCalculator />
@@ -180,11 +166,11 @@ export default function HibeKrediPage() {
         >
           6306 sayılı kanun
         </Link>
-        . İstanbul’da müteahhit arıyorsanız{" "}
+        .{" "}
         <Link href="/ilan-ver" className="font-bold text-[#168f43]">
-          ücretsiz ilan
-        </Link>{" "}
-        verebilirsiniz.
+          Ücretsiz ilan ver
+        </Link>
+        .
       </p>
     </RehberLayout>
   );
