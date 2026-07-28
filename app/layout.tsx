@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteGraphSchema } from "@/lib/seo/schema";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
@@ -57,6 +58,7 @@ export default function RootLayout({
         <JsonLd data={siteGraphSchema()} />
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
