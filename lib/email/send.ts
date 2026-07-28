@@ -249,9 +249,27 @@ export async function emailAdminContactMessage(opts: {
   subject: string;
   body: string;
 }) {
+  const site = getSiteUrl();
+
+  // Auto-ack to the user
+  const ack = T.templateContactReceivedAck({
+    name: opts.name,
+    subject: opts.subject,
+  });
+  await sendTemplateEmail({
+    to: opts.email,
+    alias: "contact-received",
+    variables: {
+      PREVIEW_TEXT: "Mesajın bize ulaştı.",
+      NAME: opts.name,
+      SUBJECT: opts.subject,
+      SITE_URL: site,
+    },
+    fallback: { to: opts.email, ...ack },
+  });
+
   const adminTo = getAdminNotifyEmail();
   if (!adminTo) return;
-  const site = getSiteUrl();
   const mail = T.templateAdminContactNotify(opts);
   await sendTemplateEmail({
     to: adminTo,
@@ -271,5 +289,30 @@ export async function emailAdminContactMessage(opts: {
       replyTo: opts.email,
       ...mail,
     },
+  });
+}
+
+/** Admin replied to a contact form message */
+export async function emailContactAdminReply(opts: {
+  name: string;
+  email: string;
+  subject: string;
+  originalBody: string;
+  reply: string;
+}) {
+  const site = getSiteUrl();
+  const mail = T.templateContactAdminReply(opts);
+  await sendTemplateEmail({
+    to: opts.email,
+    alias: "contact-reply",
+    variables: {
+      PREVIEW_TEXT: `Yanıt: ${opts.subject}`,
+      NAME: opts.name,
+      SUBJECT: opts.subject,
+      ORIGINAL_BODY: opts.originalBody,
+      REPLY_BODY: opts.reply,
+      ILETISIM_URL: `${site}/iletisim`,
+    },
+    fallback: { to: opts.email, ...mail },
   });
 }

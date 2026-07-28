@@ -507,6 +507,81 @@ const templates = [
       ctaHrefVar: "LISTING_ADMIN_URL",
     }),
   },
+  {
+    alias: "contact-received",
+    name: "Kentsele · İletişim alındı (kullanıcı)",
+    subject: "Mesajın alındı · {{{SUBJECT}}}",
+    previewFallback: "Mesajın bize ulaştı.",
+    variables: [
+      str("PREVIEW_TEXT", "Mesajın bize ulaştı."),
+      str("NAME", "Ziyaretçi"),
+      str("SUBJECT", "Mesaj"),
+      str("SITE_URL", SITE),
+      str("YEAR", YEAR),
+    ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "İletişim formundan gönderdiğin mesajı aldık.",
+      "Konu: {{{SUBJECT}}}",
+    ]),
+    html: layout({
+      title: "Mesajın bize ulaştı",
+      bodyHtml: [
+        p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
+        p(
+          "kentsele.ist iletişim formundan gönderdiğin mesajı aldık. Ekibimiz en kısa sürede e-posta ile dönüş yapacak."
+        ),
+        metaBoxRows([{ label: "Konu", valueHtml: "{{{SUBJECT}}}" }]),
+        p(
+          "Bu otomatik bir bilgilendirme mesajıdır; bu e-postaya yanıt vermen gerekmez."
+        ),
+      ].join(""),
+      ctaLabel: "Siteye git",
+      ctaHrefVar: "SITE_URL",
+    }),
+  },
+  {
+    alias: "contact-reply",
+    name: "Kentsele · İletişim admin cevabı",
+    subject: "Yanıt: {{{SUBJECT}}}",
+    previewFallback: "Mesajına yanıt geldi.",
+    variables: [
+      str("PREVIEW_TEXT", "Mesajına yanıt geldi."),
+      str("NAME", "Ziyaretçi"),
+      str("SUBJECT", "Mesaj"),
+      str("ORIGINAL_BODY", "—"),
+      str("REPLY_BODY", "—"),
+      str("ILETISIM_URL", `${SITE}/iletisim`),
+      str("YEAR", YEAR),
+    ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Yanıtımız:",
+      "{{{REPLY_BODY}}}",
+      "Senin mesajın:",
+      "{{{ORIGINAL_BODY}}}",
+    ]),
+    html: layout({
+      title: "Mesajına yanıt",
+      bodyHtml: [
+        p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
+        p("İletişim formundan ilettiğin mesaja yanıtımız:"),
+        p(
+          `<div style="margin:0 0 14px;padding:12px 14px;background:#f8f8f8;border-radius:3px;border:1px solid #e3e4e6;color:#111321;white-space:pre-wrap;">{{{REPLY_BODY}}}</div>`
+        ),
+        p(
+          `<strong style="color:${BRAND.ink};">Senin mesajın:</strong><br/><span style="color:#6b7280;">{{{ORIGINAL_BODY}}}</span>`
+        ),
+        p(
+          "Başka soruların olursa sitemizdeki iletişim formundan tekrar yazabilirsin."
+        ),
+      ].join(""),
+      ctaLabel: "İletişim",
+      ctaHrefVar: "ILETISIM_URL",
+    }),
+  },
 ];
 
 // Ensure PREVIEW_TEXT default matches each template's previewFallback

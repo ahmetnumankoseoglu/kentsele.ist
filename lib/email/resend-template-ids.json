@@ -1,5 +1,5 @@
 {
-  "importedAt": "2026-07-28T23:21:25.278Z",
+  "importedAt": "2026-07-28T23:24:27.649Z",
   "from": "Kentsele.ist <noreply@kentsele.ist>",
   "templates": [
     {
@@ -109,6 +109,24 @@
       "htmlLen": 4483,
       "textLen": 86,
       "ok": true
+    },
+    {
+      "alias": "contact-received",
+      "id": "fa05a079-f005-4073-9d31-53815c2f1e0e",
+      "action": "created",
+      "subject": "Mesajın alındı · {{{SUBJECT}}}",
+      "htmlLen": 3724,
+      "textLen": 106,
+      "ok": true
+    },
+    {
+      "alias": "contact-reply",
+      "id": "96c8269d-70b7-4cc6-81a3-ccc9f0a8a5c3",
+      "action": "created",
+      "subject": "Yanıt: {{{SUBJECT}}}",
+      "htmlLen": 3567,
+      "textLen": 106,
+      "ok": true
     }
   ],
   "byAlias": {
@@ -123,6 +141,8 @@
     "contractor-approved": "a8e86f42-e369-48ef-a5ae-8edd0f19aeb5",
     "contractor-rejected": "d9f856a6-4a71-4872-a54b-b9833c6d2741",
     "admin-contact": "84f2a8aa-0b7d-4e59-8794-6c2e637631f5",
-    "admin-new-listing": "6b6abd3b-cd6e-4df5-8391-0beb2ce539db"
+    "admin-new-listing": "6b6abd3b-cd6e-4df5-8391-0beb2ce539db",
+    "contact-received": "fa05a079-f005-4073-9d31-53815c2f1e0e",
+    "contact-reply": "96c8269d-70b7-4cc6-81a3-ccc9f0a8a5c3"
   }
 }

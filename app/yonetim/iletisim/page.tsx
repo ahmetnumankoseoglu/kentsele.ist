@@ -13,6 +13,8 @@ type ContactMessage = {
   body: string;
   status: "yeni" | "okundu" | "arsiv";
   created_at: string;
+  admin_reply?: string | null;
+  replied_at?: string | null;
 };
 
 export default async function AdminIletisimPage() {
@@ -76,10 +78,27 @@ export default async function AdminIletisimPage() {
             <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-[#374151]">
               {m.body}
             </p>
+            {m.admin_reply ? (
+              <div className="mt-3 rounded-[3px] border border-[#eaf8ee] bg-[#f8fdf9] p-3">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#168f43]">
+                  Gönderilen cevap
+                  {m.replied_at
+                    ? ` · ${new Date(m.replied_at).toLocaleString("tr-TR")}`
+                    : ""}
+                </p>
+                <p className="mt-1 whitespace-pre-wrap text-sm text-[#374151]">
+                  {m.admin_reply}
+                </p>
+              </div>
+            ) : null}
             <p className="mt-2 text-[11px] text-[#9ca3af]">
               {new Date(m.created_at).toLocaleString("tr-TR")}
             </p>
-            <ContactMessageActions id={m.id} status={m.status} />
+            <ContactMessageActions
+              id={m.id}
+              status={m.status}
+              hasReply={Boolean(m.admin_reply)}
+            />
           </li>
         ))}
         {items.length === 0 && (

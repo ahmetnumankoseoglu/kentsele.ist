@@ -374,3 +374,71 @@ export function templateAdminNewListing(ctx: ListingEmailCtx & { listingId: stri
     text: plainFromLines([`Yeni ilan: ${ctx.ilce}`, ctx.name]),
   };
 }
+
+/** 13) Kullanıcıya: iletişim formu alındı (otomatik) */
+export function templateContactReceivedAck(ctx: {
+  name: string;
+  subject: string;
+}) {
+  const title = "Mesajın bize ulaştı";
+  const html = emailLayout({
+    title,
+    preheader: "İletişim formundaki mesajın alındı.",
+    bodyHtml: [
+      p(`Merhaba ${strong(ctx.name)},`),
+      p(
+        "kentsele.ist iletişim formundan gönderdiğin mesajı aldık. Ekibimiz en kısa sürede e-posta ile dönüş yapacak."
+      ),
+      metaBox([{ label: "Konu", value: ctx.subject }]),
+      p("Bu otomatik bir bilgilendirme mesajıdır; bu e-postaya yanıt vermen gerekmez."),
+    ].join(""),
+    cta: { label: "Siteye git", href: site },
+  });
+  return {
+    subject: `Mesajın alındı · ${ctx.subject}`,
+    html,
+    text: plainFromLines([
+      `Merhaba ${ctx.name},`,
+      "Mesajını aldık. En kısa sürede dönüş yapacağız.",
+      `Konu: ${ctx.subject}`,
+    ]),
+  };
+}
+
+/** 14) Kullanıcıya: admin cevabı */
+export function templateContactAdminReply(ctx: {
+  name: string;
+  subject: string;
+  originalBody: string;
+  reply: string;
+}) {
+  const title = "Mesajına yanıt";
+  const html = emailLayout({
+    title,
+    preheader: `Re: ${ctx.subject}`,
+    bodyHtml: [
+      p(`Merhaba ${strong(ctx.name)},`),
+      p("İletişim formundan ilettiğin mesaja yanıtımız:"),
+      p(
+        `<div style="margin:0 0 14px;padding:12px 14px;background:#f8f8f8;border-radius:3px;border:1px solid #e3e4e6;color:#111321;white-space:pre-wrap;">${escapeHtml(ctx.reply)}</div>`
+      ),
+      p(
+        `<strong style="color:#111321;">Senin mesajın:</strong><br/><span style="color:#6b7280;">${escapeHtml(ctx.originalBody).replace(/\n/g, "<br/>")}</span>`
+      ),
+      p("Başka soruların olursa sitemizdeki iletişim formundan tekrar yazabilirsin."),
+    ].join(""),
+    cta: { label: "İletişim", href: `${site}/iletisim` },
+  });
+  return {
+    subject: `Yanıt: ${ctx.subject}`,
+    html,
+    text: plainFromLines([
+      `Merhaba ${ctx.name},`,
+      "Yanıtımız:",
+      ctx.reply,
+      "—",
+      "Senin mesajın:",
+      ctx.originalBody,
+    ]),
+  };
+}
