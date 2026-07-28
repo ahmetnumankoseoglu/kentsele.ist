@@ -3,15 +3,17 @@ import { getListingByManageToken } from "@/lib/listings/queries";
 import { updateListingByToken } from "@/lib/listings/mutations";
 import { updateListingByOwnerSchema } from "@/lib/validations/listing";
 import { normalizeTrPhone } from "@/lib/phone";
-import { getCurrentProfile } from "@/lib/auth/session";
+import { getCurrentProfile, getSessionUser } from "@/lib/auth/session";
+import { canOwnerEditListing } from "@/lib/listings/ownership";
 
 export async function PATCH(
   req: Request,
   ctx: { params: Promise<{ token: string }> }
 ) {
   try {
+    const user = await getSessionUser();
     const profile = await getCurrentProfile();
-    if (!profile) {
+    if (!user || !profile) {
       return NextResponse.json(
         {
           error: "auth_required",
@@ -27,16 +29,26 @@ export async function PATCH(
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
 
-    // Must own listing or claim first
+    // Token yetmez: e-posta hesabı ile eşleşme zorunlu
     if (
-      existing.owner_user_id &&
-      existing.owner_user_id !== profile.id
+      !canOwnerEditListing({
+        profileId: profile.id,
+        userEmail: user.email,
+        listing: existing,
+      })
     ) {
-      return NextResponse.json({ error: "forbidden" }, { status: 403 });
+      return NextResponse.json(
+        {
+          error: "forbidden",
+          message:
+            "Bu ilan, oluşturulurken girilen e-posta hesabına aittir. O e-posta ile giriş yapmalısınız.",
+        },
+        { status: 403 }
+      );
     }
 
-    // Auto-claim if unowned
-    if (!existing.owner_user_id) {
+    // E-posta eşleşince owner bağla
+    if (!existing.owner_user_id || existing.owner_user_id !== profile.id) {
       const { createServiceClient } = await import("@/lib/supabase/admin");
       const admin = createServiceClient();
       await admin
@@ -62,6 +74,18 @@ export async function PATCH(
       patch.agreement_requested_at = new Date().toISOString();
     }
     delete patch.status;
+
+    // E-posta değiştirilse bile sahiplik bozulmasın — e-posta güncellemesi serbest
+    // ama başka hesabın e-postasını yazmak karışıklık yaratır; yine de malik kendi
+    // e-postasını düzeltebilir.
+
+    const isFieldEdit = Object.keys(patch).some(
+      (k) => k !== "agreement_requested_at"
+    );
+    if (isFieldEdit) {
+      patch.status = "incelemede";
+      patch.published_at = null;
+    }
 
     const listing = await updateListingByToken(token, patch);
     return NextResponse.json({ listing });

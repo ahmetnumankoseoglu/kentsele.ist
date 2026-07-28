@@ -21,6 +21,7 @@ export async function PATCH(
     if (!parsed.success) {
       return NextResponse.json({ error: "validation" }, { status: 400 });
     }
+
     const admin = createServiceClient();
     const { data, error } = await admin
       .from("contractor_profiles")

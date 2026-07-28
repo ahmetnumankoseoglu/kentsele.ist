@@ -121,11 +121,8 @@ export function HibeKrediCalculator() {
       )}
 
       <p className="mt-3 text-[11px] leading-relaxed text-[#9ca3af]">
-        Aylık kira yardımı bu paketten ayrıdır;{" "}
-        <a href="/rehber/kira-yardimi" className="font-semibold text-[#168f43]">
-          kira yardımı rehberi
-        </a>
-        . Nihai hak ve ödeme resmî başvuruya bağlıdır.
+        Paket tutarları bilgilendirme amaçlıdır; nihai hak ve ödeme resmî
+        başvuru / banka sürecine bağlıdır.
       </p>
     </section>
   );

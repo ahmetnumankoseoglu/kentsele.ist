@@ -29,10 +29,13 @@ cp .env.example .env.local
 
 ### 2. Veritabanı
 
-Supabase SQL Editor’da migration’ı uygula:
+Supabase SQL Editor’da migration’ları sırayla uygula:
 
 - [`supabase/migrations/001_listings.sql`](supabase/migrations/001_listings.sql)
 - [`supabase/migrations/002_auth_news_contractors.sql`](supabase/migrations/002_auth_news_contractors.sql)
+- [`supabase/migrations/003_listing_belgeler.sql`](supabase/migrations/003_listing_belgeler.sql)
+- [`supabase/migrations/004_listing_ada_parsel.sql`](supabase/migrations/004_listing_ada_parsel.sql)
+- [`supabase/migrations/005_contact_messages.sql`](supabase/migrations/005_contact_messages.sql)
 
 Adımlar için: [`supabase/README.md`](supabase/README.md)
 

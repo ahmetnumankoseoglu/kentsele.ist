@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -10,8 +9,15 @@ export function LogoutButton() {
       type="button"
       className="text-sm font-semibold text-[#6b7280] hover:text-[#ee401d]"
       onClick={async () => {
-        const supabase = createBrowserSupabase();
-        await supabase.auth.signOut();
+        try {
+          const { createBrowserSupabase } = await import(
+            "@/lib/supabase/browser"
+          );
+          const supabase = createBrowserSupabase();
+          await supabase.auth.signOut();
+        } catch {
+          /* ignore */
+        }
         router.push("/");
         router.refresh();
       }}

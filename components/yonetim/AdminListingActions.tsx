@@ -3,22 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ISTANBUL_ILCELER } from "@/lib/constants/istanbul-ilceler";
+import { getMahallelerForIlce } from "@/lib/constants/istanbul-mahalleler";
 import {
-  DAIRE_SECENEKLERI,
-  KAT_SECENEKLERI,
+  LISTING_BELGELER,
   ODEME_LABELS,
   ODEME_TERCIHLERI,
   STATUS_LABELS,
+  type ListingBelgeKey,
   type ListingStatus,
   type OdemeTercihi,
 } from "@/lib/constants/listing";
 import type { Listing } from "@/types/listing";
+import { sanitizeDigitInput } from "@/lib/utils/numeric-input";
 
 type AdminListing = {
   id: string;
   slug: string;
   ilce: string;
   mahalle: string | null;
+  ada: string | null;
+  parsel: string | null;
   kat_sayisi: string;
   daire_sayisi: string;
   odeme_tercihi: OdemeTercihi;
@@ -32,12 +36,16 @@ type AdminListing = {
   created_at: string;
   updated_at: string;
   manage_token: string;
+  belge_aplikasyon: boolean;
+  belge_imar_durum: boolean;
+  belge_istikamet_roleve: boolean;
+  belge_kot_kesit: boolean;
 };
 
 const STATUS_ACTIONS: { status: ListingStatus; label: string }[] = [
-  { status: "yayinda", label: "Yayınla" },
-  { status: "teklif_saglaniyor", label: "Teklif sağlanıyor" },
-  { status: "anlasildi", label: "Anlaşıldı" },
+  { status: "yayinda", label: "Teklife açık" },
+  { status: "anlasildi", label: "Anlaşma sağlandı" },
+  { status: "incelemede", label: "İncelemeye al" },
   { status: "kaldirildi", label: "Kaldır" },
 ];
 
@@ -47,6 +55,8 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
   const [form, setForm] = useState({
     ilce: initial.ilce,
     mahalle: initial.mahalle ?? "",
+    ada: initial.ada ?? "",
+    parsel: initial.parsel ?? "",
     kat_sayisi: initial.kat_sayisi,
     daire_sayisi: initial.daire_sayisi,
     odeme_tercihi: initial.odeme_tercihi,
@@ -54,7 +64,12 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
     iletisim_adi: initial.iletisim_adi,
     telefon: initial.telefon,
     email: initial.email ?? "",
+    belge_aplikasyon: initial.belge_aplikasyon ?? false,
+    belge_imar_durum: initial.belge_imar_durum ?? false,
+    belge_istikamet_roleve: initial.belge_istikamet_roleve ?? false,
+    belge_kot_kesit: initial.belge_kot_kesit ?? false,
   });
+  const mahalleler = getMahallelerForIlce(form.ilce);
   const [statusLoading, setStatusLoading] = useState<ListingStatus | null>(
     null
   );
@@ -113,6 +128,8 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
       const updated = await patch({
         ilce: form.ilce,
         mahalle: form.mahalle || null,
+        ada: form.ada || null,
+        parsel: form.parsel || null,
         kat_sayisi: form.kat_sayisi,
         daire_sayisi: form.daire_sayisi,
         odeme_tercihi: form.odeme_tercihi,
@@ -120,11 +137,17 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
         iletisim_adi: form.iletisim_adi,
         telefon: form.telefon,
         email: form.email || null,
+        belge_aplikasyon: form.belge_aplikasyon,
+        belge_imar_durum: form.belge_imar_durum,
+        belge_istikamet_roleve: form.belge_istikamet_roleve,
+        belge_kot_kesit: form.belge_kot_kesit,
       });
       setListing((prev) => ({
         ...prev,
         ilce: updated.ilce,
         mahalle: updated.mahalle,
+        ada: updated.ada ?? null,
+        parsel: updated.parsel ?? null,
         kat_sayisi: updated.kat_sayisi,
         daire_sayisi: updated.daire_sayisi,
         odeme_tercihi: updated.odeme_tercihi as OdemeTercihi,
@@ -132,11 +155,17 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
         iletisim_adi: updated.iletisim_adi,
         telefon: updated.telefon,
         email: updated.email,
+        belge_aplikasyon: updated.belge_aplikasyon ?? false,
+        belge_imar_durum: updated.belge_imar_durum ?? false,
+        belge_istikamet_roleve: updated.belge_istikamet_roleve ?? false,
+        belge_kot_kesit: updated.belge_kot_kesit ?? false,
         updated_at: updated.updated_at,
       }));
       setForm({
         ilce: updated.ilce,
         mahalle: updated.mahalle ?? "",
+        ada: updated.ada ?? "",
+        parsel: updated.parsel ?? "",
         kat_sayisi: updated.kat_sayisi,
         daire_sayisi: updated.daire_sayisi,
         odeme_tercihi: updated.odeme_tercihi as OdemeTercihi,
@@ -144,6 +173,10 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
         iletisim_adi: updated.iletisim_adi,
         telefon: updated.telefon,
         email: updated.email ?? "",
+        belge_aplikasyon: updated.belge_aplikasyon ?? false,
+        belge_imar_durum: updated.belge_imar_durum ?? false,
+        belge_istikamet_roleve: updated.belge_istikamet_roleve ?? false,
+        belge_kot_kesit: updated.belge_kot_kesit ?? false,
       });
       setMessage("İlan alanları kaydedildi.");
       router.refresh();
@@ -230,7 +263,13 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
             id="admin-ilce"
             className={inputClass}
             value={form.ilce}
-            onChange={(e) => setForm((f) => ({ ...f, ilce: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                ilce: e.target.value,
+                mahalle: "",
+              }))
+            }
           >
             {ISTANBUL_ILCELER.map((ilce) => (
               <option key={ilce} value={ilce}>
@@ -244,12 +283,56 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
           <label className={labelClass} htmlFor="admin-mahalle">
             Mahalle
           </label>
-          <input
+          <select
             id="admin-mahalle"
             className={inputClass}
             value={form.mahalle}
             onChange={(e) => setForm((f) => ({ ...f, mahalle: e.target.value }))}
-          />
+          >
+            <option value="">Seçin</option>
+            {mahalleler.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelClass} htmlFor="admin-ada">
+              Ada
+            </label>
+            <input
+              id="admin-ada"
+              className={inputClass}
+              inputMode="numeric"
+              value={form.ada}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  ada: sanitizeDigitInput(e.target.value),
+                }))
+              }
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="admin-parsel">
+              Parsel
+            </label>
+            <input
+              id="admin-parsel"
+              className={inputClass}
+              inputMode="numeric"
+              value={form.parsel}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  parsel: sanitizeDigitInput(e.target.value),
+                }))
+              }
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -257,39 +340,35 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
             <label className={labelClass} htmlFor="admin-kat">
               Kat
             </label>
-            <select
+            <input
               id="admin-kat"
               className={inputClass}
+              inputMode="numeric"
               value={form.kat_sayisi}
               onChange={(e) =>
-                setForm((f) => ({ ...f, kat_sayisi: e.target.value }))
+                setForm((f) => ({
+                  ...f,
+                  kat_sayisi: sanitizeDigitInput(e.target.value),
+                }))
               }
-            >
-              {KAT_SECENEKLERI.map((k) => (
-                <option key={k} value={k}>
-                  {k}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div>
             <label className={labelClass} htmlFor="admin-daire">
               Daire
             </label>
-            <select
+            <input
               id="admin-daire"
               className={inputClass}
+              inputMode="numeric"
               value={form.daire_sayisi}
               onChange={(e) =>
-                setForm((f) => ({ ...f, daire_sayisi: e.target.value }))
+                setForm((f) => ({
+                  ...f,
+                  daire_sayisi: sanitizeDigitInput(e.target.value),
+                }))
               }
-            >
-              {DAIRE_SECENEKLERI.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
+            />
           </div>
         </div>
 
@@ -314,6 +393,30 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <p className={labelClass}>Belgeler</p>
+          <ul className="space-y-2">
+            {LISTING_BELGELER.map((b) => (
+              <li key={b.key}>
+                <label className="flex items-center gap-2 text-sm text-slate-800">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-[#2cb34f]"
+                    checked={form[b.key as ListingBelgeKey]}
+                    onChange={() =>
+                      setForm((f) => ({
+                        ...f,
+                        [b.key]: !f[b.key as ListingBelgeKey],
+                      }))
+                    }
+                  />
+                  {b.label}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div>

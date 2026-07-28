@@ -8,6 +8,15 @@ import {
 } from "@/lib/auth/session";
 import { DocumentUploadForm } from "@/components/muteahhit/DocumentUploadForm";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+
+const DOC_LABELS: Record<string, string> = {
+  vergi_levhasi: "Vergi levhası",
+  ticaret_sicil: "Ticaret sicil",
+  imza_sirkuleri: "İmza sirküleri",
+  yetki_belgesi: "Yetki belgesi",
+  diger: "Diğer",
+};
 
 export default async function MuteahhitPage() {
   const user = await getSessionUser();
@@ -45,13 +54,18 @@ export default async function MuteahhitPage() {
 
   return (
     <AppShell showBottomCta={false}>
-      <h1 className="text-2xl font-bold text-[#111321]">Müteahhit paneli</h1>
-      <p className="mt-1 text-sm text-[#6b7280]">
-        Belgelerini yükle; onay sonrası malik numaralarını görebilirsin.
-      </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-[#111321]">Müteahhit paneli</h1>
+          <p className="mt-1 text-sm text-[#6b7280]">
+            Belgelerini yükle; onay sonrası malik numaralarını görebilirsin.
+          </p>
+        </div>
+        <LogoutButton />
+      </div>
 
       <div className="card-elevated mt-5 p-5">
-        <p className="text-sm font-bold">
+        <p className="text-sm font-bold text-[#111321]">
           Durum:{" "}
           <span
             className={
@@ -69,13 +83,13 @@ export default async function MuteahhitPage() {
                 : "İncelemede"}
           </span>
         </p>
-        {contractor?.rejection_reason && (
+        {contractor?.rejection_reason ? (
           <p className="mt-2 text-xs text-[#ee401d]">
             {contractor.rejection_reason}
           </p>
-        )}
+        ) : null}
         <p className="mt-2 text-sm text-[#6b7280]">
-          {contractor?.company_name || "Firma adı"}
+          {contractor?.company_name || profile.full_name || "Firma adı"}
         </p>
       </div>
 
@@ -87,16 +101,37 @@ export default async function MuteahhitPage() {
       <section className="mt-8">
         <h2 className="section-title">Yüklenen belgeler</h2>
         {docs.length === 0 ? (
-          <p className="text-sm text-[#6b7280]">Henüz belge yok.</p>
+          <div className="card p-4 text-sm text-[#6b7280]">
+            Henüz belge yok. Yukarıdan vergi levhası veya diğer belgeleri
+            yükleyebilirsin.
+          </div>
         ) : (
-          <ul className="space-y-2">
-            {docs.map((d) => (
-              <li key={d.id} className="card px-3 py-2 text-sm">
-                <span className="font-semibold">{d.doc_type}</span>
-                <span className="ml-2 text-[#6b7280]">{d.file_name}</span>
-              </li>
-            ))}
-          </ul>
+          <>
+            <div className="mb-3 rounded-[3px] border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm leading-relaxed text-amber-950">
+              Yüklenen belgeler inceleme için admin paneline düştü. Onay
+              sürecini burada takip edebilirsin.
+            </div>
+            <ul className="space-y-2">
+              {docs.map((d) => (
+                <li
+                  key={d.id}
+                  className="card flex items-center justify-between gap-3 px-4 py-3"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-[#111321]">
+                      {DOC_LABELS[d.doc_type] ?? d.doc_type}
+                    </p>
+                    <p className="truncate text-xs text-[#6b7280]">
+                      {d.file_name}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-800">
+                    İncelemede
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </section>
 

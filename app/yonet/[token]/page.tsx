@@ -4,6 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { OwnerPanel } from "@/components/yonet/OwnerPanel";
 import { getListingByManageToken } from "@/lib/listings/queries";
 import { getCurrentProfile, getSessionUser } from "@/lib/auth/session";
+import { canOwnerEditListing } from "@/lib/listings/ownership";
 import type { Listing } from "@/types/listing";
 import type { OdemeTercihi, ListingStatus } from "@/lib/constants/listing";
 
@@ -36,9 +37,9 @@ export default async function YonetPage({
             İlan düzenlemek için giriş gerekli
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-            İlan oluşturmak ücretsiz ve kayıtsızdır. Düzenleme, anlaşma bildirimi
-            ve yönetim için hesap açman veya giriş yapman gerekir. Girişten sonra
-            bu ilan hesabına bağlanır.
+            Düzenleme yalnızca ilanı oluştururken girdiğin{" "}
+            <strong>e-posta</strong> ile giriş yaptığında mümkündür. Token tek
+            başına yetmez.
           </p>
           <div className="mt-5 flex flex-col gap-2">
             <Link
@@ -51,7 +52,7 @@ export default async function YonetPage({
               href={`/kayit?next=${encodeURIComponent(`/yonet/${token}`)}`}
               className="btn-secondary w-full"
             >
-              Kayıt ol (malik)
+              Kayıt ol
             </Link>
           </div>
         </div>
@@ -59,18 +60,34 @@ export default async function YonetPage({
     );
   }
 
-  if (listing.owner_user_id && listing.owner_user_id !== profile.id) {
+  const allowed = canOwnerEditListing({
+    profileId: profile.id,
+    userEmail: user.email,
+    listing,
+  });
+
+  if (!allowed) {
     return (
       <AppShell showBottomCta={false}>
-        <div className="card p-6 text-center text-sm text-[#ee401d]">
-          Bu ilan başka bir hesaba bağlı.
+        <div className="card p-6 text-center">
+          <p className="text-sm font-bold text-[#ee401d]">
+            Bu ilanı düzenleme yetkin yok
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
+            İlan, oluşturulurken girilen e-posta hesabına aittir. Lütfen o
+            e-posta ile giriş yap. Hesabın:{" "}
+            <strong>{user.email ?? "—"}</strong>
+          </p>
+          <Link href="/hesabim" className="btn-secondary mt-4 w-full">
+            Hesabıma git
+          </Link>
         </div>
       </AppShell>
     );
   }
 
-  // Auto-claim on view when logged in
-  if (!listing.owner_user_id) {
+  // E-posta eşleşince hesabı bağla
+  if (!listing.owner_user_id || listing.owner_user_id !== profile.id) {
     try {
       const { createServiceClient } = await import("@/lib/supabase/admin");
       const admin = createServiceClient();
@@ -80,7 +97,7 @@ export default async function YonetPage({
         .eq("id", listing.id);
       listing = { ...listing, owner_user_id: profile.id };
     } catch {
-      /* ignore if column missing until migration */
+      /* ignore */
     }
   }
 
@@ -89,6 +106,8 @@ export default async function YonetPage({
     slug: listing.slug,
     ilce: listing.ilce,
     mahalle: listing.mahalle,
+    ada: listing.ada ?? null,
+    parsel: listing.parsel ?? null,
     kat_sayisi: listing.kat_sayisi,
     daire_sayisi: listing.daire_sayisi,
     odeme_tercihi: listing.odeme_tercihi as OdemeTercihi,
@@ -101,6 +120,10 @@ export default async function YonetPage({
     published_at: listing.published_at,
     created_at: listing.created_at,
     updated_at: listing.updated_at,
+    belge_aplikasyon: listing.belge_aplikasyon ?? false,
+    belge_imar_durum: listing.belge_imar_durum ?? false,
+    belge_istikamet_roleve: listing.belge_istikamet_roleve ?? false,
+    belge_kot_kesit: listing.belge_kot_kesit ?? false,
   };
 
   return (

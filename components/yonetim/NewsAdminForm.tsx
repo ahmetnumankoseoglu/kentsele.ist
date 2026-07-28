@@ -1,8 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { NewsArticle } from "@/types/news";
+
+async function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("read_failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function ImagePicker({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const id = useId();
+  return (
+    <div>
+      <p className="mb-1.5 text-xs font-bold text-[#6b7280]">{label}</p>
+      <input
+        id={id}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="sr-only"
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          if (!f) return;
+          if (f.size > 4 * 1024 * 1024) {
+            alert("Görsel en fazla 4 MB olabilir.");
+            return;
+          }
+          const data = await fileToDataUrl(f);
+          onChange(data);
+        }}
+      />
+      <label
+        htmlFor={id}
+        className="flex cursor-pointer flex-col items-center justify-center rounded-[3px] border-2 border-dashed border-[#e3e4e6] bg-[#f8f8f8] px-3 py-5 text-center hover:border-[#2cb34f]/40"
+      >
+        {value ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={value}
+            alt=""
+            className="mb-2 max-h-28 w-full rounded object-cover"
+          />
+        ) : (
+          <span className="text-2xl text-[#2cb34f]">↑</span>
+        )}
+        <span className="text-xs font-bold text-[#111321]">
+          {value ? "Görseli değiştir" : "Görsel yükle"}
+        </span>
+        <span className="mt-0.5 text-[11px] text-[#9ca3af]">
+          JPG, PNG, WebP · max 4 MB
+        </span>
+      </label>
+      {value ? (
+        <button
+          type="button"
+          className="mt-1.5 text-xs font-bold text-[#ee401d]"
+          onClick={() => onChange("")}
+        >
+          Görseli kaldır
+        </button>
+      ) : null}
+    </div>
+  );
+}
 
 export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
   const router = useRouter();
@@ -51,6 +123,8 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
         setTitle("");
         setDescription("");
         setBody("");
+        setBanner("");
+        setCover("");
       }
       router.refresh();
     } catch {
@@ -68,7 +142,7 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
   return (
     <form
       onSubmit={submit}
-      className={`space-y-2 ${edit ? "mt-3 border-t border-[#e3e4e6] pt-3" : "card-elevated p-4"}`}
+      className={`space-y-3 ${edit ? "mt-3 border-t border-[#e3e4e6] pt-3" : "card-elevated p-4"}`}
     >
       {!edit && (
         <p className="text-sm font-bold text-[#111321]">Yeni haber</p>
@@ -82,7 +156,7 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
       />
       <input
         className="input-field"
-        placeholder="Kısa açıklama (SEO description)"
+        placeholder="Kısa açıklama"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
@@ -94,18 +168,8 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
         onChange={(e) => setBody(e.target.value)}
         required
       />
-      <input
-        className="input-field"
-        placeholder="Banner görsel URL"
-        value={banner}
-        onChange={(e) => setBanner(e.target.value)}
-      />
-      <input
-        className="input-field"
-        placeholder="Kapak görsel URL"
-        value={cover}
-        onChange={(e) => setCover(e.target.value)}
-      />
+      <ImagePicker label="Banner görsel" value={banner} onChange={setBanner} />
+      <ImagePicker label="Kapak görsel" value={cover} onChange={setCover} />
       <input
         className="input-field"
         placeholder="Etiketler (virgülle)"

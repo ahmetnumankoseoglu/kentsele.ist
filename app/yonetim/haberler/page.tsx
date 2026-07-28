@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AppShell } from "@/components/layout/AppShell";
+import { AdminShell } from "@/components/yonetim/AdminShell";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { getAdminNews } from "@/lib/news/queries";
 import { NewsAdminForm } from "@/components/yonetim/NewsAdminForm";
@@ -18,13 +18,8 @@ export default async function AdminHaberlerPage() {
   }
 
   return (
-    <AppShell showBottomCta={false}>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Haber yönetimi</h1>
-        <Link href="/yonetim/ilanlar" className="text-sm font-bold text-[#168f43]">
-          ← İlanlar
-        </Link>
-      </div>
+    <AdminShell>
+      <h1 className="mb-4 text-xl font-bold">Haber yönetimi</h1>
       {err && (
         <p className="mb-4 rounded-[3px] bg-[#fff7e6] p-3 text-sm text-[#b45309]">
           {err}
@@ -43,6 +38,6 @@ export default async function AdminHaberlerPage() {
           </li>
         ))}
       </ul>
-    </AppShell>
+    </AdminShell>
   );
 }

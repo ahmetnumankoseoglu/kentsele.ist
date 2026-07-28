@@ -8,8 +8,9 @@ const schema = z.object({
   title: z.string().min(5).max(200),
   description: z.string().min(20).max(500),
   body: z.string().min(40),
-  cover_image_url: z.string().url().optional().nullable().or(z.literal("")),
-  banner_image_url: z.string().url().optional().nullable().or(z.literal("")),
+  // URL veya data:image yüklemesi
+  cover_image_url: z.string().max(6_000_000).optional().nullable().or(z.literal("")),
+  banner_image_url: z.string().max(6_000_000).optional().nullable().or(z.literal("")),
   author_name: z.string().min(2).max(80).optional(),
   tags: z.array(z.string()).optional(),
   status: z.enum(["draft", "published", "archived"]).optional(),

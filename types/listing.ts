@@ -5,6 +5,9 @@ export type Listing = {
   slug: string;
   ilce: string;
   mahalle: string | null;
+  /** Sadece onaylı müteahhit / admin / malik yönetimi */
+  ada?: string | null;
+  parsel?: string | null;
   kat_sayisi: string;
   daire_sayisi: string;
   odeme_tercihi: OdemeTercihi;
@@ -17,6 +20,11 @@ export type Listing = {
   agreement_requested_at: string | null;
   published_at: string | null;
   owner_user_id?: string | null;
+  /** Migration 003 sonrası; yoksa false sayılır */
+  belge_aplikasyon?: boolean;
+  belge_imar_durum?: boolean;
+  belge_istikamet_roleve?: boolean;
+  belge_kot_kesit?: boolean;
   created_at: string;
   updated_at: string;
 };

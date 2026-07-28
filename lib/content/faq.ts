@@ -9,7 +9,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Telefon numaram herkese açık mı?",
-    a: "Hayır. Yayındaki ilanlarda numara herkese gösterilmez. Yalnızca belge yükleyip admin onayı almış müteahhit hesapları iletişim bilgisine erişebilir. Anlaşıldı durumuna geçen ilanlarda iletişim kapanır.",
+    a: "Hayır. Açık ilanlarda numara herkese gösterilmez. Yalnızca belge yükleyip admin onayı almış müteahhit hesapları iletişim bilgisine erişebilir. Anlaşma sağlandı durumundaki ilanlarda iletişim kapanır.",
   },
   {
     q: "Müteahhit misiniz? Nasıl çalışırsınız?",
@@ -18,9 +18,5 @@ export const FAQ_ITEMS = [
   {
     q: "Sadece İstanbul mu?",
     a: "Evet. kentsele.ist yalnızca İstanbul kentsel dönüşüm ilanları içindir. 39 ilçenin tamamı listelenir ve filtrelenebilir.",
-  },
-  {
-    q: "Haber yorumu için üyelik gerekir mi?",
-    a: "Evet. Haber yorumları için giriş yapmış (malik veya müteahhit) hesap gerekir. İlan vermek için ise kayıt şart değildir.",
   },
 ] as const;

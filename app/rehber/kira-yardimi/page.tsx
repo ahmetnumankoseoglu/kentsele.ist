@@ -13,14 +13,18 @@ import {
 } from "@/lib/seo/schema";
 import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 import { DESTEK_TUTARLARI, formatTRY } from "@/lib/content/destek-tutarlari";
+import { IBB_KIRA_DESTEGI } from "@/lib/content/ibb-kira-destegi";
 
 const PATH = "/rehber/kira-yardimi";
 const TITLE =
-  "İstanbul Kentsel Dönüşüm Kira Yardımı | Evrak Listesi ve Başvuru";
+  "İstanbul Kira Yardımı 2026 | İBB + Bakanlık Tutarları, Evrak ve Başvuru";
 const DESCRIPTION =
-  "İstanbul kira yardımı ve taşınma yardımı: malik (Ek-1), konut kiracısı (Ek-2), iş yeri kiracısı (Ek-3) belge listeleri, başvuru adımları ve SSS.";
+  "İstanbul kentsel dönüşüm kira yardımı: İBB hızlı tarama D–E ve güçlendirme tutarları, riskli/rezerv alan 18.000 TL, aylık mı 125.000 TL taşınma mı, Ek-1/2/3 evrak listeleri.";
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
-const MODIFIED = "2026-07-28T18:00:00+03:00";
+const MODIFIED = "2026-07-29T12:00:00+03:00";
+
+const IBB = IBB_KIRA_DESTEGI;
+const T125 = DESTEK_TUTARLARI.konut.tasinma;
 
 export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
@@ -28,11 +32,13 @@ export const metadata: Metadata = rehberArticleMetadata({
   path: PATH,
   keywords: [
     "İstanbul kira yardımı",
+    "İBB kira yardımı",
     "kentsel dönüşüm kira yardımı",
+    "hızlı tarama D E kira",
+    "İBB 10000 TL kira yardımı",
+    "riskli alan kira yardımı 18000",
+    "taşınma yardımı 125000",
     "kira yardımı evrak listesi",
-    "taşınma yardımı belgeler",
-    "malik kira yardımı başvuru",
-    "kiracı taşınma yardımı Ek-2 Ek-3",
     "6306 kira yardımı",
   ],
   datePublished: PUBLISHED,
@@ -41,30 +47,64 @@ export const metadata: Metadata = rehberArticleMetadata({
 
 const FAQ = [
   {
-    q: "Kira yardımı ile taşınma yardımı aynı mı?",
-    a: "Hayır. Kira yardımı genelde malik başvurularıyla ilişkilendirilen süreli barınma desteğidir. Taşınma yardımı ise (Yarısı Bizden paketindeki 125.000 ₺ kalemi ve/veya kiracı taşınma başvuruları) ayrı dosya ve formlarla (Ek-2, Ek-3) yürütülür. Kurumun verdiği güncel form ve liste esas alınır.",
+    q: "Aylık kira yardımı ile 125.000 TL taşınma aynı anda alınır mı?",
+    a: `Uygulamada ilçe belediyeleri sıklıkla “ya aylık kira yardımı ya da tek seferlik ${formatTRY(T125)} taşınma/tahliye” şeklinde yönlendirir; her iki kalemi aynı dosyada birleştirmek her zaman mümkün olmayabilir. Yarısı Bizden’deki ${formatTRY(T125)} taşınma, hibe+kredi paketinin parçasıdır ve ayrı süreçtedir. Nihai seçenek ve birleştirme kuralları için başvuracağınız ilçe kentsel dönüşüm / kira yardım birimine sorun.`,
+  },
+  {
+    q: "İBB kira desteği Bakanlık yardımının yerine mi geçer?",
+    a: "Hayır. İBB, Hızlı Tarama D–E ve güçlendirme kapsamında Çevre, Şehircilik ve İklim Değişikliği Bakanlığı kira yardımına ek (ilave) destek verir. Riskli/rezerv alanlarda ise İBB yetkisindeki alanlara özel tutarlar uygulanır.",
+  },
+  {
+    q: "Hızlı tarama D–E şartı nedir?",
+    a: "İBB’nin hızlı tarama yöntemiyle D veya E risk sınıfına giren öncelikli yapılarda, 6306 kapsamında lisanslı kuruluşla riskli yapı tespiti, tahliye ve yıkım (veya güçlendirmede ruhsat) sonrası süreç ilerler. Bakanlık kira onayından veya İBB’ye dilekçeden sonra İBB ödemesi başlar.",
+  },
+  {
+    q: "Güçlendirme yapılan binada da İBB kira yardımı var mı?",
+    a: "Evet. Mart ayı İBB Meclis kararıyla; hızlı tarama yapılmış, statik açıdan birlikte güçlendirilecek ve TBDY’ye uygun güçlendirme ruhsatı/izin belgesi alınan binalarda da riskli yapılarla aynı İBB kira tutarları uygulanır (18 aya / 12 aya kadar).",
   },
   {
     q: "Malik başvurusunda hangi form kullanılır?",
-    a: "Malik kira yardımı başvurularında Ek-1 Başvuru Formu kullanılır; form kurumda verilir.",
+    a: "Malik kira yardımı başvurularında genelde Ek-1 Başvuru Formu kullanılır; form kurumda verilir.",
   },
   {
     q: "Konut kiracısı ve iş yeri kiracısı aynı belgeleri mi verir?",
     a: "Hayır. Konut kiracıları Ek-2; iş yeri kiracıları Ek-3 formunu kullanır. Konut kiracısında adrese dayalı nüfus kaydı / fatura; iş yeri kiracısında vergi levhası (eski ve yeni adres) istenir.",
   },
   {
-    q: "Tapu arsa paylıysa ne gerekir?",
-    a: "Malik başvurularında tapu arsa paylı ise bağımsız birimin kime ait olduğunu gösteren, belediyeden alınmış imzalı-mühürlü Emlak Vergi Beyannamesi (bağımsız birim no ve hisse oranı) veya malik adına son 3 aya ait elektrik/su/doğalgaz faturasından biri (açık adres ve bağımsız bölüm no) istenir.",
-  },
-  {
-    q: "Vekâletname ile başvuru yapılabilir mi?",
-    a: "Evet. Vekâletnamede “6306 sayılı Kanun kapsamında yapılacak kira yardımı başvurusu için yetki verilmesi” ibaresi bulunmalı; vekilin kimlik aslı ve fotokopisi eklenmelidir.",
-  },
-  {
     q: "IBAN hangi bankadan olmalı?",
     a: "Kamu bankalarına ait IBAN gösteren hesap cüzdanı fotokopisi istenir. Mümkünse Ziraat Bankası veya Halkbankası tercih edilir. İş yeri kiracılarında listede Ziraat Bankası IBAN vurgulanır.",
   },
 ] as const;
+
+function TutarTablosu({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: { kim: string; tutar: string; sure: string }[];
+}) {
+  return (
+    <div className="card not-prose mt-3 overflow-hidden">
+      <p className="border-b border-[#e3e4e6] bg-[#f8f8f8] px-4 py-2.5 text-sm font-bold text-[#111321]">
+        {title}
+      </p>
+      <div className="divide-y divide-[#f0f0f0]">
+        {rows.map((r) => (
+          <div
+            key={r.kim}
+            className="grid grid-cols-1 gap-1 px-4 py-3 text-sm sm:grid-cols-3 sm:gap-2"
+          >
+            <span className="font-semibold text-[#111321]">{r.kim}</span>
+            <span className="tabular-nums text-[#168f43] sm:text-center">
+              {r.tutar}
+            </span>
+            <span className="text-[#6b7280] sm:text-right">{r.sure}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function BelgeListesi({
   title,
@@ -118,31 +158,31 @@ export default function KiraYardimiPage() {
       dateModified: MODIFIED,
       keywords: [
         "kira yardımı",
-        "taşınma yardımı",
+        "İBB kira yardımı",
+        "hızlı tarama",
         "İstanbul",
-        "Ek-1 Ek-2 Ek-3",
       ],
     }),
     howToSchema({
-      name: "İstanbul kentsel dönüşüm kira / taşınma yardımı başvurusu",
+      name: "İstanbul İBB / Bakanlık kira yardımı başvurusu",
       description:
-        "Malik kira yardımı ve kiracı taşınma yardımı için genel başvuru adımları.",
+        "Riskli yapı veya güçlendirme sonrası kira desteği için genel adımlar.",
       steps: [
         {
-          name: "Başvuru türünü belirle",
-          text: "Malik kira yardımı (Ek-1), konut kiracısı taşınma (Ek-2) veya iş yeri kiracısı taşınma (Ek-3).",
+          name: "Hızlı tarama / riskli yapı tespiti",
+          text: "Gerekliyse İBB hızlı tarama; 6306 kapsamında lisanslı kuruluşla riskli yapı tespiti.",
         },
         {
-          name: "Evrak listesini sıraya diz",
-          text: "Kurumun istediği sıraya göre kimlik, tapu/ikamet, riskli yapı ve IBAN belgelerini hazırlayın.",
+          name: "Tahliye, yıkım veya güçlendirme ruhsatı",
+          text: "Yıkım senaryosunda tahliye-yıkım; güçlendirmede TBDY uygun ruhsat/izin belgesi.",
         },
         {
-          name: "Formu kurumdan al ve doldur",
-          text: "Ek-1 / Ek-2 / Ek-3 başvuru formu kurumda verilir.",
+          name: "Bakanlık / ilçe belediyesi kira onayı",
+          text: "ÇŞB ilçe belediyeleri üzerinden kira yardımına onay veya İBB’ye dilekçe.",
         },
         {
-          name: "Başvuruyu teslim et",
-          text: "İlgili kurum birimine eksiksiz dosyayı verin; eksik evrak tebligatını takip edin.",
+          name: "Evrak ve ödeme",
+          text: "Ek-1/2/3 ve istenen belgelerle dosya; IBAN’a ödeme. İBB ilave desteği onay sonrası başlar.",
         },
       ],
     }),
@@ -162,66 +202,171 @@ export default function KiraYardimiPage() {
       schemas={schemas}
     >
       <p>
-        <strong>Kira yardımı</strong>, 6306 sayılı kanun kapsamındaki riskli
-        yapı / dönüşüm uygulamalarında hak sahiplerinin barınma sürecine katkı
-        için başvurduğu destektir. Aşağıdaki evrak listeleri kurum
-        uygulamalarındaki{" "}
-        <strong>malik kira yardımı</strong> ile{" "}
-        <strong>taşınma yardımı</strong> (konut kiracısı / iş yeri kiracısı)
-        ayrımına göredir. Formlar (Ek-1, Ek-2, Ek-3){" "}
+        İstanbul’da kentsel dönüşüm kira desteği tek bir kalem değildir.{" "}
+        <strong>Bakanlık (ÇŞB)</strong> kira yardımı,{" "}
+        <strong>İBB ilave kira desteği</strong> ve{" "}
+        <strong>Yarısı Bizden tek seferlik taşınma</strong> (
+        {formatTRY(T125)}) farklı programlardır. Belediyede duyduğunuz “ya
+        aylık alın ya da {formatTRY(T125)} tek seferlik” yönlendirmesi bu
+        ayrımı yansıtır; dosyanızda hangisinin uygulanacağı kurum uygulamasına
+        bağlıdır.
+      </p>
+
+      <div className="card not-prose mt-4 border-l-4 border-l-[#ee401d] bg-[#fef2f2] p-4 text-sm text-[#374151]">
+        <p className="font-bold text-[#111321]">
+          Pratik not (belediye uygulaması)
+        </p>
+        <p className="mt-1.5 text-[#6b7280]">
+          Birçok ilçede hak sahibine{" "}
+          <strong className="text-[#111321]">aylık kira yardımı</strong> ile{" "}
+          <strong className="text-[#111321]">
+            tek seferlik {formatTRY(T125)} taşınma/tahliye
+          </strong>{" "}
+          arasında seçim yaptırıldığı görülür; ikisini aynı anda “otomatik”
+          vermezler. Yarısı Bizden hibe+kredi paketindeki taşınma kalemi de ayrı
+          kampanya sürecindedir. Karar vermeden önce ilçe kentsel dönüşüm /
+          kira yardım birimine hangi yolu seçeceğinizi netleştirin.
+        </p>
+      </div>
+
+      <h2 className="!mt-8 text-base font-bold text-[#111321]">
+        İBB kira desteği (güncel tutarlar)
+      </h2>
+      <p>
+        İBB, 2023’te başlattığı kira yardımlarının kapsamını{" "}
+        <strong>12.11.2025 tarih ve 1277 sayılı Meclis Kararı</strong> ile
+        genişletti. Hızlı tarama <strong>D ve E</strong> sınıfı öncelikli
+        yapılar ile (Mart kararıyla) <strong>güçlendirme ruhsatı</strong> alan
+        binalarda destek, Bakanlık kira yardımına{" "}
+        <strong>ek</strong> olarak verilir. Resmî sayfa:{" "}
+        <a
+          href={IBB.resmiUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-bold text-[#168f43]"
+        >
+          kentseldonusum.ibb.istanbul
+        </a>
+        .
+      </p>
+
+      <TutarTablosu
+        title={`${IBB.hizliTaramaDE.baslik} — yıkım sonrası`}
+        rows={[
+          {
+            kim: "İkamet eden malik",
+            tutar: `${formatTRY(IBB.hizliTaramaDE.malikIkamet.aylik)} / ay (emekli ${formatTRY(IBB.hizliTaramaDE.malikIkamet.emekli)})`,
+            sure: `${IBB.hizliTaramaDE.malikIkamet.ay} ay`,
+          },
+          {
+            kim: "İkamet etmeyen malik",
+            tutar: `${formatTRY(IBB.hizliTaramaDE.malikIkametEtmeyen.aylik)} / ay`,
+            sure: `${IBB.hizliTaramaDE.malikIkametEtmeyen.ay} ay`,
+          },
+          {
+            kim: "Kiracı",
+            tutar: `${formatTRY(IBB.hizliTaramaDE.kiraci.aylik)} / ay (emekli ${formatTRY(IBB.hizliTaramaDE.kiraci.emekli)})`,
+            sure: `${IBB.hizliTaramaDE.kiraci.ay} ay`,
+          },
+        ]}
+      />
+
+      <TutarTablosu
+        title={`${IBB.guclendirme.baslik}`}
+        rows={[
+          {
+            kim: "İkamet eden malik",
+            tutar: `${formatTRY(IBB.guclendirme.malikIkamet.aylik)} / ay (emekli ${formatTRY(IBB.guclendirme.malikIkamet.emekli)})`,
+            sure: `${IBB.guclendirme.malikIkamet.ay} aya kadar`,
+          },
+          {
+            kim: "İkamet etmeyen malik",
+            tutar: `${formatTRY(IBB.guclendirme.malikIkametEtmeyen.aylik)} / ay`,
+            sure: `${IBB.guclendirme.malikIkametEtmeyen.ay} aya kadar`,
+          },
+          {
+            kim: "Kiracı",
+            tutar: `${formatTRY(IBB.guclendirme.kiraci.aylik)} / ay (emekli ${formatTRY(IBB.guclendirme.kiraci.emekli)})`,
+            sure: `${IBB.guclendirme.kiraci.ay} aya kadar`,
+          },
+        ]}
+      />
+
+      <TutarTablosu
+        title={IBB.riskliRezervAlan.baslik}
+        rows={[
+          {
+            kim: "Yapı maliki",
+            tutar: `${formatTRY(IBB.riskliRezervAlan.malik.aylik)} / ay (emekli ${formatTRY(IBB.riskliRezervAlan.malik.emekli)})`,
+            sure: `${IBB.riskliRezervAlan.malik.ay} aya kadar`,
+          },
+          {
+            kim: "Kiracı",
+            tutar: `${formatTRY(IBB.riskliRezervAlan.kiraci.aylik)} / ay (emekli ${formatTRY(IBB.riskliRezervAlan.kiraci.emekli)})`,
+            sure: `${IBB.riskliRezervAlan.kiraci.ay} aya kadar`,
+          },
+        ]}
+      />
+
+      <h2 className="!mt-8 text-base font-bold text-[#111321]">
+        İBB desteğinden nasıl yararlanılır?
+      </h2>
+      <h3 className="!mt-4 text-sm font-bold text-[#111321]">
+        Yıkılıp yeniden yapılacak binalar
+      </h3>
+      <ol className="list-decimal space-y-2 pl-5">
+        <li>
+          Hızlı tarama ile <strong>D veya E</strong> risk sınıfı öncelikli yapı.
+        </li>
+        <li>
+          6306 kapsamında lisanslı kuruluşla <strong>riskli yapı tespiti</strong>
+          ; ardından tahliye ve yıkım.
+        </li>
+        <li>
+          ÇŞB’nin ilçe belediyeleri üzerinden kira yardımına{" "}
+          <strong>onay vermesi</strong> veya <strong>İBB’ye dilekçe</strong> ile
+          başvuru → İBB kira yardımı başlar.
+        </li>
+      </ol>
+      <h3 className="!mt-4 text-sm font-bold text-[#111321]">
+        Güçlendirme yapılacak binalar
+      </h3>
+      <ol className="list-decimal space-y-2 pl-5">
+        <li>Hızlı tarama; statik açıdan birlikte güçlendirilecek yapı.</li>
+        <li>
+          <strong>Türkiye Bina Deprem Yönetmeliği</strong>’ne uygun güçlendirme
+          ruhsatı / izin belgesi.
+        </li>
+        <li>
+          ÇŞB ilçe onayı veya İBB dilekçesi sonrası İBB kira yardımı başlar.
+        </li>
+      </ol>
+      <p className="text-sm text-[#6b7280]">
+        İBB iletişim: {IBB.iletisim.telefon} ·{" "}
+        <a
+          href={`mailto:${IBB.iletisim.email}`}
+          className="font-semibold text-[#168f43]"
+        >
+          {IBB.iletisim.email}
+        </a>
+      </p>
+
+      <h2 className="!mt-8 text-base font-bold text-[#111321]">
+        Bakanlık / ilçe belediyesi kira ve taşınma evrakları
+      </h2>
+      <p>
+        Aşağıdaki listeler kurum uygulamalarındaki{" "}
+        <strong>malik kira yardımı (Ek-1)</strong> ile{" "}
+        <strong>taşınma yardımı</strong> (konut kiracısı Ek-2 / iş yeri
+        kiracısı Ek-3) ayrımına göredir. Formlar{" "}
         <strong>kurumda verilir</strong>.
       </p>
 
-      <p>
-        <strong>Karıştırılmamalı:</strong> Yarısı Bizden paketindeki{" "}
-        <strong>
-          taşınma / tahliye desteği ({formatTRY(DESTEK_TUTARLARI.konut.tasinma)})
-        </strong>{" "}
-        hibe+kredi ile birlikte birim paketinde yer alır (1 konut{" "}
-        {formatTRY(DESTEK_TUTARLARI.konut.toplamBirim)}, 1 iş yeri{" "}
-        {formatTRY(DESTEK_TUTARLARI.ticari.toplamBirim)}). Bu sayfadaki{" "}
-        <strong>kira yardımı / taşınma yardımı başvuruları</strong> ayrı evrak
-        ve formlarla yürütülür. Paket tutarları için{" "}
-        <Link
-          href="/rehber/hibe-ve-kredi-hesaplama"
-          className="font-bold text-[#168f43]"
-        >
-          hibe ve kredi hesaplama
-        </Link>{" "}
-        sayfasına bakın.
-      </p>
-
-      <h2 className="!mt-8 text-base font-bold text-[#111321]">
-        Nasıl başvurulur?
-      </h2>
-      <ol className="list-decimal space-y-2 pl-5">
-        <li>
-          Malik misiniz, konut kiracısı mısınız, iş yeri kiracısı mısınız?
-          Buna göre Ek-1 / Ek-2 / Ek-3 yolunu seçin.
-        </li>
-        <li>
-          Aşağıdaki listelere göre evrakları <strong>sırayla</strong>{" "}
-          düzenleyin (kurum bu sırayı ister).
-        </li>
-        <li>
-          Başvuru formunu kurumdan alın, doldurun; asıl + fotokopi istenen
-          belgeleri eksiksiz teslim edin.
-        </li>
-        <li>
-          Eksik evrak bildirimi gelirse süresinde tamamlayın; ödeme IBAN’a
-          yapılır.
-        </li>
-      </ol>
-
-      <h2 className="!mt-8 text-base font-bold text-[#111321]">
-        Kira yardımı başvurusu için istenen belgeler
-      </h2>
-      <p className="text-sm text-[#6b7280]">
-        <strong className="text-[#111321]">Malik başvuruları</strong>
-      </p>
-
+      <h3 className="!mt-6 text-sm font-bold text-[#111321]">
+        Malik — kira yardımı (Ek-1)
+      </h3>
       <BelgeListesi
-        title="Malik — kira yardımı (Ek-1)"
+        title="İstenen belgeler"
         note="Lütfen evraklarınızı bu sıraya göre düzenleyiniz."
         items={[
           {
@@ -247,9 +392,7 @@ export default function KiraYardimiPage() {
           },
           {
             baslik: "Adrese dayalı nüfus kayıt örneği aslı",
-            alt: [
-              "Nüfus Müdürlüğünden alınır; ıslak imzalı olmalıdır.",
-            ],
+            alt: ["Nüfus Müdürlüğünden alınır; ıslak imzalı olmalıdır."],
           },
           {
             baslik:
@@ -278,21 +421,18 @@ export default function KiraYardimiPage() {
         </ul>
       </div>
 
-      <h2 className="!mt-8 text-base font-bold text-[#111321]">
-        Taşınma yardımı başvurusu için istenen belgeler
-      </h2>
-
+      <h3 className="!mt-6 text-sm font-bold text-[#111321]">
+        Taşınma yardımı — konut kiracıları (Ek-2)
+      </h3>
       <BelgeListesi
-        title="Konut kiracıları (Ek-2)"
+        title="İstenen belgeler"
         note="Lütfen evraklarınızı bu sıraya göre düzenleyiniz."
         items={[
           {
             baslik: "Ek-2 Başvuru Formu",
             alt: ["Kurumda verilir."],
           },
-          {
-            baslik: "Nüfus cüzdanı aslı ve fotokopisi",
-          },
+          { baslik: "Nüfus cüzdanı aslı ve fotokopisi" },
           {
             baslik:
               "Riskli binada oturduğunu gösterir adrese dayalı nüfus kayıt örneği aslı",
@@ -303,43 +443,32 @@ export default function KiraYardimiPage() {
           },
           {
             baslik: "Yeni adrese dayalı nüfus kayıt örneği aslı",
-            alt: [
-              "Nüfus Müdürlüğünden alınır; ıslak imzalı olmalıdır.",
-            ],
+            alt: ["Nüfus Müdürlüğünden alınır; ıslak imzalı olmalıdır."],
           },
-          {
-            baslik: "Riskli yapı belirtme yazısının fotokopisi",
-          },
+          { baslik: "Riskli yapı belirtme yazısının fotokopisi" },
           {
             baslik:
               "Kamu bankalarına ait hesap numarası (IBAN) gösteren hesap cüzdanı fotokopisi",
-            alt: [
-              "Mümkün olması halinde Ziraat Bankası veya Halkbankası.",
-            ],
+            alt: ["Mümkün olması halinde Ziraat Bankası veya Halkbankası."],
           },
         ]}
       />
 
+      <h3 className="!mt-6 text-sm font-bold text-[#111321]">
+        Taşınma yardımı — iş yeri kiracıları (Ek-3)
+      </h3>
       <BelgeListesi
-        title="İş yeri kiracıları (Ek-3)"
+        title="İstenen belgeler"
         note="Lütfen evraklarınızı bu sıraya göre düzenleyiniz."
         items={[
           {
             baslik: "Ek-3 Başvuru Formu",
             alt: ["Kurumda verilir."],
           },
-          {
-            baslik: "Nüfus cüzdanı aslı ve fotokopisi",
-          },
-          {
-            baslik: "Riskli bina adresine ait vergi levhası",
-          },
-          {
-            baslik: "Yeni taşınılan adrese ait vergi levhası",
-          },
-          {
-            baslik: "Riskli yapı belirtme yazısının fotokopisi",
-          },
+          { baslik: "Nüfus cüzdanı aslı ve fotokopisi" },
+          { baslik: "Riskli bina adresine ait vergi levhası" },
+          { baslik: "Yeni taşınılan adrese ait vergi levhası" },
+          { baslik: "Riskli yapı belirtme yazısının fotokopisi" },
           {
             baslik:
               "Ziraat Bankası hesap numarası (IBAN) gösteren hesap cüzdanı fotokopisi",
@@ -353,30 +482,28 @@ export default function KiraYardimiPage() {
       <ul className="list-disc space-y-2 pl-5">
         <li>
           Evrakları listedeki <strong>sıraya göre</strong> dosyalayın; eksik
-          sıra veya eksik mühür/imza iade nedenidir.
+          mühür/imza iade nedenidir.
         </li>
         <li>
           Faturalarda <strong>bağımsız bölüm numarası</strong> ve açık adres
           görünür olmalı.
         </li>
         <li>
-          Belediye emlak beyannamesi ve tapu kayıtlarında{" "}
-          <strong>imza + mühür</strong> şartına dikkat edin.
+          İBB ilave desteği için hızlı tarama D–E veya güçlendirme ruhsatı
+          şartlarını kontrol edin; her riskli yapı otomatik İBB kapsamında
+          değildir.
         </li>
         <li>
-          Nüfus kayıt örneklerinde <strong>ıslak imza</strong> aranır.
-        </li>
-        <li>
-          Güncel form ve ek şartlar için başvuracağınız kurum birimini arayın;
-          listeler dönemsel olarak güncellenebilir.
+          Güncel form ve tutar için ilçe birimi + İBB (
+          {IBB.iletisim.telefon}) ile doğrulayın.
         </li>
       </ul>
 
       <div className="card mt-6 border-l-4 border-l-[#2cb34f] bg-[#f8f8f8] p-4 text-sm text-[#6b7280]">
-        <strong className="text-[#111321]">Uyarı:</strong> Bu sayfa kurum
-        uygulamalarındaki belge listelerine dayalı genel bilgilendirmedir.
-        Nihai evrak ve tutar için ilgili belediye / Kentsel Dönüşüm birimi
-        açıklamaları esas alınır.
+        <strong className="text-[#111321]">Uyarı:</strong> Bu sayfa İBB resmî
+        bilgilendirmesi ve kurum belge listelerine dayalı genel
+        bilgilendirmedir; hukuki danışmanlık değildir. Tutar, süre ve
+        birleştirme kuralları Meclis kararı / yönetmelik ile değişebilir.
       </div>
 
       <h2 className="!mt-8 text-base font-bold text-[#111321]">
@@ -385,19 +512,19 @@ export default function KiraYardimiPage() {
       <FaqAccordion items={FAQ} />
 
       <p className="!mt-6">
-        6306 süreci için{" "}
+        Yarısı Bizden hibe ve kredi paket tutarları için{" "}
+        <Link
+          href="/rehber/hibe-ve-kredi-hesaplama"
+          className="font-bold text-[#168f43]"
+        >
+          hibe ve kredi hesaplama
+        </Link>
+        ; 6306 süreci için{" "}
         <Link
           href="/rehber/6306-sayili-kanun"
           className="font-bold text-[#168f43]"
         >
           kanun rehberi
-        </Link>
-        ; hibe–kredi–taşınma paket tutarları için{" "}
-        <Link
-          href="/rehber/hibe-ve-kredi-hesaplama"
-          className="font-bold text-[#168f43]"
-        >
-          hesaplama sayfası
         </Link>
         . İstanbul’da müteahhit arıyorsanız{" "}
         <Link href="/ilan-ver" className="font-bold text-[#168f43]">

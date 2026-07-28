@@ -273,3 +273,27 @@ h4 {
   transform: translateY(-3px);
   box-shadow: var(--card-shadow);
 }
+
+/* Header rehber subnav — masaüstünde de yatay kaydırılabilir */
+.subnav-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.subnav-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.subnav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.subnav-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+
+.subnav-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

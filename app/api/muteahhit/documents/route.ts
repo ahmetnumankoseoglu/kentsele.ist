@@ -33,17 +33,32 @@ export async function GET() {
 export async function POST(req: Request) {
   const profile = await getCurrentProfile();
   if (!profile || profile.role !== "muteahhit") {
-    return NextResponse.json({ error: "auth" }, { status: 401 });
+    return NextResponse.json(
+      { error: "auth", message: "Müteahhit girişi gerekli." },
+      { status: 401 }
+    );
   }
   try {
     const form = await req.formData();
     const file = form.get("file") as File | null;
     const doc_type = String(form.get("doc_type") ?? "diger");
-    if (!file) {
-      return NextResponse.json({ error: "file" }, { status: 400 });
+    if (!file || file.size === 0) {
+      return NextResponse.json(
+        { error: "file", message: "Dosya seçin." },
+        { status: 400 }
+      );
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "file", message: "Dosya en fazla 10 MB olabilir." },
+        { status: 400 }
+      );
     }
     if (!DOC_TYPES.includes(doc_type as (typeof DOC_TYPES)[number])) {
-      return NextResponse.json({ error: "doc_type" }, { status: 400 });
+      return NextResponse.json(
+        { error: "doc_type", message: "Geçersiz belge türü." },
+        { status: 400 }
+      );
     }
 
     const admin = createServiceClient();
@@ -58,7 +73,6 @@ export async function POST(req: Request) {
         upsert: false,
       });
     if (upErr) {
-      // bucket may not exist yet — still record metadata with path
       console.warn("storage upload:", upErr.message);
     }
 
@@ -74,7 +88,6 @@ export async function POST(req: Request) {
       .single();
     if (error) throw error;
 
-    // reset verification to pending after new docs
     await admin
       .from("contractor_profiles")
       .update({
@@ -86,6 +99,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ item: data });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: "server" }, { status: 500 });
+    return NextResponse.json(
+      { error: "server", message: "Yükleme başarısız." },
+      { status: 500 }
+    );
   }
 }

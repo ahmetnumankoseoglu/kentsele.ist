@@ -3,9 +3,11 @@ import { createServiceClient } from "@/lib/supabase/admin";
 import type { CreateListingInput } from "@/lib/validations/listing";
 import { buildListingSlug, randomShortId } from "@/lib/slug";
 import type { Listing } from "@/types/listing";
+import type { ListingStatus } from "@/lib/constants/listing";
 
 export async function createListing(
-  input: CreateListingInput
+  input: CreateListingInput,
+  opts?: { status?: ListingStatus }
 ): Promise<{ listing: Listing; manageUrlPath: string }> {
   const supabase = createServiceClient();
   const shortId = randomShortId(4);
@@ -17,8 +19,8 @@ export async function createListing(
     shortId,
   });
   const manage_token = randomBytes(24).toString("base64url");
-  const email =
-    input.email && String(input.email).trim() !== "" ? String(input.email) : null;
+  const email = String(input.email).trim();
+  const status = opts?.status ?? "incelemede";
 
   const { data, error } = await supabase
     .from("listings")
@@ -26,6 +28,8 @@ export async function createListing(
       slug,
       ilce: input.ilce,
       mahalle: input.mahalle?.trim() || null,
+      ada: input.ada?.trim() || null,
+      parsel: input.parsel?.trim() || null,
       kat_sayisi: input.kat_sayisi,
       daire_sayisi: input.daire_sayisi,
       odeme_tercihi: input.odeme_tercihi,
@@ -33,8 +37,13 @@ export async function createListing(
       iletisim_adi: input.iletisim_adi,
       telefon: input.telefon,
       email,
-      status: "incelemede",
+      status,
       manage_token,
+      published_at: status === "yayinda" ? new Date().toISOString() : null,
+      belge_aplikasyon: input.belge_aplikasyon ?? false,
+      belge_imar_durum: input.belge_imar_durum ?? false,
+      belge_istikamet_roleve: input.belge_istikamet_roleve ?? false,
+      belge_kot_kesit: input.belge_kot_kesit ?? false,
     })
     .select("*")
     .single();

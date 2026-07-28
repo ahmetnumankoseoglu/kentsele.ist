@@ -41,7 +41,7 @@ export function AdminLoginForm() {
       <div>
         <h1 className="text-xl font-semibold">Yönetim girişi</h1>
         <p className="mt-1 text-sm text-slate-600">
-          İlan moderasyonu ve durum güncellemeleri için giriş yapın.
+          İlan moderasyonu, yeni ilan ve müteahhit onayı için giriş yapın.
         </p>
       </div>
 

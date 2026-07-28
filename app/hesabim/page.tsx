@@ -8,6 +8,22 @@ import {
 } from "@/lib/auth/session";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import {
+  OWNER_STATUS_LABELS,
+  PUBLIC_STATUSES,
+  type ListingStatus,
+} from "@/lib/constants/listing";
+
+type MyListing = {
+  id: string;
+  slug: string;
+  ilce: string;
+  mahalle: string | null;
+  status: ListingStatus;
+  manage_token: string;
+  kat_sayisi: string;
+  daire_sayisi: string;
+};
 
 export default async function HesabimPage() {
   const user = await getSessionUser();
@@ -15,16 +31,17 @@ export default async function HesabimPage() {
   const profile = await getCurrentProfile();
   if (!profile) redirect("/giris");
 
-  let myListings: { id: string; slug: string; ilce: string; status: string }[] =
-    [];
+  let myListings: MyListing[] = [];
   try {
     const admin = createServiceClient();
     const { data } = await admin
       .from("listings")
-      .select("id, slug, ilce, status")
+      .select(
+        "id, slug, ilce, mahalle, status, manage_token, kat_sayisi, daire_sayisi"
+      )
       .eq("owner_user_id", profile.id)
       .order("created_at", { ascending: false });
-    myListings = data ?? [];
+    myListings = (data ?? []) as MyListing[];
   } catch {
     myListings = [];
   }
@@ -83,24 +100,91 @@ export default async function HesabimPage() {
       )}
 
       <section className="mt-8">
-        <h2 className="section-title">İlanlarım</h2>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="section-title !mb-0">İlanlarım</h2>
+          {profile.role !== "muteahhit" && (
+            <Link
+              href="/ilan-ver"
+              className="text-xs font-bold text-[#168f43]"
+            >
+              + Yeni ilan
+            </Link>
+          )}
+        </div>
+
         {myListings.length === 0 ? (
           <div className="card p-5 text-sm text-[#6b7280]">
-            Henüz hesabına bağlı ilan yok. Yeni ilan ücretsiz ve kayıtsız
-            oluşturulur; düzenlemek için yönetim linkinden giriş yapıp ilanı
-            bağlarsın.
-            <Link href="/ilan-ver" className="btn-primary mt-3 w-full">
-              İlan ver
-            </Link>
+            {profile.role === "muteahhit" ? (
+              <p>
+                Müteahhit hesapları ilan vermez. İlanları ana sayfa ve ilanlar
+                listesinden görüntüleyebilirsin.
+              </p>
+            ) : (
+              <>
+                Henüz hesabına bağlı ilan yok. Ücretsiz ilan oluşturabilirsin.
+                <Link href="/ilan-ver" className="btn-primary mt-3 w-full">
+                  İlan ver
+                </Link>
+              </>
+            )}
           </div>
         ) : (
-          <ul className="space-y-2">
-            {myListings.map((l) => (
-              <li key={l.id} className="card flex justify-between p-3 text-sm">
-                <span className="font-semibold">{l.ilce}</span>
-                <span className="text-[#6b7280]">{l.status}</span>
-              </li>
-            ))}
+          <ul className="space-y-3">
+            {myListings.map((l) => {
+              const isPublic = PUBLIC_STATUSES.includes(l.status);
+              const statusLabel = OWNER_STATUS_LABELS[l.status] ?? l.status;
+              return (
+                <li key={l.id} className="card p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="font-bold text-[#111321]">
+                        {l.ilce}
+                        {l.mahalle ? ` · ${l.mahalle}` : ""}
+                      </p>
+                      <p className="mt-0.5 text-xs text-[#6b7280]">
+                        {l.kat_sayisi} kat · {l.daire_sayisi} daire
+                      </p>
+                    </div>
+                    <span
+                      className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                        l.status === "yayinda" ||
+                        l.status === "teklif_saglaniyor"
+                          ? "bg-[#eaf8ee] text-[#168f43]"
+                          : l.status === "incelemede"
+                            ? "bg-amber-50 text-amber-800"
+                            : l.status === "anlasildi"
+                              ? "bg-[#f3f4f6] text-[#6b7280]"
+                              : l.status === "kaldirildi"
+                                ? "bg-rose-50 text-rose-700"
+                                : "bg-slate-100 text-slate-700"
+                      }`}
+                    >
+                      {statusLabel}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {isPublic ? (
+                      <Link
+                        href={`/ilan/${l.slug}`}
+                        className="btn-secondary !py-2.5 text-center !text-sm"
+                      >
+                        İlanı gör
+                      </Link>
+                    ) : (
+                      <span className="flex items-center justify-center rounded-[3px] bg-[#f8f8f8] px-2 py-2.5 text-center text-xs text-[#9ca3af]">
+                        İnceleniyor
+                      </span>
+                    )}
+                    <Link
+                      href={`/yonet/${l.manage_token}`}
+                      className="btn-primary !py-2.5 text-center !text-sm"
+                    >
+                      Düzenle / yönet
+                    </Link>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>

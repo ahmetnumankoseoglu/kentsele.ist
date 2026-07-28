@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { AppShell } from "@/components/layout/AppShell";
+import { AdminShell } from "@/components/yonetim/AdminShell";
 import { AdminListingActions } from "@/components/yonetim/AdminListingActions";
-import { AdminLogoutButton } from "@/components/yonetim/AdminLogoutButton";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { getListingById } from "@/lib/listings/queries";
 import type { Listing } from "@/types/listing";
@@ -32,6 +31,8 @@ export default async function YonetimIlanDetayPage({
     slug: listing.slug,
     ilce: listing.ilce,
     mahalle: listing.mahalle,
+    ada: listing.ada ?? null,
+    parsel: listing.parsel ?? null,
     kat_sayisi: listing.kat_sayisi,
     daire_sayisi: listing.daire_sayisi,
     odeme_tercihi: listing.odeme_tercihi as OdemeTercihi,
@@ -45,30 +46,30 @@ export default async function YonetimIlanDetayPage({
     created_at: listing.created_at,
     updated_at: listing.updated_at,
     manage_token: listing.manage_token,
+    belge_aplikasyon: listing.belge_aplikasyon ?? false,
+    belge_imar_durum: listing.belge_imar_durum ?? false,
+    belge_istikamet_roleve: listing.belge_istikamet_roleve ?? false,
+    belge_kot_kesit: listing.belge_kot_kesit ?? false,
   };
 
   return (
-    <AppShell showBottomCta={false}>
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <Link
-            href="/yonetim/ilanlar"
-            className="text-xs font-medium text-slate-500 hover:text-slate-800"
-          >
-            ← İlan listesi
-          </Link>
-          <h1 className="mt-1 text-xl font-semibold">
-            {listing.ilce}
-            {listing.mahalle ? ` · ${listing.mahalle}` : ""}
-          </h1>
-          <p className="mt-0.5 text-sm text-slate-600">
-            {listing.iletisim_adi} · {listing.telefon}
-          </p>
-        </div>
-        <AdminLogoutButton />
+    <AdminShell>
+      <Link
+        href="/yonetim/ilanlar"
+        className="text-xs font-medium text-slate-500 hover:text-slate-800"
+      >
+        ← İlan listesi
+      </Link>
+      <h1 className="mt-1 text-xl font-semibold">
+        {listing.ilce}
+        {listing.mahalle ? ` · ${listing.mahalle}` : ""}
+      </h1>
+      <p className="mt-0.5 text-sm text-slate-600">
+        {listing.iletisim_adi} · {listing.telefon}
+      </p>
+      <div className="mt-4">
+        <AdminListingActions listing={serialized} />
       </div>
-
-      <AdminListingActions listing={serialized} />
-    </AppShell>
+    </AdminShell>
   );
 }

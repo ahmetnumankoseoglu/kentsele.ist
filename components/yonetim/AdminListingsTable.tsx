@@ -63,7 +63,10 @@ export function AdminListingsTable({ listings }: { listings: Listing[] }) {
                     {listing.iletisim_adi}
                   </p>
                 </div>
-                <StatusBadge status={listing.status as ListingStatus} />
+                <StatusBadge
+                  status={listing.status as ListingStatus}
+                  variant="admin"
+                />
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">

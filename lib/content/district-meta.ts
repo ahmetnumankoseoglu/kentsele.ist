@@ -217,7 +217,7 @@ export function buildDistrictSeoSections(meta: DistrictMeta) {
       },
       {
         q: `Komşu ilçelerde de ilan verebilir miyim?`,
-        a: `kentsele.ist yalnızca İstanbul ilçelerini kapsar. ${neighboring.join(", ")} gibi yakın ilçelerin de ayrı SEO sayfaları ve ilan filtreleri bulunur.`,
+        a: `kentsele.ist yalnızca İstanbul ilçelerini kapsar. ${neighboring.join(", ")} gibi yakın ilçelerde de ayrı sayfalar ve ilan filtreleri bulunur.`,
       },
     ],
 

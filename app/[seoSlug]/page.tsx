@@ -15,7 +15,7 @@ import {
   buildDistrictSeoSections,
   getDistrictMeta,
 } from "@/lib/content/district-meta";
-import { getPublicListings } from "@/lib/listings/queries";
+import { getPublicListingsForViewer } from "@/lib/listings/queries";
 import {
   breadcrumbSchema,
   faqPageSchema,
@@ -90,7 +90,7 @@ export default async function DistrictSeoPage({
 
   let listings: PublicListing[] = [];
   try {
-    listings = await getPublicListings(ilce);
+    listings = await getPublicListingsForViewer(ilce);
   } catch {
     listings = [];
   }
@@ -167,7 +167,7 @@ export default async function DistrictSeoPage({
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#111321] via-[#111321]/80 to-[#111321]/50" />
-        <div className="relative px-4 pb-9 pt-8 sm:px-6">
+        <div className="relative mx-auto max-w-lg px-4 pb-8 pt-10">
           <nav className="mb-3 text-xs text-white/60" aria-label="Breadcrumb">
             <Link href="/" className="text-[#2cb34f] hover:underline">
               Ana sayfa
@@ -179,13 +179,13 @@ export default async function DistrictSeoPage({
             <span className="mx-1.5">/</span>
             <span className="text-white">{ilce} kentsel dönüşüm</span>
           </nav>
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#2cb34f]">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
             İstanbul · {districtMeta.side}
           </p>
-          <h1 className="mt-2 text-[28px] font-bold leading-tight sm:text-[32px]">
+          <h1 className="mt-2 text-[26px] font-bold leading-tight text-white">
             {ilce} Kentsel Dönüşüm
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80">
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
             {ilce} kentsel dönüşüm ilanı verin veya güncel ilanları inceleyin.
             Ücretsiz malik ilanları; iletişim yalnızca onaylı müteahhitlere açık.
           </p>
@@ -203,7 +203,7 @@ export default async function DistrictSeoPage({
         </div>
       </section>
 
-      <div className="px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-lg px-4 py-8">
         {/* Intro article */}
         <article className="card-elevated mb-8 p-5 sm:p-6">
           <h2 className="section-title">{ilce} kentsel dönüşüm nedir?</h2>
@@ -361,7 +361,6 @@ export default async function DistrictSeoPage({
           </p>
         </section>
 
-        {/* All other districts for internal linking SEO */}
         <section className="mb-4">
           <h2 className="section-title">İstanbul ilçe kentsel dönüşüm sayfaları</h2>
           <p className="mb-4 -mt-2 text-sm text-[#6b7280]">

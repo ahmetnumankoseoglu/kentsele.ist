@@ -25,20 +25,17 @@ export function HomeFooter() {
           <Link href="/haberler" className="text-[#6b7280]">
             Haberler
           </Link>
+          <Link href="/hakkimizda" className="text-[#6b7280]">
+            Hakkımızda
+          </Link>
+          <Link href="/iletisim" className="text-[#6b7280]">
+            İletişim
+          </Link>
           <Link href="/rehber" className="text-[#6b7280]">
             Rehber
           </Link>
-          <Link href="/rehber/6306-sayili-kanun" className="text-[#6b7280]">
-            6306 kanun
-          </Link>
-          <Link href="/rehber/kira-yardimi" className="text-[#6b7280]">
-            Kira yardımı
-          </Link>
-          <Link
-            href="/rehber/hibe-ve-kredi-hesaplama"
-            className="text-[#6b7280]"
-          >
-            Hibe & kredi
+          <Link href="/site-haritasi" className="text-[#6b7280]">
+            Site haritası
           </Link>
         </div>
 

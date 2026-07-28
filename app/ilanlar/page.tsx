@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { ListingsFeed } from "@/components/ilan/ListingsFeed";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getPublicListings } from "@/lib/listings/queries";
+import { getPublicListingsForViewer } from "@/lib/listings/queries";
 import { isValidIstanbulIlce } from "@/lib/constants/istanbul-ilceler";
 import {
   breadcrumbSchema,
@@ -52,10 +52,9 @@ export default async function IlanlarPage({
   let listings: PublicListing[] = [];
   let errorMsg: string | null = null;
   try {
-    listings = await getPublicListings(ilce);
+    listings = await getPublicListingsForViewer(ilce);
   } catch {
-    errorMsg =
-      "İlanlar yüklenemedi. Supabase yapılandırmasını kontrol edin.";
+    errorMsg = "İlanlar yüklenemedi.";
   }
 
   const site = getSiteUrl();
@@ -93,7 +92,7 @@ export default async function IlanlarPage({
         {ilce ? `${ilce} kentsel dönüşüm ilanları` : "İstanbul kentsel dönüşüm ilanları"}
       </h1>
       <p className="mb-6 text-sm text-[#6b7280]">
-        Yayındaki tüm ilanlar. İlçeye göre filtrele. Malik numarası yalnızca
+        Tüm açık ilanlar. İlçeye göre filtrele. Malik numarası yalnızca
         onaylı müteahhit hesaplarına açıktır.
       </p>
       <ListingsFeed

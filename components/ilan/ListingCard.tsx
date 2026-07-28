@@ -12,6 +12,16 @@ function initials(name: string) {
 }
 
 export function ListingCard({ listing }: { listing: PublicListing }) {
+  const adaParsel =
+    listing.ada || listing.parsel
+      ? [
+          listing.ada ? `Ada ${listing.ada}` : null,
+          listing.parsel ? `Parsel ${listing.parsel}` : null,
+        ]
+          .filter(Boolean)
+          .join(" · ")
+      : null;
+
   return (
     <Link
       href={`/ilan/${listing.slug}`}
@@ -26,6 +36,7 @@ export function ListingCard({ listing }: { listing: PublicListing }) {
             <p className="truncate text-[15px] font-bold text-[#111321]">
               {listing.ilce}
               {listing.mahalle ? ` · ${listing.mahalle}` : ""}
+              {adaParsel ? ` · ${adaParsel}` : ""}
             </p>
             <p className="mt-0.5 text-xs text-[#6b7280]">
               Kentsel Dönüşüm · {listing.kat_sayisi} kat · {listing.daire_sayisi}{" "}

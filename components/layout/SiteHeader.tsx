@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 function UserIcon({ className }: { className?: string }) {
@@ -25,9 +26,10 @@ function UserIcon({ className }: { className?: string }) {
 }
 
 const navLinkClass =
-  "shrink-0 rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm";
+  "shrink-0 rounded-lg px-1.5 py-1.5 text-xs font-semibold text-[#6b7280] transition-colors hover:bg-[#f8f8f8] hover:text-[#111321] sm:px-2 sm:text-sm";
 
 const SUBNAV = [
+  { href: "/rehber/kentsel-donusum-nedir", label: "Kentsel dönüşüm nedir" },
   { href: "/rehber/6306-sayili-kanun", label: "6306 sayılı kanun" },
   { href: "/rehber/kira-yardimi", label: "Kira yardımı" },
   { href: "/rehber/hibe-ve-kredi-hesaplama", label: "Hibe & kredi" },
@@ -37,10 +39,45 @@ const SUBNAV = [
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const subnavRef = useRef<HTMLElement>(null);
+  const [hideIlanVer, setHideIlanVer] = useState(false);
+
+  useEffect(() => {
+    const el = subnavRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  // Müteahhit girişi varsa header'da İlan Ver gizle
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (!cancelled) {
+          setHideIlanVer(data?.role === "muteahhit");
+        }
+      } catch {
+        if (!cancelled) setHideIlanVer(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#e3e4e6] bg-white">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto w-full min-w-0 max-w-lg">
         <div className="flex h-12 items-center justify-between gap-2 px-4 sm:h-14">
           {isHome ? (
             <Link
@@ -68,23 +105,26 @@ export function SiteHeader() {
             </Link>
             <Link
               href="/hesabim"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#eaf8ee] hover:text-[#168f43]"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#6b7280] transition-colors hover:bg-[#eaf8ee] hover:text-[#168f43]"
               aria-label="Hesabım"
               title="Hesabım"
             >
               <UserIcon />
             </Link>
-            <Link
-              href="/ilan-ver"
-              className="shrink-0 whitespace-nowrap rounded-[3px] bg-[#2cb34f] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-[#1ca03e] sm:px-3 sm:py-2 sm:text-sm"
-            >
-              İlan Ver
-            </Link>
+            {!hideIlanVer && (
+              <Link
+                href="/ilan-ver"
+                className="shrink-0 whitespace-nowrap rounded-[3px] bg-[#2cb34f] px-2.5 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#1ca03e] sm:px-3 sm:py-2 sm:text-sm"
+              >
+                İlan Ver
+              </Link>
+            )}
           </div>
         </div>
 
         <nav
-          className="flex gap-0.5 overflow-x-auto border-t border-[#f0f0f0] px-4 py-1 sm:gap-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={subnavRef}
+          className="subnav-scroll flex min-w-0 gap-0.5 overflow-x-auto overscroll-x-contain border-t border-[#f0f0f0] px-4 py-1.5 sm:gap-1.5"
           aria-label="Rehber menüsü"
         >
           {SUBNAV.map((item) => (

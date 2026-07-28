@@ -14,11 +14,32 @@ export const PUBLIC_STATUSES: ListingStatus[] = [
   "anlasildi",
 ];
 
+/**
+ * Durum etiketleri.
+ * Listeye çıkmış ilan: “Teklife açık” (yeşil)
+ * Anlaşma: “Anlaşma sağlandı” (gri)
+ */
 export const STATUS_LABELS: Record<ListingStatus, string> = {
   incelemede: "İncelemede",
-  yayinda: "Yayında",
-  teklif_saglaniyor: "Teklif sağlanıyor",
-  anlasildi: "Anlaşıldı",
+  yayinda: "Teklife açık",
+  teklif_saglaniyor: "Teklife açık",
+  anlasildi: "Anlaşma sağlandı",
+  kaldirildi: "Kaldırıldı",
+};
+
+/** İlan listesi / ilan detayı — public rozet */
+export const PUBLIC_STATUS_LABELS: Partial<Record<ListingStatus, string>> = {
+  yayinda: "Teklife açık",
+  teklif_saglaniyor: "Teklife açık",
+  anlasildi: "Anlaşma sağlandı",
+};
+
+/** Hesabım / malik paneli */
+export const OWNER_STATUS_LABELS: Record<ListingStatus, string> = {
+  incelemede: "İnceleniyor",
+  yayinda: "Teklife açık",
+  teklif_saglaniyor: "Teklife açık",
+  anlasildi: "Anlaşma sağlandı",
   kaldirildi: "Kaldırıldı",
 };
 
@@ -40,7 +61,22 @@ export const ODEME_LABELS: Record<OdemeTercihi, string> = {
   belirsiz: "Belirsiz",
 };
 
-export const KAT_SECENEKLERI = ["1", "2", "3", "4", "5", "6", "7", "8+"] as const;
+/**
+ * İlan formu hızlı seçimler (chip).
+ * Değerler saf rakam — özel girişi de destekler (1–99 / 1–999).
+ */
+export const KAT_SECENEKLERI = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "10",
+  "12",
+] as const;
 
 export const DAIRE_SECENEKLERI = [
   "1",
@@ -57,5 +93,27 @@ export const DAIRE_SECENEKLERI = [
   "24",
   "30",
   "40",
-  "50+",
+  "50",
 ] as const;
+
+/** Malik formunda “elimde var” diye işaretlenen belgeler */
+export const LISTING_BELGELER = [
+  {
+    key: "belge_aplikasyon",
+    label: "Aplikasyon Krokisi",
+  },
+  {
+    key: "belge_imar_durum",
+    label: "İmar Durum Belgesi",
+  },
+  {
+    key: "belge_istikamet_roleve",
+    label: "İnşaat İstikamet Rölevesi",
+  },
+  {
+    key: "belge_kot_kesit",
+    label: "Kot-Kesit",
+  },
+] as const;
+
+export type ListingBelgeKey = (typeof LISTING_BELGELER)[number]["key"];

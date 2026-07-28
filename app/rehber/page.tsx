@@ -15,9 +15,9 @@ import { getSiteUrl } from "@/lib/seo/site";
 
 const PATH = "/rehber";
 const TITLE =
-  "İstanbul Kentsel Dönüşüm Rehberi | 6306, Kira Yardımı, Hibe ve Kredi";
+  "Kentsel Dönüşüm Rehberi | İstanbul 6306, Kira Yardımı, Hibe ve Kredi";
 const DESCRIPTION =
-  "İstanbul kentsel dönüşüm rehberi: 6306 sayılı kanun, kira ve taşınma yardımı evrak listeleri, Yarısı Bizden hibe-kredi hesaplama. 39 ilçe.";
+  "Kentsel dönüşüm rehberi: kentsel dönüşüm nedir, 6306 sayılı kanun, kira ve taşınma yardımı evrakları, Yarısı Bizden hibe-kredi. İstanbul 39 ilçe.";
 
 export const metadata: Metadata = {
   ...istanbulGeoMetadata({
@@ -25,15 +25,22 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     path: PATH,
     keywords: [
-      "İstanbul kentsel dönüşüm rehberi",
+      "kentsel dönüşüm rehberi",
+      "kentsel dönüşüm nedir",
       "6306 sayılı kanun",
       "kira yardımı İstanbul",
       "Yarısı Bizden hesaplama",
+      "İstanbul kentsel dönüşüm",
     ],
   }),
 };
 
 const GUIDES = [
+  {
+    href: "/rehber/kentsel-donusum-nedir",
+    title: "Kentsel dönüşüm nedir?",
+    desc: "Amaç, mülkiyet hakkı, riskli alan / riskli yapı farkı, itiraz, tahliye, 2/3 çoğunluk ve vergi muafiyeti.",
+  },
   {
     href: "/rehber/6306-sayili-kanun",
     title: "6306 sayılı kanun nedir?",
@@ -42,7 +49,7 @@ const GUIDES = [
   {
     href: "/rehber/kira-yardimi",
     title: "Kira yardımı nedir? Nasıl alınır?",
-    desc: "Malik, konut kiracısı ve iş yeri kiracısı için istenen belgeler ve başvuru adımları.",
+    desc: "İBB hızlı tarama D–E ve güçlendirme tutarları, riskli alan 18.000 ₺, aylık mı 125.000 ₺ mı, Ek-1/2/3 evrakları.",
   },
   {
     href: "/rehber/hibe-ve-kredi-hesaplama",
@@ -75,15 +82,16 @@ export default function RehberIndexPage() {
     <AppShell showBottomCta>
       <JsonLd data={schemas} />
       <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
-        Bilgi bankası · İstanbul
+        Bilgi bankası · Kentsel dönüşüm · İstanbul
       </p>
       <h1 className="mt-1 text-2xl font-bold text-[#111321]">
-        İstanbul kentsel dönüşüm rehberi
+        Kentsel dönüşüm rehberi
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        6306 sayılı kanun, kira–taşınma yardımı evrakları ve Yarısı Bizden
-        destek tutarları. Bilgiler genel bilgilendirme amaçlıdır; güncel
-        mevzuat ve resmî kurum açıklamaları esas alınmalıdır.
+        Kentsel dönüşüm nedir, 6306 sayılı kanun, kira–taşınma yardımı
+        evrakları ve Yarısı Bizden destek tutarları — İstanbul odaklı.
+        Bilgiler genel bilgilendirme amaçlıdır; güncel mevzuat ve resmî kurum
+        açıklamaları esas alınmalıdır.
       </p>
       <div className="mt-6 flex flex-col gap-3">
         {GUIDES.map((g) => (

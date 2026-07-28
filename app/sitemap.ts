@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { allSeoDistrictSlugs } from "@/lib/constants/istanbul-ilceler";
 import { getAllHaberler } from "@/lib/content/haberler";
+import { getPublicListings } from "@/lib/listings/queries";
 import { getSiteUrl } from "@/lib/seo/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const site = getSiteUrl();
   const now = new Date();
 
@@ -30,8 +31,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${site}/rehber`,
       lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${site}/rehber/kentsel-donusum-nedir`,
+      lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.85,
+      priority: 0.9,
     },
     {
       url: `${site}/rehber/6306-sayili-kanun`,
@@ -51,6 +58,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
+    {
+      url: `${site}/hakkimizda`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${site}/iletisim`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${site}/site-haritasi`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
   ];
 
   const districts: MetadataRoute.Sitemap = allSeoDistrictSlugs().map(
@@ -69,5 +94,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...districts, ...news];
+  // Yayındaki ilanlar
+  let listings: MetadataRoute.Sitemap = [];
+  try {
+    const publicListings = await getPublicListings();
+    listings = publicListings.map((l) => ({
+      url: `${site}/ilan/${l.slug}`,
+      lastModified: new Date(l.updated_at || l.published_at || now),
+      changeFrequency: "daily" as const,
+      priority: 0.75,
+    }));
+  } catch {
+    /* ilan yoksa sitemap yine static + ilçe + haber döner */
+  }
+
+  return [...staticRoutes, ...districts, ...news, ...listings];
 }

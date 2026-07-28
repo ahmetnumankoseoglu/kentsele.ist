@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { canViewListingContact } from "@/lib/auth/session";
 
-/** Only approved contractors (or admin) get malik phone */
+/** Only approved contractors (or admin) get malik phone + ada/parsel */
 export async function GET(req: Request) {
   try {
     const slug = new URL(req.url).searchParams.get("slug");
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
         {
           error: "forbidden",
           message:
-            "Malik iletişim bilgisi yalnızca onaylı müteahhit hesaplarına açıktır.",
+            "Malik iletişim ve ada/parsel yalnızca onaylı müteahhit hesaplarına açıktır.",
         },
         { status: 403 }
       );
@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     const admin = createServiceClient();
     const { data, error } = await admin
       .from("listings")
-      .select("telefon, email, iletisim_adi, status")
+      .select("telefon, email, iletisim_adi, status, ada, parsel, mahalle")
       .eq("slug", slug)
       .in("status", ["yayinda", "teklif_saglaniyor"])
       .maybeSingle();
@@ -39,6 +39,9 @@ export async function GET(req: Request) {
       telefon: data.telefon,
       email: data.email,
       iletisim_adi: data.iletisim_adi,
+      ada: data.ada ?? null,
+      parsel: data.parsel ?? null,
+      mahalle: data.mahalle,
     });
   } catch (e) {
     console.error(e);

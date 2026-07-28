@@ -8,7 +8,15 @@ import {
   SITE_NAME,
 } from "./site";
 
-/** Root + tüm sayfalarda ortak İstanbul geo / local SEO metadata */
+/** Primary keyword first; Istanbul is geo/local modifier (OK for single-city product) */
+const CORE_KEYWORDS = [
+  "kentsel dönüşüm",
+  "İstanbul kentsel dönüşüm",
+  "riskli yapı",
+  "Yarısı Bizden",
+  "6306 sayılı kanun",
+];
+
 export function istanbulGeoMetadata(overrides?: {
   title?: string;
   description?: string;
@@ -22,11 +30,7 @@ export function istanbulGeoMetadata(overrides?: {
     overrides?.title ?? "kentsele.ist — İstanbul Kentsel Dönüşüm İlanları";
   const description = overrides?.description ?? SITE_DESCRIPTION;
   const keywords = [
-    "İstanbul kentsel dönüşüm",
-    "kentsel dönüşüm İstanbul",
-    "riskli yapı İstanbul",
-    "Yarısı Bizden",
-    "6306 sayılı kanun",
+    ...CORE_KEYWORDS,
     ...(overrides?.keywords ?? []),
   ];
 
@@ -86,7 +90,6 @@ export function istanbulGeoMetadata(overrides?: {
   };
 }
 
-/** Rehber makale sayfaları için zengin metadata */
 export function rehberArticleMetadata(opts: {
   title: string;
   description: string;
@@ -102,9 +105,9 @@ export function rehberArticleMetadata(opts: {
     description: opts.description,
     path: opts.path,
     keywords: [
+      "kentsel dönüşüm",
       ...opts.keywords,
       "İstanbul kentsel dönüşüm rehberi",
-      "kentsel dönüşüm bilgi bankası",
     ],
   });
 
@@ -121,8 +124,8 @@ export function rehberArticleMetadata(opts: {
       publishedTime: opts.datePublished,
       modifiedTime: opts.dateModified ?? opts.datePublished,
       authors: [SITE_NAME],
-      section: "İstanbul Kentsel Dönüşüm Rehberi",
-      tags: opts.keywords,
+      section: "Kentsel Dönüşüm Rehberi",
+      tags: ["kentsel dönüşüm", ...opts.keywords],
     },
     twitter: {
       card: "summary_large_image",

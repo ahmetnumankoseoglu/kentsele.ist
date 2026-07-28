@@ -6,7 +6,7 @@ import { IlceFilter } from "@/components/ilan/IlceFilter";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
 import { HomeFooter } from "@/components/home/HomeFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getPublicListings } from "@/lib/listings/queries";
+import { getPublicListingsForViewer } from "@/lib/listings/queries";
 import {
   isValidIstanbulIlce,
   ISTANBUL_ILCELER,
@@ -57,10 +57,9 @@ export default async function HomePage({
   let listings: PublicListing[] = [];
   let errorMsg: string | null = null;
   try {
-    listings = await getPublicListings(ilce);
+    listings = await getPublicListingsForViewer(ilce);
   } catch {
-    errorMsg =
-      "İlanlar yüklenemedi. Supabase yapılandırmasını kontrol edin.";
+    errorMsg = "İlanlar yüklenemedi.";
   }
 
   const haberler = (await getPublishedNews()).slice(0, 3);

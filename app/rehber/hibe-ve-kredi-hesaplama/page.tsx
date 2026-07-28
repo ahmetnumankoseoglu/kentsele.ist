@@ -20,7 +20,7 @@ const TITLE =
   "İstanbul Yarısı Bizden Hibe ve Kredi Hesaplama | Konut & İş Yeri";
 const DESCRIPTION = `İstanbul Yarısı Bizden: konut ${formatTRY(K.toplamBirim)} (hibe ${formatTRY(K.hibe)} + kredi ${formatTRY(K.kredi)} + taşınma ${formatTRY(K.tasinma)}), iş yeri ${formatTRY(T.toplamBirim)}. Konut+dükkân karışık hesap.`;
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
-const MODIFIED = "2026-07-28T18:00:00+03:00";
+const MODIFIED = "2026-07-29T12:00:00+03:00";
 
 export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
@@ -33,7 +33,6 @@ export const metadata: Metadata = rehberArticleMetadata({
     "1 milyon 875 bin destek",
     "iş yeri dönüşüm 1 milyon",
     "İstanbul kentsel dönüşüm destek",
-    "taşınma yardımı 125000",
   ],
   datePublished: PUBLISHED,
   dateModified: MODIFIED,
@@ -166,15 +165,37 @@ export default function HibeKrediPage() {
       </p>
 
       <h2 className="!mt-6 text-base font-bold text-[#111321]">
-        Taşınma desteği ≠ aylık kira yardımı
+        Proje ön şartı ve başvuru (özet)
       </h2>
+      <ul className="list-disc space-y-1.5 pl-5">
+        <li>
+          Yeni projedeki yapı (otopark ve sığınak hariç), eski yapının bir buçuk
+          katını (bağımsız bölüm veya inşaat alanı) geçmemelidir.
+        </li>
+        <li>
+          İstanbul’un 39 ilçesinde riskli yapı sahipleri kampanya kapsamında
+          değerlendirilebilir.
+        </li>
+        <li>
+          Başvuru genelde e-Devlet ile yapılmaz: kat irtifakı sonrası hak sahibi
+          tespiti için ilçe belediyesine başvurulur; randevuda hibe taahhütnamesi
+          ve kredi sözleşmesi imzalanır.
+        </li>
+        <li>
+          Kredi geri ödemeleri uygulamada yapı ruhsatı sonrası belirli süre
+          (ör. 2 yıl) sonra başlayıp uzun vadeye (ör. 10 yıl) yayılabilir; ilk
+          dönem faiz uygulanmayabilir. Güncel banka/kampanya şartı esas alınır.
+        </li>
+        <li>
+          Ada/site ölçekli büyük dönüşümde tam uzlaşma halinde Kentsel Dönüşüm
+          Başkanlığı, TOKİ ve Emlak Konut iş birliği gündeme gelebilir.
+        </li>
+      </ul>
       <p>
-        Taşınma ({formatTRY(K.tasinma)} / birim) paket içindedir. Aylık kira
-        yardımı ayrı destektir —{" "}
-        <Link href="/rehber/kira-yardimi" className="font-bold text-[#168f43]">
-          kira yardımı rehberi
-        </Link>
-        .
+        Resmî duyurularda bazen “ilk birim tam paket, sonraki birimler yalnızca
+        kredi” şeklinde ayrım anlatılır. Aşağıdaki hesaplayıcı, pratik planlama
+        için her birime tam paket uygular; kesin hak tutarı kurum/banka
+        onayına bağlıdır.
       </p>
 
       <div className="card mt-4 border-l-4 border-l-[#ee401d] bg-[#fef2f2] p-4 text-sm text-[#6b7280]">
@@ -186,7 +207,14 @@ export default function HibeKrediPage() {
       <HibeKrediCalculator />
 
       <p className="!mt-6">
-        Hukuki çerçeve:{" "}
+        İlgili:{" "}
+        <Link
+          href="/rehber/kentsel-donusum-nedir"
+          className="font-bold text-[#168f43]"
+        >
+          kentsel dönüşüm nedir
+        </Link>
+        ,{" "}
         <Link
           href="/rehber/6306-sayili-kanun"
           className="font-bold text-[#168f43]"

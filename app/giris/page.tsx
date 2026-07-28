@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export default function GirisPage() {
   const router = useRouter();
@@ -20,6 +19,7 @@ export default function GirisPage() {
     setLoading(true);
     setError(null);
     try {
+      const { createBrowserSupabase } = await import("@/lib/supabase/browser");
       const supabase = createBrowserSupabase();
       const { error: err } = await supabase.auth.signInWithPassword({
         email,
@@ -33,7 +33,7 @@ export default function GirisPage() {
       router.push(next);
       router.refresh();
     } catch {
-      setError("Giriş yapılamadı.");
+      setError("Giriş yapılamadı. Lütfen tekrar dene.");
       setLoading(false);
     }
   }
@@ -44,6 +44,7 @@ export default function GirisPage() {
       <p className="mt-1 text-sm text-[#6b7280]">
         İlan düzenlemek, müteahhit paneli veya yorum için hesabına gir.
       </p>
+
       <form onSubmit={onSubmit} className="card-elevated mt-6 space-y-3 p-5">
         <input
           className="input-field"

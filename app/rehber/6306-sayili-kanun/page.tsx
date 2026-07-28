@@ -20,7 +20,7 @@ const TITLE =
 const DESCRIPTION =
   "6306 sayılı Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun: riskli yapı tespiti, malik hakları, itiraz, yıkım süreci. İstanbul kentsel dönüşüm rehberi.";
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
-const MODIFIED = "2026-07-28T12:00:00+03:00";
+const MODIFIED = "2026-07-28T22:00:00+03:00";
 
 export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
@@ -44,16 +44,32 @@ const FAQ = [
     a: "Kanun 16 Mayıs 2012 tarihinde kabul edilmiş, 31 Mayıs 2012 tarihli Resmî Gazete’de yayımlanarak yürürlüğe girmiştir. Sonraki yıllarda yönetmelik ve uygulama değişiklikleriyle detaylandırılmıştır.",
   },
   {
-    q: "Riskli yapı tespiti zorunlu mu?",
-    a: "Malikler kendi talebiyle riskli yapı tespiti yaptırabilir. Ayrıca idare (bakanlık, belediye vb.) de resen tespit yaptırabilir. Riskli yapı kararı tapuya şerh edilir ve süreç yasal takvime bağlanır.",
+    q: "Riskli yapı tespiti zorunlu mu? Tüm maliklerin onayı gerekir mi?",
+    a: "Malikler kendi talebiyle riskli yapı tespiti yaptırabilir; idare de resen tespit yaptırabilir. Uygulamada sıklıkla maliklerden biri lisanslı kuruluşa başvurabilir. Riskli yapı kararı tapuya şerh edilir ve süreç yasal takvime bağlanır.",
   },
   {
-    q: "Kat maliklerinin tamamı anlaşmak zorunda mı?",
-    a: "Uygulama tipine göre çoğunluk ve usuller yönetmelikle belirlenir. Pratikte mümkün olduğunca yüksek mutabakat süreci hızlandırır. Güncel oran ve usuller için yürürlükteki yönetmelik ve idare rehberleri kontrol edilmelidir.",
+    q: "Kat maliklerinin tamamı anlaşmak zorunda mı? 2/3 nedir?",
+    a: "Yeniden yapım ve uygulama kararlarında arsa payı oranında en az üçte iki (salt) çoğunluk aranabilir. Karara katılmayanların hisseleri kanundaki usulle satılarak süreç ilerletilebilir. Oybirliği mümkün olduğunca tercih edilir; güncel oran ve usuller için yürürlükteki yönetmelik kontrol edilmelidir.",
   },
   {
-    q: "Riskli yapı kararına itiraz edilebilir mi?",
-    a: "Evet. Riskli yapı tespitine karşı malikler veya kanuni temsilcileri, tebligattan itibaren kanunda/yönetmelikte öngörülen süre içinde itiraz edebilir. İtirazlar üniversiteler bünyesindeki teknik heyetlerce değerlendirilir.",
+    q: "Riskli yapı kararına itiraz edilebilir mi? Süre nedir?",
+    a: "Evet. Malikler veya yasal temsilcileri, tebliğ / muhtarlık ilanı usulüne göre tebliğ sayıldığı tarihten itibaren genellikle 15 gün içinde ilgili müdürlüğe veya yetki devri yapılmış belediyeye yazılı itiraz edebilir. İtirazlar teknik heyetçe incelenir.",
+  },
+  {
+    q: "Tebligat nasıl yapılır?",
+    a: "Tespit bilgilerini içeren tutanak yapıya asılır, maliklere e-Devlet üzerinden bildirilir ve muhtarlıkta ilan edilir; ilanın son günü tebliğ sayılabilir. Ayrıca başkanlık internet sayfasında ilan yapılabilir. Güncel usul yönetmeliğe tabidir.",
+  },
+  {
+    q: "Tahliye süresi ne kadardır? Altyapı kesilir mi?",
+    a: "Riskli yapı kesinleştikten sonra maliklere tahliye ve yıkım için süre verilir (uygulamada 60 günden az olmamak üzere; idare 90 güne kadar süre verebilir). Süre sonunda yıkım yoksa elektrik, su ve doğalgaz kesintisi talep edilebilir; ardından idari yıkım gündeme gelebilir.",
+  },
+  {
+    q: "6306 kapsamında vergi ve harç muafiyeti var mı?",
+    a: "Evet. Kanun kapsamındaki işlem, sözleşme, devir ve tesciller; noter harcı, tapu harcı, belediye harçları, damga vergisi, veraset ve intikal vergisi, döner sermaye ve benzeri ücretlerden muaf tutulabilir. Güncel kapsam için kanun ve vergi idaresi tebliğleri esas alınır.",
+  },
+  {
+    q: "Müteahhit inşaatı yarım bırakırsa ne olur?",
+    a: "Kanundaki şartlar oluşursa (ör. karar sonrası bir yıl içinde başlanmama veya uzun süre fiili faaliyetin kesilmesi) malikler sözleşme feshi talebinde bulunabilir. Detay ve süre koşulları 6306 ve uygulama yönetmeliğine bakılmalıdır.",
   },
   {
     q: "6306 ile kira yardımı veya hibe ilişkisi nedir?",
@@ -178,12 +194,13 @@ export default function Kanun6306Page() {
           ilgili tapu müdürlüğüne bildirilir; riskli yapı şerhi işlenir.
         </li>
         <li>
-          <strong>Tebligat ve itiraz:</strong> Maliklere tebliğ edilir. Kanuni
-          süre içinde itiraz hakkı vardır.
+          <strong>Tebligat ve itiraz:</strong> Yapıya asma, e-Devlet ve
+          muhtarlık ilanı usulüyle tebliğ; genelde 15 gün içinde itiraz hakkı.
         </li>
         <li>
-          <strong>Tahliye ve yıkım:</strong> Süreç tamamlandıktan sonra tahliye
-          ve yıkım takvimi işler. Anlaşma yolu önceliklidir.
+          <strong>Tahliye ve yıkım:</strong> Maliklere süre verilir; süre sonunda
+          altyapı kesintisi ve idari yıkım gündeme gelebilir. Anlaşma yolu
+          önceliklidir.
         </li>
         <li>
           <strong>Yeniden yapım:</strong> Malikler müteahhit ile kat karşılığı,
