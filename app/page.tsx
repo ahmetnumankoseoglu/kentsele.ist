@@ -285,7 +285,7 @@ export default async function HomePage({
         <section className="pb-8">
           <h2 className="section-title">Popüler ilçeler</h2>
           <p className="mb-4 -mt-2 text-sm text-[#6b7280]">
-            SEO sayfaları: “Bayrampaşa kentsel dönüşüm” gibi ilçe rehberleri.
+            İstanbul’da en çok aranan kentsel dönüşüm bölgelerine hızlı erişim.
           </p>
           <div className="flex flex-wrap gap-2">
             {POPULAR_ILCELER.map((name) => (
