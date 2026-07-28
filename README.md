@@ -25,7 +25,7 @@ cp .env.example .env.local
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (sadece sunucu; gizli tut) |
 | `ADMIN_PASSWORD` | Admin paneli şifresi |
 | `ADMIN_SESSION_SECRET` | Cookie imzası için rastgele gizli dize |
-| `NEXT_PUBLIC_SITE_URL` | Site kökü (örn. `http://localhost:3000`) |
+| `NEXT_PUBLIC_SITE_URL` | Canlı site kökü (`https://kentsele.ist`) — schema/canonical için; localhost kullanma |
 
 ### 2. Veritabanı
 

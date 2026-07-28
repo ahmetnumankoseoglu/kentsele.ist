@@ -27,12 +27,13 @@ export async function POST(req: Request) {
       );
     }
     const { listing, manageUrlPath } = await createListing(parsed.data);
-    const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+    const { getSiteUrl } = await import("@/lib/seo/site");
+    const site = getSiteUrl();
     return NextResponse.json({
       id: listing.id,
       slug: listing.slug,
       managePath: manageUrlPath,
-      manageUrl: site ? `${site}${manageUrlPath}` : manageUrlPath,
+      manageUrl: `${site}${manageUrlPath}`,
     });
   } catch (e) {
     console.error(e);
