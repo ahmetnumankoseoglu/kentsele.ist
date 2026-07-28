@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { formatPhoneInput } from "@/lib/phone";
 
 export function ContactForm() {
@@ -88,6 +89,13 @@ export function ContactForm() {
         required
         minLength={10}
       />
+      <p className="text-xs leading-relaxed text-[#6b7280]">
+        Göndererek{" "}
+        <Link href="/gizlilik" className="font-semibold text-[#168f43]">
+          KVKK ve Gizlilik Politikası
+        </Link>
+        ’nı okuduğunu kabul edersin.
+      </p>
       {error ? (
         <p className="text-sm font-medium text-[#ee401d]">{error}</p>
       ) : null}

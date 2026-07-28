@@ -42,6 +42,9 @@ export function HomeFooter() {
           <Link href="/site-haritasi" className="text-[#6b7280]">
             Sayfa listesi
           </Link>
+          <Link href="/gizlilik" className="text-[#6b7280]">
+            KVKK / Gizlilik
+          </Link>
         </nav>
 
         <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-[#9ca3af]">

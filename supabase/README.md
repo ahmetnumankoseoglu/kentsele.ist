@@ -11,12 +11,13 @@ kentsele.ist veritabanı, auth ve storage kurulumu.
 5. `migrations/005_contact_messages.sql` — site iletişim formu
 6. `migrations/006_rls_lockdown.sql` — rol / müteahhit onay alanlarını client’tan kilitle
 7. `migrations/007_contact_replies.sql` — iletişim formu admin cevabı alanları
-8. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+8. `migrations/008_storage_contractor_docs.sql` — private `contractor-docs` bucket
+9. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
 
 ## Dashboard ayarları
 
 1. **Authentication → Providers**: Email açık.
-2. **Storage**: `contractor-docs` bucket (private) oluştur.
+2. **Storage**: `contractor-docs` — detay: [`STORAGE.md`](./STORAGE.md) (SQL 008 veya elle).
 3. API keys → `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, anon, service_role).
 4. **Admin paneli**: `.env.local` içinde `ADMIN_PASSWORD` ve `ADMIN_SESSION_SECRET`.
 
