@@ -34,6 +34,34 @@ export async function PATCH(
       .select("*")
       .single();
     if (error) throw error;
+
+    // Notify contractor by email (Auth user email + profile name)
+    try {
+      if (
+        parsed.data.verification_status === "approved" ||
+        parsed.data.verification_status === "rejected"
+      ) {
+        const { data: userData } = await admin.auth.admin.getUserById(id);
+        const email = userData.user?.email;
+        const { data: profile } = await admin
+          .from("profiles")
+          .select("full_name")
+          .eq("id", id)
+          .maybeSingle();
+        if (email) {
+          const { emailOnContractorStatus } = await import("@/lib/email/send");
+          await emailOnContractorStatus({
+            email,
+            name: profile?.full_name || "Müteahhit",
+            status: parsed.data.verification_status,
+            reason: parsed.data.rejection_reason,
+          });
+        }
+      }
+    } catch (mailErr) {
+      console.error("[email] contractor status:", mailErr);
+    }
+
     return NextResponse.json({ item: data });
   } catch (e) {
     console.error(e);

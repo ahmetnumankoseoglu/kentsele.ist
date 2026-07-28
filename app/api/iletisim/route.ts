@@ -33,6 +33,14 @@ export async function POST(req: Request) {
       .single();
 
     if (error) throw error;
+
+    try {
+      const { emailAdminContactMessage } = await import("@/lib/email/send");
+      await emailAdminContactMessage(parsed.data);
+    } catch (mailErr) {
+      console.error("[email] contact:", mailErr);
+    }
+
     return NextResponse.json({ ok: true, id: data.id });
   } catch (e) {
     console.error(e);

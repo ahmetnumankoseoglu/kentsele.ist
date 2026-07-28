@@ -29,6 +29,15 @@ export async function POST(req: Request) {
     const { listing, manageUrlPath } = await createListing(parsed.data);
     const { getSiteUrl } = await import("@/lib/seo/site");
     const site = getSiteUrl();
+
+    // Transactional email (non-blocking for client if Resend fails)
+    try {
+      const { emailOnListingCreated } = await import("@/lib/email/send");
+      await emailOnListingCreated(listing);
+    } catch (mailErr) {
+      console.error("[email] listing create:", mailErr);
+    }
+
     return NextResponse.json({
       id: listing.id,
       slug: listing.slug,

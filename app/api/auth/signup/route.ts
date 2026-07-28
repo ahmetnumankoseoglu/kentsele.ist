@@ -46,6 +46,19 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    try {
+      const { emailOnSignup } = await import("@/lib/email/send");
+      await emailOnSignup({
+        email,
+        full_name,
+        role,
+        company_name: company_name ?? undefined,
+      });
+    } catch (mailErr) {
+      console.error("[email] signup:", mailErr);
+    }
+
     return NextResponse.json({ userId: data.user?.id });
   } catch (e) {
     console.error(e);
