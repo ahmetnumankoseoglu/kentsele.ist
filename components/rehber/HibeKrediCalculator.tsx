@@ -7,9 +7,20 @@ import {
   hesaplaYarisiBizden,
 } from "@/lib/content/destek-tutarlari";
 
+/** Boş stringe izin ver — "0" silinme bug'ını engeller */
+function parseAdet(raw: string): number {
+  if (raw.trim() === "") return 0;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
+}
+
 export function HibeKrediCalculator() {
-  const [konutAdet, setKonutAdet] = useState(1);
-  const [ticariAdet, setTicariAdet] = useState(0);
+  const [konutRaw, setKonutRaw] = useState("1");
+  const [ticariRaw, setTicariRaw] = useState("0");
+
+  const konutAdet = parseAdet(konutRaw);
+  const ticariAdet = parseAdet(ticariRaw);
 
   const sonuc = useMemo(
     () => hesaplaYarisiBizden(konutAdet, ticariAdet),
@@ -29,7 +40,6 @@ export function HibeKrediCalculator() {
         kampanya rakamlarına göre çarpılır.
       </p>
 
-      {/* Sabit tablolar */}
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <div className="rounded-[3px] border border-[#e3e4e6] bg-[#f8f8f8] p-3 text-xs">
           <p className="font-bold text-[#168f43]">1 konut (ilk birim)</p>
@@ -66,27 +76,35 @@ export function HibeKrediCalculator() {
         <label className="block text-xs font-bold text-[#6b7280]">
           Konut adedi
           <input
-            type="number"
-            min={0}
-            max={200}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             className="input-field mt-1"
-            value={konutAdet}
-            onChange={(e) =>
-              setKonutAdet(Math.max(0, Number(e.target.value) || 0))
-            }
+            value={konutRaw}
+            onChange={(e) => {
+              const v = e.target.value.replace(/[^\d]/g, "");
+              setKonutRaw(v);
+            }}
+            onBlur={() => {
+              if (konutRaw.trim() === "") setKonutRaw("0");
+            }}
           />
         </label>
         <label className="block text-xs font-bold text-[#6b7280]">
           Ticari (dükkân) adedi
           <input
-            type="number"
-            min={0}
-            max={200}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             className="input-field mt-1"
-            value={ticariAdet}
-            onChange={(e) =>
-              setTicariAdet(Math.max(0, Number(e.target.value) || 0))
-            }
+            value={ticariRaw}
+            onChange={(e) => {
+              const v = e.target.value.replace(/[^\d]/g, "");
+              setTicariRaw(v);
+            }}
+            onBlur={() => {
+              if (ticariRaw.trim() === "") setTicariRaw("0");
+            }}
           />
         </label>
       </div>
@@ -106,8 +124,14 @@ export function HibeKrediCalculator() {
             {sonuc.ticariAdet > 0 ? ` · ${sonuc.ticariAdet} ticari` : ""}
           </p>
           <Row label="Toplam hibe" value={formatTRY(sonuc.hibe)} />
-          <Row label="Toplam kredi (ilk birimler)" value={formatTRY(sonuc.kredi)} />
-          <Row label="Toplam taşınma / tahliye" value={formatTRY(sonuc.tasinma)} />
+          <Row
+            label="Toplam kredi (ilk birimler)"
+            value={formatTRY(sonuc.kredi)}
+          />
+          <Row
+            label="Toplam taşınma / tahliye"
+            value={formatTRY(sonuc.tasinma)}
+          />
           {sonuc.ekKredi > 0 && (
             <Row
               label="Ek birimler için kredi imkânı"

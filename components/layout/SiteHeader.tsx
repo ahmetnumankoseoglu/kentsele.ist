@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function UserIcon({ className }: { className?: string }) {
   return (
@@ -32,17 +35,33 @@ const SUBNAV = [
 ] as const;
 
 export function SiteHeader() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   return (
     <header className="sticky top-0 z-40 border-b border-[#e3e4e6] bg-white">
       <div className="mx-auto max-w-lg">
         <div className="flex h-12 items-center justify-between gap-2 px-4 sm:h-14">
-          <Link
-            href="/"
-            className="shrink-0 text-[16px] font-bold tracking-tight text-[#111321] sm:text-[17px]"
-          >
-            kentsele
-            <span className="text-[#2cb34f]">.ist</span>
-          </Link>
+          {isHome ? (
+            <Link
+              href="/"
+              className="shrink-0 text-[16px] font-bold tracking-tight text-[#111321] sm:text-[17px]"
+            >
+              kentsele
+              <span className="text-[#2cb34f]">.ist</span>
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="inline-flex shrink-0 items-center gap-1 rounded-lg py-1.5 pr-2 text-sm font-bold text-[#111321] transition hover:bg-[#f8f8f8] hover:text-[#168f43]"
+              aria-label="Ana sayfaya dön"
+            >
+              <span className="text-lg leading-none text-[#2cb34f]" aria-hidden>
+                ‹
+              </span>
+              <span>Anasayfa</span>
+            </Link>
+          )}
           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
             <Link href="/ilanlar" className={navLinkClass}>
               İlanlar
