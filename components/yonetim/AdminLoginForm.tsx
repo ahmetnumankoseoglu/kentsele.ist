@@ -20,11 +20,18 @@ export function AdminLoginForm() {
         body: JSON.stringify({ password }),
       });
       if (!res.ok) {
-        setError(
-          res.status === 401
-            ? "Şifre hatalı."
-            : "Giriş yapılamadı. Tekrar dene."
-        );
+        let msg = "Giriş yapılamadı. Tekrar dene.";
+        if (res.status === 401) {
+          msg = "Şifre hatalı.";
+        } else {
+          try {
+            const data = (await res.json()) as { message?: string };
+            if (data?.message) msg = data.message;
+          } catch {
+            /* ignore */
+          }
+        }
+        setError(msg);
         return;
       }
       router.replace("/yonetim/ilanlar");
