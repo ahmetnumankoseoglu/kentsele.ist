@@ -16,11 +16,17 @@ export type Listing = {
   manage_token: string;
   agreement_requested_at: string | null;
   published_at: string | null;
+  owner_user_id?: string | null;
   created_at: string;
   updated_at: string;
 };
 
-export type PublicListing = Omit<Listing, "manage_token" | "telefon" | "email"> & {
+/** Public-safe: phone never exposed; contact via approved contractor only */
+export type PublicListing = Omit<
+  Listing,
+  "manage_token" | "telefon" | "email" | "owner_user_id"
+> & {
   telefon: string | null;
   email: string | null;
+  contact_closed?: boolean;
 };

@@ -1,4 +1,4 @@
-import { getAllHaberler } from "@/lib/content/haberler";
+import { getPublishedNews } from "@/lib/news/queries";
 import { getSiteUrl, SITE_NAME } from "@/lib/seo/site";
 
 export const dynamic = "force-static";
@@ -12,18 +12,17 @@ function escapeXml(s: string) {
     .replace(/'/g, "&apos;");
 }
 
-/** Google News / RSS uyumlu haber feed */
 export async function GET() {
   const site = getSiteUrl();
-  const items = getAllHaberler();
-  const lastBuild = items[0]?.datePublished ?? new Date().toISOString();
+  const items = await getPublishedNews();
+  const lastBuild =
+    items[0]?.published_at || items[0]?.created_at || new Date().toISOString();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:media="http://search.yahoo.com/mrss/">
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${escapeXml(`${SITE_NAME} — İstanbul Kentsel Dönüşüm Haberleri`)}</title>
     <link>${site}/haberler</link>
@@ -34,19 +33,21 @@ export async function GET() {
     ${items
       .map((h) => {
         const link = `${site}/haberler/${h.slug}`;
-        const content = h.body.map((p) => `<p>${escapeXml(p)}</p>`).join("");
+        const paras = h.body
+          .split(/\n\n+/)
+          .map((p) => `<p>${escapeXml(p)}</p>`)
+          .join("");
         return `
     <item>
       <title>${escapeXml(h.title)}</title>
       <link>${link}</link>
       <guid isPermaLink="true">${link}</guid>
-      <pubDate>${new Date(h.datePublished).toUTCString()}</pubDate>
-      <dc:creator>${escapeXml(h.authorName)}</dc:creator>
+      <pubDate>${new Date(h.published_at || h.created_at).toUTCString()}</pubDate>
+      <dc:creator>${escapeXml(h.author_name)}</dc:creator>
       <description>${escapeXml(h.description)}</description>
-      <content:encoded><![CDATA[${content}]]></content:encoded>
+      <content:encoded><![CDATA[${paras}]]></content:encoded>
       <category>Kentsel Dönüşüm</category>
       <category>İstanbul</category>
-      ${h.tags.map((t) => `<category>${escapeXml(t)}</category>`).join("\n      ")}
     </item>`;
       })
       .join("")}

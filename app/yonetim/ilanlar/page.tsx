@@ -37,7 +37,15 @@ export default async function YonetimIlanlarPage() {
               : ""}
           </p>
         </div>
-        <AdminLogoutButton />
+        <div className="flex flex-col items-end gap-2">
+          <AdminLogoutButton />
+          <Link href="/yonetim/haberler" className="text-xs font-bold text-[#168f43]">
+            Haberler
+          </Link>
+          <Link href="/yonetim/muteahhitler" className="text-xs font-bold text-[#168f43]">
+            Müteahhitler
+          </Link>
+        </div>
       </div>
 
       {pending > 0 || agreementRequests > 0 ? (

@@ -13,7 +13,7 @@ import {
   ilceToSeoSlug,
 } from "@/lib/constants/istanbul-ilceler";
 import { FAQ_ITEMS } from "@/lib/content/faq";
-import { getAllHaberler } from "@/lib/content/haberler";
+import { getPublishedNews } from "@/lib/news/queries";
 import {
   breadcrumbSchema,
   faqPageSchema,
@@ -63,7 +63,7 @@ export default async function HomePage({
       "İlanlar yüklenemedi. Supabase yapılandırmasını kontrol edin.";
   }
 
-  const haberler = getAllHaberler().slice(0, 3);
+  const haberler = (await getPublishedNews()).slice(0, 3);
 
   const schemas = [
     websiteSchema(),
@@ -269,7 +269,7 @@ export default async function HomePage({
                 style={{ animationDelay: `${i * 50}ms` }}
               >
                 <time className="text-xs font-bold text-[#2cb34f]">
-                  {formatDate(h.datePublished)}
+                  {formatDate(h.published_at || h.created_at)}
                 </time>
                 <h3 className="mt-1 text-sm font-bold leading-snug text-[#111321]">
                   {h.title}

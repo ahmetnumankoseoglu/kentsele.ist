@@ -1,0 +1,151 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AppShell } from "@/components/layout/AppShell";
+import { createBrowserSupabase } from "@/lib/supabase/browser";
+
+export default function KayitPage() {
+  const router = useRouter();
+  const sp = useSearchParams();
+  const next = sp.get("next") || "/hesabim";
+  const [role, setRole] = useState<"malik" | "muteahhit">("malik");
+  const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          full_name: fullName,
+          phone,
+          role,
+          company_name: company,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error === "company_required"
+          ? "Firma adı gerekli"
+          : data.error || "Kayıt başarısız");
+        setLoading(false);
+        return;
+      }
+      const supabase = createBrowserSupabase();
+      const { error: loginErr } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (loginErr) {
+        router.push("/giris");
+        return;
+      }
+      router.push(role === "muteahhit" ? "/muteahhit" : next);
+      router.refresh();
+    } catch {
+      setError("Kayıt hatası");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <AppShell showBottomCta={false}>
+      <h1 className="text-2xl font-bold text-[#111321]">Kayıt ol</h1>
+      <p className="mt-1 text-sm text-[#6b7280]">
+        İlan vermek ücretsiz ve kayıtsız. Düzenlemek veya müteahhit olarak numara
+        görmek için hesap gerekir.
+      </p>
+
+      <div className="mt-5 grid grid-cols-2 gap-2">
+        {(
+          [
+            { id: "malik" as const, label: "Malik / ilan sahibi" },
+            { id: "muteahhit" as const, label: "Müteahhit" },
+          ] as const
+        ).map((r) => (
+          <button
+            key={r.id}
+            type="button"
+            onClick={() => setRole(r.id)}
+            data-selected={role === r.id}
+            className="option-chip px-3 py-3 text-sm font-semibold"
+          >
+            {r.label}
+          </button>
+        ))}
+      </div>
+
+      {role === "muteahhit" && (
+        <p className="mt-3 rounded-[3px] bg-[#fff7e6] px-3 py-2 text-xs text-[#b45309]">
+          Müteahhit hesapları belge yükleyip onaylanmadan malik numaralarını
+          göremez.
+        </p>
+      )}
+
+      <form onSubmit={onSubmit} className="card-elevated mt-5 space-y-3 p-5">
+        <input
+          className="input-field"
+          placeholder="Ad soyad"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          required
+        />
+        {role === "muteahhit" && (
+          <input
+            className="input-field"
+            placeholder="Firma / unvan"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            required
+          />
+        )}
+        <input
+          className="input-field"
+          placeholder="Telefon"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <input
+          className="input-field"
+          type="email"
+          placeholder="E-posta"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="input-field"
+          type="password"
+          placeholder="Şifre (min 6)"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          minLength={6}
+        />
+        {error && <p className="text-sm text-[#ee401d]">{error}</p>}
+        <button type="submit" disabled={loading} className="btn-primary w-full">
+          {loading ? "Kaydediliyor…" : "Kayıt ol"}
+        </button>
+      </form>
+      <p className="mt-4 text-center text-sm text-[#6b7280]">
+        Zaten hesabın var mı?{" "}
+        <Link href="/giris" className="font-bold text-[#168f43]">
+          Giriş yap
+        </Link>
+      </p>
+    </AppShell>
+  );
+}

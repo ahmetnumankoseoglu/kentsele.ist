@@ -1,0 +1,41 @@
+import { NextResponse } from "next/server";
+import { createServiceClient } from "@/lib/supabase/admin";
+import { isAdminAuthenticated } from "@/lib/auth/admin-session";
+import { z } from "zod";
+
+const schema = z.object({
+  verification_status: z.enum(["pending", "approved", "rejected"]),
+  rejection_reason: z.string().optional().nullable(),
+});
+
+export async function PATCH(
+  req: Request,
+  ctx: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "auth" }, { status: 401 });
+  }
+  try {
+    const { id } = await ctx.params;
+    const parsed = schema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "validation" }, { status: 400 });
+    }
+    const admin = createServiceClient();
+    const { data, error } = await admin
+      .from("contractor_profiles")
+      .update({
+        verification_status: parsed.data.verification_status,
+        rejection_reason: parsed.data.rejection_reason ?? null,
+        reviewed_at: new Date().toISOString(),
+      })
+      .eq("user_id", id)
+      .select("*")
+      .single();
+    if (error) throw error;
+    return NextResponse.json({ item: data });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "server" }, { status: 500 });
+  }
+}

@@ -53,3 +53,8 @@ export function randomShortId(length = 4): string {
   }
   return out;
 }
+
+export function buildNewsSlug(title: string): string {
+  const base = slugifyTr(title).slice(0, 80);
+  return `${base}-${randomShortId(4)}`;
+}

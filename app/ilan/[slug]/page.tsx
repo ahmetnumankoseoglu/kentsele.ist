@@ -10,6 +10,7 @@ import { ODEME_LABELS, type OdemeTercihi } from "@/lib/constants/listing";
 import { ilceToSeoSlug } from "@/lib/constants/istanbul-ilceler";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { getSiteUrl } from "@/lib/seo/site";
+import { canViewListingContact } from "@/lib/auth/session";
 import type { PublicListing } from "@/types/listing";
 
 export async function generateMetadata({
@@ -50,6 +51,7 @@ export default async function IlanDetailPage({
   if (!listing) notFound();
 
   const districtPath = `/${ilceToSeoSlug(listing.ilce)}`;
+  const canViewContact = await canViewListingContact();
   const schemas = [
     breadcrumbSchema([
       { name: "Ana sayfa", path: "/" },
@@ -127,8 +129,12 @@ export default async function IlanDetailPage({
           </div>
         </div>
         <ContactActions
-          telefon={listing.telefon}
-          anlasildi={listing.status === "anlasildi"}
+          slug={listing.slug}
+          anlasildi={
+            listing.status === "anlasildi" ||
+            Boolean(listing.contact_closed)
+          }
+          canViewContact={canViewContact}
         />
       </div>
 

@@ -13,10 +13,10 @@ export function SiteHeader() {
             <span className="text-[#2cb34f]">.ist</span>
           </span>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
             href="/ilanlar"
-            className="text-sm font-semibold text-[#6b7280] hover:text-[#111321]"
+            className="hidden text-sm font-semibold text-[#6b7280] hover:text-[#111321] xs:inline sm:inline"
           >
             İlanlar
           </Link>
@@ -25,6 +25,12 @@ export function SiteHeader() {
             className="text-sm font-semibold text-[#6b7280] hover:text-[#111321]"
           >
             Haberler
+          </Link>
+          <Link
+            href="/hesabim"
+            className="text-sm font-semibold text-[#6b7280] hover:text-[#111321]"
+          >
+            Hesap
           </Link>
           <Link
             href="/ilan-ver"
