@@ -126,6 +126,15 @@ export async function PATCH(
       console.error("[email] contractor status:", mailErr);
     }
 
+    try {
+      if (status === "approved" || status === "rejected") {
+        const { pushOnContractorStatus } = await import("@/lib/push/send");
+        await pushOnContractorStatus(id, status);
+      }
+    } catch (pushErr) {
+      console.error("[push] contractor status:", pushErr);
+    }
+
     return NextResponse.json({
       item: data,
       verification_status: status,

@@ -68,6 +68,16 @@ export async function PATCH(
       } catch (mailErr) {
         console.error("[email] listing status:", mailErr);
       }
+      try {
+        const { pushOnListingStatus } = await import("@/lib/push/send");
+        await pushOnListingStatus(
+          listing,
+          prevStatus,
+          String(patch.status)
+        );
+      } catch (pushErr) {
+        console.error("[push] listing status:", pushErr);
+      }
     }
 
     return NextResponse.json({ listing });
