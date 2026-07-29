@@ -1,12 +1,19 @@
 /* kentsele.ist service worker — PWA + push */
-const CACHE = "kentsele-shell-v1";
-const PRECACHE = ["/", "/favicon.ico", "/favicon.svg", "/manifest.webmanifest"];
+const CACHE = "kentsele-shell-v2";
+const PRECACHE = ["/favicon.ico", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
+  // Don't block install on precache failures (broken install → push subscribe fails)
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(PRECACHE))
+      .then((cache) =>
+        Promise.all(
+          PRECACHE.map((url) =>
+            cache.add(url).catch(() => undefined)
+          )
+        )
+      )
       .then(() => self.skipWaiting())
       .catch(() => self.skipWaiting())
   );
@@ -21,6 +28,12 @@ self.addEventListener("activate", (event) => {
       )
       .then(() => self.clients.claim())
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("fetch", (event) => {
