@@ -15,12 +15,19 @@ export default function SifremiUnuttumPage() {
     setLoading(true);
     setError(null);
     try {
+      // Sadece kendi API — asla supabase.auth.resetPasswordForEmail
+      // (o Supabase Auth şablonunu yollar)
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ email: email.trim() }),
       });
-      const data = await res.json().catch(() => ({}));
+      const data = (await res.json().catch(() => ({}))) as {
+        message?: string;
+        via?: string;
+        error?: string;
+      };
       if (!res.ok) {
         setError(
           data.message ||
