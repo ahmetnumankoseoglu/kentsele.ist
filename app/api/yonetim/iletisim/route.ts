@@ -107,3 +107,33 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "server" }, { status: 500 });
   }
 }
+
+/** Kalıcı sil */
+export async function DELETE(req: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  try {
+    const body = await req.json().catch(() => ({}));
+    const id =
+      typeof body?.id === "string"
+        ? body.id
+        : new URL(req.url).searchParams.get("id");
+    if (!id) {
+      return NextResponse.json(
+        { error: "validation", message: "id gerekli." },
+        { status: 400 }
+      );
+    }
+    const admin = createServiceClient();
+    const { error } = await admin
+      .from("contact_messages")
+      .delete()
+      .eq("id", id);
+    if (error) throw error;
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error("[contact DELETE]", e);
+    return NextResponse.json({ error: "server" }, { status: 500 });
+  }
+}

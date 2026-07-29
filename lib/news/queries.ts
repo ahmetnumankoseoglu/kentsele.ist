@@ -31,9 +31,10 @@ export async function getPublishedNews(): Promise<NewsArticle[]> {
       .select("*")
       .order("published_at", { ascending: false });
     if (error) throw error;
-    if (data && data.length > 0) return data as NewsArticle[];
+    // DB boşsa seed’e düşme — seed devre dışı (admin’den eklenenler)
+    return (data ?? []) as NewsArticle[];
   } catch {
-    /* fallback seed */
+    /* tablo yoksa boş */
   }
   return seedAsArticles();
 }
@@ -50,6 +51,8 @@ export async function getPublishedNewsBySlug(
       .maybeSingle();
     if (error) throw error;
     if (data) return data as NewsArticle;
+    // Seed yoksa 404
+    return null;
   } catch {
     /* fallback */
   }

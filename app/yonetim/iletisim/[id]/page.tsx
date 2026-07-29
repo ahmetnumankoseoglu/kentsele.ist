@@ -90,6 +90,7 @@ export default async function AdminIletisimDetailPage({
           id={m.id as string}
           status={String(m.status)}
           hasReply={Boolean(m.admin_reply)}
+          subject={String(m.subject)}
         />
       </section>
     </AdminShell>

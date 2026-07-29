@@ -7,15 +7,19 @@ export function ContactMessageActions({
   id,
   status,
   hasReply,
+  subject,
 }: {
   id: string;
   status: string;
   hasReply?: boolean;
+  /** Onay diyaloğunda gösterilir */
+  subject?: string;
 }) {
   const router = useRouter();
   const [reply, setReply] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [okMsg, setOkMsg] = useState<string | null>(null);
 
@@ -61,6 +65,34 @@ export function ContactMessageActions({
       setError("Bağlantı hatası.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function permanentDelete() {
+    const label = subject?.trim() || "bu mesajı";
+    const ok = window.confirm(
+      `"${label}" kalıcı silinsin mi?\n\nBu işlem geri alınamaz.`
+    );
+    if (!ok) return;
+    setDeleteLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/yonetim/iletisim", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.message || "Silinemedi.");
+        setDeleteLoading(false);
+        return;
+      }
+      router.replace("/yonetim/iletisim");
+      router.refresh();
+    } catch {
+      setError("Bağlantı hatası.");
+      setDeleteLoading(false);
     }
   }
 
@@ -131,6 +163,20 @@ export function ContactMessageActions({
           </button>
         </div>
       )}
+
+      <div className="border-t border-rose-100 pt-3">
+        <button
+          type="button"
+          disabled={deleteLoading}
+          onClick={() => void permanentDelete()}
+          className="w-full rounded-[3px] border border-rose-200 bg-rose-50 px-3 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-100 disabled:opacity-60"
+        >
+          {deleteLoading ? "Siliniyor…" : "Mesajı kalıcı sil"}
+        </button>
+        {error && !open ? (
+          <p className="mt-2 text-xs text-[#ee401d]">{error}</p>
+        ) : null}
+      </div>
     </div>
   );
 }
