@@ -166,13 +166,6 @@ export function IlanVerWizard({
         setLoading(false);
         return;
       }
-      sessionStorage.setItem(
-        "kentsele_manage",
-        JSON.stringify({
-          managePath: data.managePath,
-          manageUrl: data.manageUrl,
-        })
-      );
       router.push("/ilan-ver/basarili");
     } catch {
       setError("Bağlantı hatası.");
