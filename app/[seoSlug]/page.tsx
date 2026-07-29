@@ -169,7 +169,7 @@ export default async function DistrictSeoPage({
           className="absolute inset-0 opacity-35"
           style={{
             backgroundImage:
-              "url(https://cdn.armut.com/images/services/mobile/00761-kentsel-donusum-proje.jpeg)",
+              "url(/images/kentsel-donusum-hero.jpeg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

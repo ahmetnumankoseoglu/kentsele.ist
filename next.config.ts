@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.armut.com",
-      },
-      {
-        protocol: "https",
         hostname: "**.supabase.co",
       },
     ],

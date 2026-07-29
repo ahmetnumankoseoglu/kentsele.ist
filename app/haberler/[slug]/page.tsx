@@ -99,7 +99,7 @@ export default async function HaberDetailPage({
         <div
           className="absolute inset-0 opacity-50"
           style={{
-            backgroundImage: `url(${haber.banner_image_url || haber.cover_image_url || "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg"})`,
+            backgroundImage: `url(${haber.banner_image_url || haber.cover_image_url || "/images/kentsel-donusum-cover.jpeg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

@@ -98,8 +98,7 @@ export default async function HomePage({
         <div
           className="absolute inset-0 opacity-40"
           style={{
-            backgroundImage:
-              "url(https://cdn.armut.com/images/services/mobile/00761-kentsel-donusum-proje.jpeg)",
+            backgroundImage: "url(/images/kentsel-donusum-hero.jpeg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -139,46 +138,6 @@ export default async function HomePage({
 
       <div className="mx-auto max-w-lg px-4">
         <section className="py-8">
-          <h2 className="section-title">Neden Kentsele?</h2>
-          <div className="grid gap-3">
-            {[
-              {
-                t: "İstanbul’a özel",
-                d: "Sadece İstanbul kentsel dönüşüm ilanları. 39 ilçenin tamamı tek yerde.",
-              },
-              {
-                t: "Ücretsiz malik ilanı",
-                d: "İlan vermek ücretsiz ve kayıtsız. Düzenlemek için hesap gerekir. Müteahhitler ilan veremez.",
-              },
-              {
-                t: "Teyitli yayın",
-                d: "İlanlar ekip teyidi sonrası yayına alınır; sahte ilan riski azalır.",
-              },
-              {
-                t: "Onaylı müteahhit iletişimi",
-                d: "Malik numarası herkese açık değildir. Yalnızca belge onayı almış müteahhitler arar.",
-              },
-            ].map((item, i) => (
-              <div
-                key={item.t}
-                className="how-step card flex gap-3 p-4 animate-fade-up"
-                style={{ animationDelay: `${i * 50}ms` }}
-              >
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ee] text-sm font-bold text-[#168f43]">
-                  ✓
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-[#111321]">{item.t}</p>
-                  <p className="mt-0.5 text-sm leading-snug text-[#6b7280]">
-                    {item.d}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="pb-8">
           <h2 className="section-title">Nasıl çalışır?</h2>
           <div className="grid gap-3">
             {[
@@ -216,6 +175,46 @@ export default async function HomePage({
           <Link href="/ilan-ver" className="btn-primary mt-5 w-full">
             Hemen İlan Ver
           </Link>
+        </section>
+
+        <section className="pb-8">
+          <h2 className="section-title">Neden Kentsele?</h2>
+          <div className="grid gap-3">
+            {[
+              {
+                t: "İstanbul’a özel",
+                d: "Sadece İstanbul kentsel dönüşüm ilanları. 39 ilçenin tamamı tek yerde.",
+              },
+              {
+                t: "Ücretsiz malik ilanı",
+                d: "İlan vermek ücretsiz ve kayıtsız. Düzenlemek için hesap gerekir. Müteahhitler ilan veremez.",
+              },
+              {
+                t: "Teyitli yayın",
+                d: "İlanlar ekip teyidi sonrası yayına alınır; sahte ilan riski azalır.",
+              },
+              {
+                t: "Onaylı müteahhit iletişimi",
+                d: "Malik numarası herkese açık değildir. Yalnızca belge onayı almış müteahhitler arar.",
+              },
+            ].map((item, i) => (
+              <div
+                key={item.t}
+                className="how-step card flex gap-3 p-4 animate-fade-up"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ee] text-sm font-bold text-[#168f43]">
+                  ✓
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-[#111321]">{item.t}</p>
+                  <p className="mt-0.5 text-sm leading-snug text-[#6b7280]">
+                    {item.d}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="pb-8">

@@ -76,7 +76,7 @@ export default async function HaberlerPage() {
         <div
           className="absolute inset-0 scale-105 opacity-45"
           style={{
-            backgroundImage: `url(${featured?.banner_image_url || featured?.cover_image_url || "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg"})`,
+            backgroundImage: `url(${featured?.banner_image_url || featured?.cover_image_url || "/images/kentsel-donusum-cover.jpeg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -116,7 +116,7 @@ export default async function HaberlerPage() {
                 src={
                   featured.cover_image_url ||
                   featured.banner_image_url ||
-                  "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg"
+                  "/images/kentsel-donusum-cover.jpeg"
                 }
                 alt={featured.title}
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
@@ -150,7 +150,7 @@ export default async function HaberlerPage() {
                 <img
                   src={
                     h.cover_image_url ||
-                    "https://cdn.armut.com/images/services/mobile/00761-kentsel-donusum-proje.jpeg"
+                    "/images/kentsel-donusum-hero.jpeg"
                   }
                   alt={h.title}
                   className="absolute inset-0 h-full w-full object-cover"

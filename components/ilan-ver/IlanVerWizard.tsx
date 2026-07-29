@@ -313,7 +313,7 @@ export function IlanVerWizard({
               ))}
             </div>
             <label className="mt-4 block text-xs font-bold text-[#6b7280]">
-              Özel kat sayısı
+              Kat sayısı
               <input
                 className="input-field mt-1.5 text-lg font-bold tabular-nums"
                 inputMode="numeric"
@@ -357,7 +357,7 @@ export function IlanVerWizard({
                 ))}
               </div>
               <label className="mt-4 block text-xs font-bold text-[#6b7280]">
-                Özel daire sayısı
+                Daire sayısı
                 <input
                   className="input-field mt-1.5 text-lg font-bold tabular-nums"
                   inputMode="numeric"
@@ -397,7 +397,7 @@ export function IlanVerWizard({
                 ))}
               </div>
               <label className="mt-4 block text-xs font-bold text-[#6b7280]">
-                Özel dükkan sayısı
+                Dükkan sayısı
                 <input
                   className="input-field mt-1.5 text-lg font-bold tabular-nums"
                   inputMode="numeric"
@@ -444,9 +444,6 @@ export function IlanVerWizard({
               <p className="text-sm font-bold text-[#111321]">
                 Detay <span className="text-[#ee401d]">*</span>
               </p>
-              <p className="mt-0.5 text-xs text-[#6b7280]">
-                Zorunlu · en az 20 karakter
-              </p>
               <textarea
                 className="input-field mt-2 min-h-32 resize-y"
                 placeholder="Örn: 4 katlı 8 daireli bina, riskli yapı raporu alındı, kat karşılığı düşünüyoruz…"
@@ -462,11 +459,6 @@ export function IlanVerWizard({
             <div>
               <p className="text-sm font-bold text-[#111321]">
                 Ada / parsel <span className="text-[#ee401d]">*</span>
-              </p>
-              <p className="mt-0.5 text-xs text-[#6b7280]">
-                Zorunlu. Yalnızca rakam. Mahalle herkese açık; ada ve parsel
-                yalnızca <strong>onaylı müteahhit</strong> hesaplarına
-                gösterilir.
               </p>
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <input

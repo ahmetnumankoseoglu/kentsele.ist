@@ -10,10 +10,8 @@ function seedAsArticles(): NewsArticle[] {
     title: h.title,
     description: h.description,
     body: h.body.join("\n\n"),
-    cover_image_url:
-      "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg",
-    banner_image_url:
-      "https://cdn.armut.com/images/services/00761-kentsel-donusum-proje.jpeg",
+    cover_image_url: "/images/kentsel-donusum-cover.jpeg",
+    banner_image_url: "/images/kentsel-donusum-cover.jpeg",
     status: "published" as const,
     author_name: h.authorName,
     tags: h.tags,
