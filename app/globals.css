@@ -274,6 +274,86 @@ h4 {
   box-shadow: var(--card-shadow);
 }
 
+/* Haber gövdesi + admin TipTap */
+.prose-article h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111321;
+  margin: 1.25rem 0 0.5rem;
+}
+.prose-article h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111321;
+  margin: 1rem 0 0.4rem;
+}
+.prose-article p {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #374151;
+  margin: 0 0 0.85rem;
+}
+.prose-article ul,
+.prose-article ol {
+  margin: 0 0 0.85rem 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #374151;
+}
+.prose-article li {
+  margin-bottom: 0.25rem;
+}
+.prose-article a {
+  color: #168f43;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.prose-article blockquote {
+  border-left: 3px solid #2cb34f;
+  margin: 0.75rem 0;
+  padding: 0.35rem 0 0.35rem 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+}
+.prose-article strong {
+  color: #111321;
+  font-weight: 700;
+}
+
+.prose-editor .ProseMirror {
+  min-height: 220px;
+}
+.prose-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: #9ca3af;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+.prose-editor .ProseMirror h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0.75rem 0 0.35rem;
+}
+.prose-editor .ProseMirror h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0.65rem 0 0.3rem;
+}
+.prose-editor .ProseMirror ul,
+.prose-editor .ProseMirror ol {
+  margin: 0.35rem 0 0.35rem 1.15rem;
+}
+.prose-editor .ProseMirror a {
+  color: #168f43;
+  text-decoration: underline;
+}
+.prose-editor .ProseMirror blockquote {
+  border-left: 3px solid #2cb34f;
+  padding-left: 0.75rem;
+  color: #6b7280;
+}
+
 /* Header rehber subnav — masaüstünde de yatay kaydırılabilir */
 .subnav-scroll {
   -webkit-overflow-scrolling: touch;

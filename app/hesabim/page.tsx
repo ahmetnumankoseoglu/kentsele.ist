@@ -7,6 +7,7 @@ import {
   getSessionUser,
 } from "@/lib/auth/session";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { PushEnableButton } from "@/components/pwa/PushEnableButton";
 import {
   OWNER_STATUS_LABELS,
   PUBLIC_STATUSES,
@@ -65,6 +66,8 @@ export default async function HesabimPage() {
         </div>
         <LogoutButton />
       </div>
+
+      <PushEnableButton />
 
       {contractor && (
         <div className="card mt-5 p-4">

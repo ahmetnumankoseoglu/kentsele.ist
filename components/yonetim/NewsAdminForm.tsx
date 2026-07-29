@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { NewsArticle } from "@/types/news";
+import { RichTextEditor } from "@/components/yonetim/RichTextEditor";
 
 async function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -90,6 +91,11 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    const plain = body.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim();
+    if (plain.length < 20) {
+      setMsg("İçerik en az ~20 karakter olmalı (zengin metin editörü).");
+      return;
+    }
     setLoading(true);
     setMsg(null);
     const payload = {
@@ -161,13 +167,16 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
         onChange={(e) => setDescription(e.target.value)}
         required
       />
-      <textarea
-        className="input-field min-h-32"
-        placeholder="Gövde (paragrafları boş satırla ayır)"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        required
-      />
+      <div>
+        <p className="mb-1.5 text-xs font-bold text-[#6b7280]">
+          İçerik (zengin metin)
+        </p>
+        <RichTextEditor
+          value={body}
+          onChange={setBody}
+          placeholder="Haberi WordPress gibi biçimlendir: başlık, liste, kalın, link…"
+        />
+      </div>
       <ImagePicker label="Banner görsel" value={banner} onChange={setBanner} />
       <ImagePicker label="Kapak görsel" value={cover} onChange={setCover} />
       <input

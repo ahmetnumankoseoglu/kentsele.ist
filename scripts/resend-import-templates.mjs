@@ -320,6 +320,40 @@ const templates = [
     }),
   },
   {
+    alias: "password-reset",
+    name: "Kentsele · Şifre sıfırlama",
+    subject: "Şifre sıfırlama · kentsele.ist",
+    previewFallback: "Şifreni sıfırlamak için bağlantı.",
+    variables: [
+      str("PREVIEW_TEXT", "Şifreni sıfırlamak için bağlantı."),
+      str("NAME", "Kullanıcı"),
+      str("RESET_URL", `${SITE}/sifre-yenile`),
+      str("YEAR", YEAR),
+    ],
+    text: plainText([
+      "{{{PREVIEW_TEXT}}}",
+      "Merhaba {{{NAME}}},",
+      "Yeni şifre belirle: {{{RESET_URL}}}",
+      "Bu talebi sen yapmadıysan yok say.",
+    ]),
+    html: layout({
+      title: "Şifre sıfırlama",
+      bodyHtml: [
+        p(`Merhaba <strong style="color:${BRAND.ink};">{{{NAME}}}</strong>,`),
+        p(
+          "Şifre sıfırlama talebin alındı. Aşağıdaki düğmeyle yeni şifreni belirleyebilirsin. Bağlantı bir süre geçerlidir; açtıktan sonra hemen şifreni kaydet."
+        ),
+        p(
+          "Bu talebi sen yapmadıysan bu e-postayı yok sayabilirsin; şifren değişmez."
+        ),
+      ].join(""),
+      ctaLabel: "Yeni şifre belirle",
+      ctaHrefVar: "RESET_URL",
+      footerNote:
+        "Bu e-posta, şifre sıfırlama talebin üzerine otomatik gönderilmiştir.",
+    }),
+  },
+  {
     alias: "welcome-malik",
     name: "Kentsele · Hoş geldin malik",
     subject: "Hoş geldin · kentsele.ist",

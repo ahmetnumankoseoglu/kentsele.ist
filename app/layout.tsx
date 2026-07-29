@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { siteGraphSchema } from "@/lib/seo/schema";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="tr-TR" className={`${poppins.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white font-sans text-[#111321]">
         <JsonLd data={siteGraphSchema()} />
+        <PwaRegister />
         {children}
         <Analytics />
         <SpeedInsights />

@@ -1,5 +1,5 @@
 {
-  "importedAt": "2026-07-28T23:24:27.649Z",
+  "importedAt": "2026-07-29T00:59:43.301Z",
   "from": "Kentsele.ist <noreply@kentsele.ist>",
   "templates": [
     {
@@ -54,6 +54,15 @@
       "subject": "Üyeliğini aktifleştir · kentsele.ist",
       "htmlLen": 3238,
       "textLen": 113,
+      "ok": true
+    },
+    {
+      "alias": "password-reset",
+      "id": "3f07f293-74cf-483f-bc1d-746b1b24581c",
+      "action": "created",
+      "subject": "Şifre sıfırlama · kentsele.ist",
+      "htmlLen": 3345,
+      "textLen": 112,
       "ok": true
     },
     {
@@ -113,7 +122,7 @@
     {
       "alias": "contact-received",
       "id": "fa05a079-f005-4073-9d31-53815c2f1e0e",
-      "action": "created",
+      "action": "updated",
       "subject": "Mesajın alındı · {{{SUBJECT}}}",
       "htmlLen": 3724,
       "textLen": 106,
@@ -122,7 +131,7 @@
     {
       "alias": "contact-reply",
       "id": "96c8269d-70b7-4cc6-81a3-ccc9f0a8a5c3",
-      "action": "created",
+      "action": "updated",
       "subject": "Yanıt: {{{SUBJECT}}}",
       "htmlLen": 3567,
       "textLen": 106,
@@ -136,6 +145,7 @@
     "listing-agreed": "641c5281-5f7f-4434-9dc8-095fe81a31d4",
     "listing-removed": "263a5cba-0e29-4dd4-91cd-b9cff229175c",
     "activate-account": "99d53a0b-b9ba-49e4-bd88-8c2f1a7a54bd",
+    "password-reset": "3f07f293-74cf-483f-bc1d-746b1b24581c",
     "welcome-malik": "21f51036-9fb1-457e-b265-83d19e24b153",
     "welcome-contractor": "6f21aa68-1b47-4995-aaf1-18dfd0814087",
     "contractor-approved": "a8e86f42-e369-48ef-a5ae-8edd0f19aeb5",

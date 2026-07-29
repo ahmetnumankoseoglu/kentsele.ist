@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { AppShell } from "@/components/layout/AppShell";
 import { ContactForm } from "@/components/iletisim/ContactForm";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
+import { getCurrentProfile, getSessionUser } from "@/lib/auth/session";
+import { formatPhoneInput } from "@/lib/phone";
 
 export const metadata: Metadata = istanbulGeoMetadata({
   title: "İletişim | Sorularınızı Bize Yazın",
@@ -11,7 +13,21 @@ export const metadata: Metadata = istanbulGeoMetadata({
   keywords: ["kentsele iletişim", "kentsel dönüşüm iletişim İstanbul"],
 });
 
-export default function IletisimPage() {
+export default async function IletisimPage() {
+  const user = await getSessionUser();
+  const profile = user ? await getCurrentProfile() : null;
+
+  const prefill =
+    user || profile
+      ? {
+          full_name: profile?.full_name ?? null,
+          email: user?.email ?? null,
+          phone: profile?.phone
+            ? formatPhoneInput(profile.phone)
+            : null,
+        }
+      : null;
+
   return (
     <AppShell showBottomCta={false}>
       <h1 className="text-2xl font-bold text-[#111321]">İletişim</h1>
@@ -20,7 +36,7 @@ export default function IletisimPage() {
         yönetim paneline düşer.
       </p>
       <div className="mt-6">
-        <ContactForm />
+        <ContactForm prefill={prefill} />
       </div>
     </AppShell>
   );

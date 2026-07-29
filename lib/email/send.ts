@@ -202,7 +202,7 @@ export async function emailOnListingStatusChange(
   }
 }
 
-/** Şifre sıfırlama — bağlantı Supabase generateLink, gönderim Resend */
+/** Şifre sıfırlama — generateLink token; Resend template alias password-reset */
 export async function emailPasswordReset(opts: {
   email: string;
   resetUrl: string;

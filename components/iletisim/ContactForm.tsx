@@ -4,10 +4,22 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatPhoneInput } from "@/lib/phone";
 
-export function ContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+export type ContactPrefill = {
+  full_name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+};
+
+export function ContactForm({ prefill }: { prefill?: ContactPrefill | null }) {
+  const fromAccount = Boolean(
+    prefill?.email || prefill?.full_name || prefill?.phone
+  );
+
+  const [name, setName] = useState(prefill?.full_name?.trim() || "");
+  const [email, setEmail] = useState(prefill?.email?.trim() || "");
+  const [phone, setPhone] = useState(
+    prefill?.phone ? formatPhoneInput(prefill.phone) : ""
+  );
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,11 +49,14 @@ export function ContactForm() {
         return;
       }
       setOk(true);
-      setName("");
-      setEmail("");
-      setPhone("");
       setSubject("");
       setBody("");
+      // Hesaptan gelen kimlik alanlarını koru
+      if (!fromAccount) {
+        setName("");
+        setEmail("");
+        setPhone("");
+      }
     } catch {
       setError("Bağlantı hatası.");
     }
@@ -50,6 +65,11 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="card-elevated space-y-3 p-5">
+      {fromAccount ? (
+        <p className="rounded-[3px] bg-[#eaf8ee] px-3 py-2 text-xs font-medium text-[#168f43]">
+          Giriş yaptığın için ad, e-posta ve telefon hesabından dolduruldu.
+        </p>
+      ) : null}
       <input
         className="input-field"
         placeholder="Ad soyad"
@@ -57,6 +77,7 @@ export function ContactForm() {
         onChange={(e) => setName(e.target.value)}
         required
         minLength={2}
+        readOnly={Boolean(prefill?.full_name?.trim())}
       />
       <input
         className="input-field"
@@ -65,6 +86,7 @@ export function ContactForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        readOnly={Boolean(prefill?.email?.trim())}
       />
       <input
         className="input-field tabular-nums"
@@ -72,6 +94,7 @@ export function ContactForm() {
         inputMode="tel"
         value={phone}
         onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
+        readOnly={Boolean(prefill?.phone?.trim())}
       />
       <input
         className="input-field"

@@ -6,15 +6,16 @@ export type Haber = {
   datePublished: string;
   dateModified?: string;
   authorName: string;
-  /** HTML-safe paragraphs */
+  /** HTML-safe paragraphs (seed fallback) */
   body: string[];
   tags: string[];
   image?: string;
 };
 
 /**
- * İstanbul kentsel dönüşüm haberleri.
- * Yeni haber eklemek için bu diziye kayıt ekle (Google News / RSS için).
+ * Seed haberler — DB’de yayınlı haber yoksa fallback.
+ * Admin panelinden gerçek haber eklemen önerilir.
+ * (Eski 3 seed’ten 2’si kaldırıldı.)
  */
 export const HABERLER: Haber[] = [
   {
@@ -30,34 +31,6 @@ export const HABERLER: Haber[] = [
       "İlk adım genelde riskli yapı tespitidir. Yetkili kurumlarca yapılan tespit sonrasında malikler arasında mutabakat ve proje modeli (kat karşılığı, hasılat paylaşımı, peşin vb.) konuşulur. Bu aşamada şeffaf teklif karşılaştırması kritik önem taşır.",
       "kentsele.ist üzerinde malikler ilçeye özel ücretsiz ve kayıtsız ilan oluşturabilir. Müteahhitler kayıt olup belge onayı aldıktan sonra malik iletişim bilgisine erişebilir. Onay sonrası ilanlar hem ilgili ilçe sayfasında hem genel listede görünür.",
       "2026 itibarıyla kamu destekleri ve yerel uygulamalar bölgeye göre değişebildiği için, kendi ilçenizdeki güncel projelere ve benzer ilanlara bakmak en sağlıklı başlangıçtır.",
-    ],
-  },
-  {
-    slug: "kat-karsiligi-mi-hakedis-mi",
-    title: "Kat Karşılığı mı, Hakediş mi? Kentsel Dönüşümde Ödeme Modelleri",
-    description:
-      "Kentsel dönüşümde kat karşılığı, hakediş ve peşin modellerinin malik açısından artı ve eksileri.",
-    datePublished: "2026-07-15T11:30:00+03:00",
-    authorName: "kentsele.ist Editör",
-    tags: ["kat karşılığı", "hakediş", "kentsel dönüşüm"],
-    body: [
-      "Kentsel dönüşüm projelerinde en çok konuşulan konuların başında ödeme / paylaşım modeli gelir. Kat karşılığı, hakedişe tabi ve peşin nakit modelleri farklı risk ve getiri profilleri sunar.",
-      "Kat karşılığında müteahhit inşaatı üstlenir; malikler genelde belirli bağımsız bölümleri alır. Hakediş modelinde ise ilerleme basamaklarına göre ödemeler yapılır. Peşin modellerde nakit akışı daha net olsa da bütçe disiplini şarttır.",
-      "Hangi modelin uygun olduğu; arsa payı, emsal, konum, daire adedi ve malik mutabakatına göre değişir. kentsele.ist ilan formunda ödeme tercihi seçilerek müteahhitlerin doğru beklentiyle iletişime geçmesi sağlanır.",
-    ],
-  },
-  {
-    slug: "avrupa-yakasi-kentsel-donusum-trendleri",
-    title: "Avrupa Yakası’nda Kentsel Dönüşüm Trendleri",
-    description:
-      "Bağcılar, Bahçelievler, Küçükçekmece ve Fatih hattında öne çıkan kentsel dönüşüm dinamikleri.",
-    datePublished: "2026-07-08T14:00:00+03:00",
-    authorName: "kentsele.ist Editör",
-    tags: ["Avrupa Yakası", "İstanbul", "trend"],
-    body: [
-      "İstanbul Avrupa Yakası’nda yoğun yapı stoku, kentsel dönüşümü hem fırsat hem operasyonel zorluk haline getiriyor. Özellikle Bağcılar, Bahçelievler, Güngören, Küçükçekmece ve Fatih gibi ilçelerde parsel bazlı dönüşüm talepleri sık görülüyor.",
-      "Müteahhitler için bu bölgelerde referans iş, zemin koşulları ve malik iletişimi belirleyici. Malikler içinse şeffaf süreç ve iletişim kanalları güven inşa ediyor.",
-      "kentsele.ist üzerinde ilçe filtreleri ve ilçe sayfaları sayesinde ilgili bölgedeki ilanlar daha kolay keşfedilebilir.",
     ],
   },
 ];

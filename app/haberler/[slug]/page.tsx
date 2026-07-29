@@ -13,6 +13,7 @@ import { breadcrumbSchema, newsArticleSchema } from "@/lib/seo/schema";
 import { getSiteUrl } from "@/lib/seo/site";
 import { getCurrentProfile } from "@/lib/auth/session";
 import { ShareButtons } from "@/components/seo/ShareButtons";
+import { NewsBody } from "@/components/haber/NewsBody";
 
 export async function generateStaticParams() {
   const items = await getPublishedNews();
@@ -71,7 +72,6 @@ export default async function HaberDetailPage({
 
   const comments = await getNewsComments(haber.id);
   const profile = await getCurrentProfile();
-  const paragraphs = haber.body.split(/\n\n+/).filter(Boolean);
 
   const schemas = [
     newsArticleSchema({
@@ -145,17 +145,7 @@ export default async function HaberDetailPage({
           {haber.description}
         </p>
 
-        <div className="prose-article mt-6 space-y-4">
-          {paragraphs.map((p, i) => (
-            <p
-              key={i}
-              className="animate-fade-up text-sm leading-relaxed text-[#374151]"
-              style={{ animationDelay: `${i * 40}ms` }}
-            >
-              {p}
-            </p>
-          ))}
-        </div>
+        <NewsBody body={haber.body} />
 
         <ShareButtons
           className="mt-8"

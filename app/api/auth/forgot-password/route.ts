@@ -3,8 +3,7 @@ import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { getSiteUrl } from "@/lib/seo/site";
 import { normalizeEmail } from "@/lib/listings/normalize-email";
-import { templatePasswordReset } from "@/lib/email/templates";
-import { sendEmail } from "@/lib/email/resend";
+
 
 const schema = z.object({
   email: z.string().email(),
@@ -96,12 +95,11 @@ export async function POST(req: Request) {
       /* ignore */
     }
 
-    const mail = templatePasswordReset({ name, resetUrl });
-    const sent = await sendEmail({
-      to: email,
-      subject: mail.subject,
-      html: mail.html,
-      text: mail.text,
+    const { emailPasswordReset } = await import("@/lib/email/send");
+    const sent = await emailPasswordReset({
+      email,
+      resetUrl,
+      name,
     });
 
     if (!sent.ok) {
@@ -118,7 +116,7 @@ export async function POST(req: Request) {
       );
     }
 
-    console.info("[forgot-password] sent via Resend", sent.id);
+    console.info("[forgot-password] sent via Resend", sent.id, "template-or-html");
     return NextResponse.json({ ok: true, via: "resend" });
   } catch (e) {
     console.error("[forgot-password]", e);
