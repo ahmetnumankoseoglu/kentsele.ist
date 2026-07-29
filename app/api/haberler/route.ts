@@ -51,6 +51,9 @@ export async function POST(req: Request) {
         ? slugifyTr(d.slug)
         : buildNewsSlug(d.title);
     const status = d.status ?? "draft";
+    // Tek görsel: cover ve banner aynı
+    const image =
+      d.cover_image_url || d.banner_image_url || null;
     const admin = createServiceClient();
     const { data, error } = await admin
       .from("news")
@@ -59,8 +62,8 @@ export async function POST(req: Request) {
         title: d.title,
         description: d.description,
         body: d.body,
-        cover_image_url: d.cover_image_url || null,
-        banner_image_url: d.banner_image_url || null,
+        cover_image_url: image,
+        banner_image_url: image,
         author_name: d.author_name || "kentsele.ist Editör",
         tags: d.tags ?? [],
         status,

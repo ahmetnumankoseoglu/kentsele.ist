@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
-import { adminUpdateListing } from "@/lib/listings/mutations";
+import {
+  adminDeleteListing,
+  adminUpdateListing,
+} from "@/lib/listings/mutations";
 import { getListingById } from "@/lib/listings/queries";
 import { adminUpdateListingSchema } from "@/lib/validations/listing";
 import { normalizeTrPhone } from "@/lib/phone";
@@ -70,6 +73,28 @@ export async function PATCH(
     return NextResponse.json({ listing });
   } catch (e) {
     console.error(e);
+    return NextResponse.json({ error: "server" }, { status: 500 });
+  }
+}
+
+/** Kalıcı sil — “Kaldır” durumundan farklı */
+export async function DELETE(
+  _req: Request,
+  ctx: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!(await isAdminAuthenticated())) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+    const { id } = await ctx.params;
+    const existing = await getListingById(id);
+    if (!existing) {
+      return NextResponse.json({ error: "not_found" }, { status: 404 });
+    }
+    await adminDeleteListing(id);
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error("[admin listing DELETE]", e);
     return NextResponse.json({ error: "server" }, { status: 500 });
   }
 }

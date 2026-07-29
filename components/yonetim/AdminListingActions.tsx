@@ -74,8 +74,33 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
     null
   );
   const [saveLoading, setSaveLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function permanentDelete() {
+    const ok = window.confirm(
+      "Bu ilanı KALICI olarak silmek istediğine emin misin?\n\nGeri alınamaz. Sadece yayından almak için “Kaldır” kullan."
+    );
+    if (!ok) return;
+    setDeleteLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const res = await fetch(`/api/yonetim/ilanlar/${listing.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.message || "Silinemedi.");
+      }
+      router.replace("/yonetim/ilanlar");
+      router.refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Silinemedi.");
+      setDeleteLoading(false);
+    }
+  }
 
   async function patch(body: Record<string, unknown>) {
     const res = await fetch(`/api/yonetim/ilanlar/${listing.id}`, {
@@ -480,6 +505,22 @@ export function AdminListingActions({ listing: initial }: { listing: AdminListin
           className="h-12 w-full rounded-xl bg-[#2cb34f] hover:bg-[#1ca03e] text-sm font-medium text-white disabled:opacity-60"
         >
           {saveLoading ? "Kaydediliyor…" : "Alanları kaydet"}
+        </button>
+      </div>
+
+      <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
+        <p className="text-sm font-semibold text-rose-900">Kalıcı sil</p>
+        <p className="mt-1 text-xs leading-relaxed text-rose-800/90">
+          “Kaldır” yalnızca yayından alır. Kalıcı silme ilanı veritabanından
+          siler; geri alınamaz.
+        </p>
+        <button
+          type="button"
+          disabled={deleteLoading}
+          onClick={() => void permanentDelete()}
+          className="mt-3 h-11 w-full rounded-xl border border-rose-300 bg-white text-sm font-bold text-rose-700 hover:bg-rose-100 disabled:opacity-60"
+        >
+          {deleteLoading ? "Siliniyor…" : "İlanı kalıcı olarak sil"}
         </button>
       </div>
 

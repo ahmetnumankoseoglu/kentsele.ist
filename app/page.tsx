@@ -4,7 +4,6 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ListingCard } from "@/components/ilan/ListingCard";
 import { IlceFilter } from "@/components/ilan/IlceFilter";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
-import { HomeFooter } from "@/components/home/HomeFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicListingsForViewer } from "@/lib/listings/queries";
 import {
@@ -342,8 +341,6 @@ export default async function HomePage({
           </Link>
         </section>
       </div>
-
-      <HomeFooter />
     </AppShell>
   );
 }

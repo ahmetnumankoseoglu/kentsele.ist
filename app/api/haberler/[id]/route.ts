@@ -34,6 +34,18 @@ export async function PATCH(
     if (typeof patch.slug === "string") {
       patch.slug = slugifyTr(patch.slug);
     }
+    // Tek görsel: cover ve banner senkron
+    if (
+      "cover_image_url" in patch ||
+      "banner_image_url" in patch
+    ) {
+      const image =
+        (patch.cover_image_url as string | null | undefined) ??
+        (patch.banner_image_url as string | null | undefined) ??
+        null;
+      patch.cover_image_url = image || null;
+      patch.banner_image_url = image || null;
+    }
     if (patch.status === "published") {
       // set published_at if missing — done via fetch existing optional
       const admin = createServiceClient();

@@ -91,3 +91,10 @@ export async function adminUpdateListing(
   if (error) throw error;
   return data as Listing;
 }
+
+/** Kalıcı silme — geri alınamaz */
+export async function adminDeleteListing(id: string): Promise<void> {
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("listings").delete().eq("id", id);
+  if (error) throw error;
+}

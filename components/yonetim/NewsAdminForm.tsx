@@ -52,7 +52,7 @@ function ImagePicker({
           <img
             src={value}
             alt=""
-            className="mb-2 max-h-28 w-full rounded object-cover"
+            className="mb-2 max-h-36 w-full rounded object-cover"
           />
         ) : (
           <span className="text-2xl text-[#2cb34f]">↑</span>
@@ -61,7 +61,7 @@ function ImagePicker({
           {value ? "Görseli değiştir" : "Görsel yükle"}
         </span>
         <span className="mt-0.5 text-[11px] text-[#9ca3af]">
-          JPG, PNG, WebP · max 4 MB
+          Banner ve kapak olarak kullanılır · JPG/PNG/WebP · max 4 MB
         </span>
       </label>
       {value ? (
@@ -79,31 +79,36 @@ function ImagePicker({
 
 export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
   const router = useRouter();
+  // Tek görsel: cover = banner
+  const initialImage =
+    edit?.cover_image_url || edit?.banner_image_url || "";
   const [title, setTitle] = useState(edit?.title ?? "");
   const [description, setDescription] = useState(edit?.description ?? "");
   const [body, setBody] = useState(edit?.body ?? "");
-  const [banner, setBanner] = useState(edit?.banner_image_url ?? "");
-  const [cover, setCover] = useState(edit?.cover_image_url ?? "");
+  const [image, setImage] = useState(initialImage);
   const [status, setStatus] = useState(edit?.status ?? "draft");
   const [tags, setTags] = useState((edit?.tags ?? []).join(", "));
   const [msg, setMsg] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const plain = body.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim();
     if (plain.length < 20) {
-      setMsg("İçerik en az ~20 karakter olmalı (zengin metin editörü).");
+      setError("İçerik en az ~20 karakter olmalı (zengin metin editörü).");
       return;
     }
     setLoading(true);
     setMsg(null);
+    setError(null);
+    // Banner ve kapak aynı görsel
     const payload = {
       title,
       description,
       body,
-      banner_image_url: banner || null,
-      cover_image_url: cover || null,
+      banner_image_url: image || null,
+      cover_image_url: image || null,
       status,
       tags: tags
         .split(",")
@@ -119,40 +124,53 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
           body: JSON.stringify(payload),
         }
       );
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setMsg("Kaydedilemedi");
+        setError(data.message || "Kaydedilemedi");
         setLoading(false);
         return;
       }
       setMsg(edit ? "Güncellendi" : "Oluşturuldu");
-      if (!edit) {
-        setTitle("");
-        setDescription("");
-        setBody("");
-        setBanner("");
-        setCover("");
+      if (!edit && data.item?.id) {
+        router.replace(`/yonetim/haberler/${data.item.id}`);
+        router.refresh();
+        return;
       }
       router.refresh();
     } catch {
-      setMsg("Hata");
+      setError("Bağlantı hatası");
     }
     setLoading(false);
   }
 
   async function remove() {
-    if (!edit || !confirm("Silinsin mi?")) return;
-    await fetch(`/api/haberler/${edit.id}`, { method: "DELETE" });
-    router.refresh();
+    if (!edit) return;
+    if (
+      !confirm(
+        `"${edit.title}" haberi kalıcı silinsin mi?\n\nBu işlem geri alınamaz.`
+      )
+    ) {
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/haberler/${edit.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        setError("Silinemedi");
+        setLoading(false);
+        return;
+      }
+      router.replace("/yonetim/haberler");
+      router.refresh();
+    } catch {
+      setError("Bağlantı hatası");
+      setLoading(false);
+    }
   }
 
   return (
-    <form
-      onSubmit={submit}
-      className={`space-y-3 ${edit ? "mt-3 border-t border-[#e3e4e6] pt-3" : "card-elevated p-4"}`}
-    >
-      {!edit && (
-        <p className="text-sm font-bold text-[#111321]">Yeni haber</p>
-      )}
+    <form onSubmit={submit} className="card-elevated space-y-3 p-4">
       <input
         className="input-field"
         placeholder="Başlık"
@@ -177,8 +195,11 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
           placeholder="Haberi WordPress gibi biçimlendir: başlık, liste, kalın, link…"
         />
       </div>
-      <ImagePicker label="Banner görsel" value={banner} onChange={setBanner} />
-      <ImagePicker label="Kapak görsel" value={cover} onChange={setCover} />
+      <ImagePicker
+        label="Haber görseli (banner + kapak)"
+        value={image}
+        onChange={setImage}
+      />
       <input
         className="input-field"
         placeholder="Etiketler (virgülle)"
@@ -196,20 +217,26 @@ export function NewsAdminForm({ edit }: { edit?: NewsArticle }) {
         <option value="published">Yayında</option>
         <option value="archived">Arşiv</option>
       </select>
-      {msg && <p className="text-xs text-[#168f43]">{msg}</p>}
+      {error ? (
+        <p className="text-xs font-medium text-[#ee401d]">{error}</p>
+      ) : null}
+      {msg ? (
+        <p className="text-xs font-medium text-[#168f43]">{msg}</p>
+      ) : null}
       <div className="flex gap-2">
         <button type="submit" disabled={loading} className="btn-primary flex-1">
           {loading ? "…" : edit ? "Güncelle" : "Kaydet"}
         </button>
-        {edit && (
+        {edit ? (
           <button
             type="button"
-            onClick={remove}
+            onClick={() => void remove()}
+            disabled={loading}
             className="btn-secondary text-[#ee401d]"
           >
             Sil
           </button>
-        )}
+        ) : null}
       </div>
     </form>
   );

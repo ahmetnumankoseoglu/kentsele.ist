@@ -4,9 +4,18 @@ import {
   ilceToSeoSlug,
 } from "@/lib/constants/istanbul-ilceler";
 
-export function HomeFooter() {
+export function HomeFooter({
+  withBottomCta = false,
+}: {
+  /** Sabit alt CTA varken alt boşluk */
+  withBottomCta?: boolean;
+}) {
   return (
-    <footer className="-mb-28 border-t border-[#e3e4e6] bg-[#f8f8f8] pb-28">
+    <footer
+      className={`border-t border-[#e3e4e6] bg-[#f8f8f8] ${
+        withBottomCta ? "pb-28" : "pb-10"
+      }`}
+    >
       <div className="mx-auto max-w-lg px-4 pb-6 pt-8">
         <p className="text-base font-bold text-[#111321]">
           kentsele<span className="text-[#2cb34f]">.ist</span>
@@ -16,7 +25,6 @@ export function HomeFooter() {
           müteahhit belge onayı sonrası iletişime geçer.
         </p>
 
-        {/* Unique short anchors (avoid repeating header labels) */}
         <nav
           className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold"
           aria-label="Alt menü"
