@@ -29,7 +29,15 @@ export function AdminHeader() {
               Admin
             </span>
           </Link>
-          <AdminLogoutButton className="!text-white/80 hover:!text-white" />
+          <div className="flex shrink-0 items-center gap-3">
+            <Link
+              href="/"
+              className="text-xs font-semibold text-white/70 transition hover:text-white sm:text-sm"
+            >
+              Siteye dön
+            </Link>
+            <AdminLogoutButton className="!text-white/80 hover:!text-white" />
+          </div>
         </div>
         <nav
           className="flex gap-1 overflow-x-auto border-t border-white/10 pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
