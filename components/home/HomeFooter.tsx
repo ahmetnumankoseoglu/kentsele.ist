@@ -35,6 +35,9 @@ export function HomeFooter({
           <Link href="/ilanlar" className="text-[#6b7280]">
             Tüm ilanlar
           </Link>
+          <Link href="/canli" className="text-[#6b7280]">
+            Canlı yayın
+          </Link>
           <Link href="/haberler" className="text-[#6b7280]">
             Güncel haber
           </Link>

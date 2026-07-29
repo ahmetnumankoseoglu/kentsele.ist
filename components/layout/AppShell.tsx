@@ -1,6 +1,7 @@
 import { SiteHeader } from "./SiteHeader";
 import { BottomCta } from "./BottomCta";
 import { HomeFooter } from "@/components/home/HomeFooter";
+import { LiveBroadcastWidget } from "@/components/canli/LiveBroadcastWidget";
 
 export function AppShell({
   children,
@@ -29,6 +30,7 @@ export function AppShell({
       </main>
       {showFooter ? <HomeFooter withBottomCta={showBottomCta} /> : null}
       {showBottomCta ? <BottomCta /> : null}
+      <LiveBroadcastWidget liftForBottomCta={showBottomCta} />
     </div>
   );
 }

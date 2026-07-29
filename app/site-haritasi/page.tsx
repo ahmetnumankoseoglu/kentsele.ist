@@ -19,6 +19,7 @@ const MAIN = [
   { href: "/", label: "Ana sayfa" },
   { href: "/ilanlar", label: "İlanlar" },
   { href: "/ilan-ver", label: "İlan ver" },
+  { href: "/canli", label: "Canlı yayın" },
   { href: "/haberler", label: "Haberler" },
   { href: "/hakkimizda", label: "Hakkımızda" },
   { href: "/gizlilik", label: "KVKK / Gizlilik" },

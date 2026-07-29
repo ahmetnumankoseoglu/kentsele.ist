@@ -23,6 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${site}/canli`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.65,
+    },
+    {
       url: `${site}/haberler`,
       lastModified: now,
       changeFrequency: "daily",
