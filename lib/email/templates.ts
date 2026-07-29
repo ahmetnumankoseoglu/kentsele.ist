@@ -208,7 +208,7 @@ export function templateActivateAccount(ctx: {
   };
 }
 
-/** 6b) Şifre sıfırlama — Resend (Supabase Auth maili değil) */
+/** 6b) Şifre sıfırlama — Resend; link sitede token_hash ile doğrulanır */
 export function templatePasswordReset(ctx: {
   name?: string | null;
   resetUrl: string;
@@ -223,7 +223,7 @@ export function templatePasswordReset(ctx: {
     bodyHtml: [
       p(greeting),
       p(
-        "Şifre sıfırlama talebin alındı. Aşağıdaki düğmeyle yeni şifreni belirleyebilirsin. Bu bağlantı sınırlı süre geçerlidir."
+        "Şifre sıfırlama talebin alındı. Aşağıdaki düğmeyle yeni şifreni belirleyebilirsin. Bağlantı bir süre geçerlidir; açtıktan sonra hemen şifreni kaydet."
       ),
       p(
         "Bu talebi sen yapmadıysan bu e-postayı yok sayabilirsin; şifren değişmez."

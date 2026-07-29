@@ -12,10 +12,11 @@ const schema = z.object({
 
 /**
  * Şifre sıfırlama:
- * 1) Supabase Admin generateLink — SADECE token/link üretir, mail GÖNDERMEZ
- * 2) Markalı HTML mail Resend ile gider (Supabase Auth şablonu kullanılmaz)
- *
- * Asla supabase.auth.resetPasswordForEmail kullanma — o Supabase şablonunu yollar.
+ * 1) generateLink → hashed_token (mail göndermez)
+ * 2) Link doğrudan sitemize: /sifre-yenile?token_hash=...&type=recovery
+ *    (Supabase /auth/v1/verify action_link KULLANMA — e-posta tarayıcıları
+ *     GET ile token’ı tüketir → otp_expired)
+ * 3) Resend ile markalı HTML
  */
 export async function POST(req: Request) {
   try {
@@ -45,7 +46,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Link üret — e-posta göndermez
     const { data, error } = await admin.auth.admin.generateLink({
       type: "recovery",
       email,
@@ -53,8 +53,8 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      // Kullanıcı yok / rate limit: güvenlik için yine genel mesaj
       console.error("[forgot-password] generateLink:", error.message);
+      // Kullanıcı yok: güvenlik için genel başarı
       return NextResponse.json({ ok: true });
     }
 
@@ -62,31 +62,24 @@ export async function POST(req: Request) {
       | {
           action_link?: string;
           hashed_token?: string;
-          redirect_to?: string;
+          email_otp?: string;
         }
       | undefined;
 
-    // Prefer action_link; fallback build verify URL from hashed_token
-    let resetUrl = props?.action_link?.trim() || "";
-    if (!resetUrl && props?.hashed_token) {
-      const base = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
-      if (base) {
-        const q = new URLSearchParams({
-          token: props.hashed_token,
-          type: "recovery",
-          redirect_to: redirectTo,
-        });
-        resetUrl = `${base}/auth/v1/verify?${q.toString()}`;
-      }
-    }
-
-    if (!resetUrl) {
+    const tokenHash = props?.hashed_token?.trim();
+    if (!tokenHash) {
       console.error(
-        "[forgot-password] no recovery link in generateLink response",
+        "[forgot-password] no hashed_token",
         JSON.stringify(props ?? null)
       );
       return NextResponse.json({ ok: true });
     }
+
+    // Kendi domain — client verifyOtp ile oturum açar (prefetch token tüketmez)
+    const resetUrl = `${site}/sifre-yenile?${new URLSearchParams({
+      token_hash: tokenHash,
+      type: "recovery",
+    }).toString()}`;
 
     let name: string | null = null;
     try {
@@ -103,7 +96,6 @@ export async function POST(req: Request) {
       /* ignore */
     }
 
-    // Her zaman inline HTML (Resend dashboard template gerekmez)
     const mail = templatePasswordReset({ name, resetUrl });
     const sent = await sendEmail({
       to: email,
@@ -126,7 +118,7 @@ export async function POST(req: Request) {
       );
     }
 
-    console.info("[forgot-password] sent via Resend", sent.id, email);
+    console.info("[forgot-password] sent via Resend", sent.id);
     return NextResponse.json({ ok: true, via: "resend" });
   } catch (e) {
     console.error("[forgot-password]", e);
