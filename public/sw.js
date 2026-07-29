@@ -1,21 +1,17 @@
-/* kentsele.ist service worker — PWA + push */
-const CACHE = "kentsele-shell-v2";
-const PRECACHE = ["/favicon.ico", "/favicon.svg"];
+/* kentsele.ist service worker — PWA + push (v3: minimal fetch) */
+const CACHE = "kentsele-shell-v3";
 
 self.addEventListener("install", (event) => {
-  // Don't block install on precache failures (broken install → push subscribe fails)
+  // Push için install'ı engelleme; hemen aktif ol
+  self.skipWaiting();
   event.waitUntil(
-    caches
-      .open(CACHE)
-      .then((cache) =>
-        Promise.all(
-          PRECACHE.map((url) =>
-            cache.add(url).catch(() => undefined)
-          )
+    caches.open(CACHE).then((cache) =>
+      Promise.all(
+        ["/favicon.ico", "/favicon.svg"].map((url) =>
+          cache.add(url).catch(() => undefined)
         )
       )
-      .then(() => self.skipWaiting())
-      .catch(() => self.skipWaiting())
+    )
   );
 });
 
@@ -36,24 +32,7 @@ self.addEventListener("message", (event) => {
   }
 });
 
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  if (req.method !== "GET") return;
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-  // Network-first for navigations; cache fallback for shell
-  if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-          return res;
-        })
-        .catch(() => caches.match(req).then((m) => m || caches.match("/")))
-    );
-  }
-});
+// Navigation cache kaldırıldı — SW race / push subscribe sorunlarını azaltır
 
 self.addEventListener("push", (event) => {
   let data = {
@@ -85,7 +64,8 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || "/";
+  const target =
+    (event.notification.data && event.notification.data.url) || "/";
   event.waitUntil(
     self.clients
       .matchAll({ type: "window", includeUncontrolled: true })

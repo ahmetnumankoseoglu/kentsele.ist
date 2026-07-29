@@ -7,7 +7,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://fcmregistrations.googleapis.com https://firebaseinstallations.googleapis.com https://updates.push.services.mozilla.com",
+  // FCM / Web Push + Supabase + analytics
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.googleapis.com https://*.gstatic.com https://fcmregistrations.googleapis.com https://firebaseinstallations.googleapis.com https://fcm.googleapis.com https://updates.push.services.mozilla.com wss://*.web.push.apple.com https://web.push.apple.com",
   "frame-src 'self' https://www.googletagmanager.com https://vercel.live",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
