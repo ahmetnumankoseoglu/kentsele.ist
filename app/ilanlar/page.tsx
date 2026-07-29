@@ -33,10 +33,10 @@ export async function generateMetadata({
     sp.ilce && isValidIstanbulIlce(sp.ilce) ? sp.ilce : undefined;
   const page = parsePage(sp.page);
   const title = ilce
-    ? `${ilce} malik ilanları`
+    ? `${ilce} kentsel dönüşüm`
     : "İstanbul malik ilanları";
   const description = ilce
-    ? `${ilce} için açık ilanlar. Ücretsiz malik kaydı; onaylı müteahhit iletişimi.`
+    ? `${ilce} kentsel dönüşüm ilanları. Ücretsiz malik kaydı; onaylı müteahhit iletişimi.`
     : "İstanbul geneli açık ilanlar. 39 ilçe, ücretsiz malik ilanı, onaylı müteahhit iletişimi.";
 
   const params = new URLSearchParams();
@@ -80,7 +80,7 @@ export default async function IlanlarPage({
   const listings = all.slice(start, start + PAGE_SIZE);
 
   const site = getSiteUrl();
-  const h1 = ilce ? `${ilce} malik ilanları` : "İstanbul malik ilanları";
+  const h1 = ilce ? `${ilce} kentsel dönüşüm` : "İstanbul malik ilanları";
   const crumbs = [
     { name: "Ana sayfa", path: "/" },
     { name: "İlanlar", path: "/ilanlar" },
