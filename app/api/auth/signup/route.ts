@@ -47,6 +47,20 @@ export async function POST(req: Request) {
       );
     }
 
+    const userId = data.user?.id;
+    let linkedListings = 0;
+    if (userId) {
+      try {
+        const { linkUnownedListingsByEmail } = await import(
+          "@/lib/listings/claim-by-email"
+        );
+        const linked = await linkUnownedListingsByEmail(userId, email);
+        linkedListings = linked.linked;
+      } catch (linkErr) {
+        console.error("[signup] claim-by-email:", linkErr);
+      }
+    }
+
     try {
       const { emailOnSignup } = await import("@/lib/email/send");
       await emailOnSignup({
@@ -59,7 +73,10 @@ export async function POST(req: Request) {
       console.error("[email] signup:", mailErr);
     }
 
-    return NextResponse.json({ userId: data.user?.id });
+    return NextResponse.json({
+      userId,
+      linkedListings,
+    });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "server" }, { status: 500 });

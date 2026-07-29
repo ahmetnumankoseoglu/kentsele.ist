@@ -34,6 +34,16 @@ export default async function HesabimPage() {
   let myListings: MyListing[] = [];
   try {
     const admin = createServiceClient();
+    // Misafir iken verilen ilanları aynı e-posta ile hesaba bağla
+    try {
+      const { linkUnownedListingsByEmail } = await import(
+        "@/lib/listings/claim-by-email"
+      );
+      await linkUnownedListingsByEmail(profile.id, user.email);
+    } catch (linkErr) {
+      console.error("[hesabim] claim-by-email:", linkErr);
+    }
+
     const { data } = await admin
       .from("listings")
       .select(
@@ -121,7 +131,11 @@ export default async function HesabimPage() {
               </p>
             ) : (
               <>
-                Henüz hesabına bağlı ilan yok. Ücretsiz ilan oluşturabilirsin.
+                <p>
+                  Henüz hesabına bağlı ilan yok. Daha önce kayıtsız ilan verdiysen,
+                  ilandaki e-posta ile giriş yaptığından emin ol — sistem otomatik
+                  bağlar.
+                </p>
                 <Link href="/ilan-ver" className="btn-primary mt-3 w-full">
                   İlan ver
                 </Link>

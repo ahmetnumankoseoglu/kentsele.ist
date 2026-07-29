@@ -72,6 +72,15 @@ export default function KayitPage() {
         router.push("/giris");
         return;
       }
+      // Signup zaten e-posta ile ilan bağlar; oturum sonrası bir kez daha dene
+      try {
+        await fetch("/api/ilanlar/claim-by-email", {
+          method: "POST",
+          credentials: "same-origin",
+        });
+      } catch {
+        /* ignore */
+      }
       router.push(role === "muteahhit" ? "/muteahhit" : next);
       router.refresh();
     } catch {

@@ -31,6 +31,15 @@ export default function GirisPage() {
         setLoading(false);
         return;
       }
+      // Aynı e-posta ile verilen sahipsiz ilanları hesaba bağla
+      try {
+        await fetch("/api/ilanlar/claim-by-email", {
+          method: "POST",
+          credentials: "same-origin",
+        });
+      } catch {
+        /* bağlama başarısız olsa da giriş devam eder */
+      }
       router.push(next);
       router.refresh();
     } catch {
