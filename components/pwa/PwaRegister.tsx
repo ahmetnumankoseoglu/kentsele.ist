@@ -1,29 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
+/** web.dev / web-push standardı — Uint8Array (ArrayBuffer değil) */
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const raw = atob(base64);
-  const out = new Uint8Array(raw.length);
-  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
-  return out;
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
 }
 
 function cleanVapidKey(raw: string): string {
   return raw.trim().replace(/^["']|["']$/g, "").replace(/\s+/g, "");
-}
-
-/**
- * Chrome PushManager: bazı sürümlerde offset’li ArrayBuffer sorun çıkarır.
- * Temiz kopya ArrayBuffer üret.
- */
-function toApplicationServerKey(vapid: string): ArrayBuffer {
-  const u8 = urlBase64ToUint8Array(vapid);
-  const copy = new ArrayBuffer(u8.byteLength);
-  new Uint8Array(copy).set(u8);
-  return copy;
 }
 
 async function fetchVapidPublicKey(): Promise<string | null> {
@@ -35,7 +27,7 @@ async function fetchVapidPublicKey(): Promise<string | null> {
       if (k.length >= 80) return k;
     }
   } catch {
-    /* fall through */
+    /* ignore */
   }
   const embedded = cleanVapidKey(
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ""
@@ -43,22 +35,8 @@ async function fetchVapidPublicKey(): Promise<string | null> {
   return embedded.length >= 80 ? embedded : null;
 }
 
-async function waitForController(timeoutMs = 8000): Promise<boolean> {
-  if (navigator.serviceWorker.controller) return true;
-  return new Promise((resolve) => {
-    const t = window.setTimeout(() => resolve(false), timeoutMs);
-    const onChange = () => {
-      if (navigator.serviceWorker.controller) {
-        window.clearTimeout(t);
-        navigator.serviceWorker.removeEventListener(
-          "controllerchange",
-          onChange
-        );
-        resolve(true);
-      }
-    };
-    navigator.serviceWorker.addEventListener("controllerchange", onChange);
-  });
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
 }
 
 async function ensureServiceWorker(): Promise<ServiceWorkerRegistration> {
@@ -66,81 +44,54 @@ async function ensureServiceWorker(): Promise<ServiceWorkerRegistration> {
     throw new Error("Service Worker desteklenmiyor");
   }
 
-  // Eski / bozuk kayıtları temizle (yalnızca bizim sw.js)
-  const existingRegs = await navigator.serviceWorker.getRegistrations();
-  for (const r of existingRegs) {
-    const script = r.active?.scriptURL || r.installing?.scriptURL || "";
-    // Yabancı SW varsa dokunma; bizim eski sw'yi yenile
-    if (script && !script.endsWith("/sw.js") && !script.includes("/sw.js")) {
-      continue;
-    }
-  }
+  const reg = await navigator.serviceWorker.register("/sw.js", {
+    scope: "/",
+    updateViaCache: "none",
+  });
 
-  let reg = await navigator.serviceWorker.getRegistration("/");
-  if (!reg) {
-    reg = await navigator.serviceWorker.register("/sw.js", {
-      scope: "/",
-      updateViaCache: "none",
-    });
-  } else {
-    try {
-      await reg.update();
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // installing / waiting → active
-  if (!reg.active) {
-    const pending = reg.installing || reg.waiting;
-    if (pending) {
-      await new Promise<void>((resolve, reject) => {
-        const t = window.setTimeout(
-          () => reject(new Error("Service Worker zaman aşımı")),
-          15_000
-        );
-        const done = () => {
+  // Aktif olana kadar bekle
+  if (reg.installing) {
+    await new Promise<void>((resolve, reject) => {
+      const sw = reg.installing!;
+      const t = window.setTimeout(
+        () => reject(new Error("Service Worker kurulum zaman aşımı")),
+        20_000
+      );
+      sw.addEventListener("statechange", () => {
+        if (sw.state === "installed" || sw.state === "activated") {
           window.clearTimeout(t);
           resolve();
-        };
-        pending.addEventListener("statechange", () => {
-          if (pending.state === "activated") done();
-          if (pending.state === "redundant") {
-            window.clearTimeout(t);
-            reject(new Error("Service Worker kurulumu başarısız"));
-          }
-        });
-        if (pending.state === "activated") done();
+        }
+        if (sw.state === "redundant") {
+          window.clearTimeout(t);
+          reject(new Error("Service Worker kurulumu başarısız"));
+        }
       });
-    }
+    });
   }
 
   if (reg.waiting) {
     reg.waiting.postMessage({ type: "SKIP_WAITING" });
-    await waitForController(4000);
   }
 
   const ready = await navigator.serviceWorker.ready;
-  if (!ready.active) {
-    throw new Error("Service Worker henüz aktif değil");
+
+  // Sayfa controller olana kadar kısa bekle (ilk ziyaret)
+  if (!navigator.serviceWorker.controller) {
+    await Promise.race([
+      new Promise<void>((resolve) => {
+        navigator.serviceWorker.addEventListener(
+          "controllerchange",
+          () => resolve(),
+          { once: true }
+        );
+      }),
+      sleep(2500),
+    ]);
   }
 
-  // İlk kurulumda controller yok → sayfa kontrol edilmiyor; push bazen patlar
-  if (!navigator.serviceWorker.controller) {
-    const controlled = await waitForController(3000);
-    if (!controlled) {
-      // Tek seferlik soft reload bayrağı
-      const flag = "kentsele_sw_reload";
-      if (!sessionStorage.getItem(flag)) {
-        sessionStorage.setItem(flag, "1");
-        window.location.reload();
-        // reload sonrası kod çalışmaz
-        throw new Error("SW_RELOAD");
-      }
-      // Reload sonrası hâlâ controller yoksa claim için mesaj + kısa bekleme
-      ready.active.postMessage({ type: "SKIP_WAITING" });
-      await waitForController(2000);
-    }
+  if (!ready.active) {
+    throw new Error("Service Worker aktif değil");
   }
 
   return ready;
@@ -161,242 +112,297 @@ async function postSubscription(sub: PushSubscription): Promise<{
     body: JSON.stringify(json),
   });
   if (res.ok) return { ok: true };
-  let message = "Abonelik kaydedilemedi.";
   try {
     const data = (await res.json()) as { message?: string; error?: string };
-    if (data.message) message = data.message;
-    else if (data.error === "db")
-      message =
-        "Abonelik kaydı başarısız. Supabase’te 013_push_subscriptions.sql çalıştırıldı mı?";
-    else if (data.error === "validation")
-      message = "Abonelik verisi geçersiz (tarayıcı anahtarı).";
+    if (data.message) return { ok: false, message: data.message };
+    if (data.error === "db")
+      return {
+        ok: false,
+        message:
+          "Abonelik DB’ye yazılamadı. Supabase’te 013_push_subscriptions.sql çalıştırıldı mı?",
+      };
   } catch {
     /* ignore */
   }
-  return { ok: false, message };
+  return { ok: false, message: `Abonelik kaydı HTTP ${res.status}` };
 }
 
-async function subscribeWithKey(
-  reg: ServiceWorkerRegistration,
-  vapid: string
-): Promise<PushSubscription> {
-  // Her zaman temiz abonelik — eski anahtar / bozuk FCM kaydı
-  const existing = await reg.pushManager.getSubscription();
-  if (existing) {
-    try {
-      await existing.unsubscribe();
-    } catch {
-      /* ignore */
-    }
-  }
+export type PushDiagnostics = {
+  secure: boolean;
+  permission: NotificationPermission | "unsupported";
+  hasServiceWorker: boolean;
+  hasPushManager: boolean;
+  controller: boolean;
+  swState: string;
+  vapidChars: number;
+  vapidBytes: number;
+  vapidFirstByte: number;
+  healthCanSubscribe: boolean | null;
+  healthCanSend: boolean | null;
+  step: string;
+  lastError: string | null;
+};
 
-  return reg.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: toApplicationServerKey(vapid),
-  });
-}
+export async function collectPushDiagnostics(): Promise<PushDiagnostics> {
+  const d: PushDiagnostics = {
+    secure: typeof window !== "undefined" && window.isSecureContext,
+    permission:
+      typeof Notification !== "undefined"
+        ? Notification.permission
+        : "unsupported",
+    hasServiceWorker: "serviceWorker" in navigator,
+    hasPushManager: "PushManager" in window,
+    controller: Boolean(navigator.serviceWorker?.controller),
+    swState: "—",
+    vapidChars: 0,
+    vapidBytes: 0,
+    vapidFirstByte: -1,
+    healthCanSubscribe: null,
+    healthCanSend: null,
+    step: "init",
+    lastError: null,
+  };
 
-function explainPushError(e: unknown): string {
-  if (e instanceof Error && e.message === "SW_RELOAD") {
-    return "Service Worker kuruldu; sayfa yenileniyor…";
-  }
-  const msg = e instanceof Error ? e.message : String(e);
-  const name = e instanceof DOMException ? e.name : "";
-
-  if (/push service error|registration failed/i.test(msg)) {
-    return (
-      "Tarayıcı FCM push kaydını reddetti (VAPID sunucuda geçerli). " +
-      "Dene: (1) chrome://settings/content/notifications — siteye izin ver, " +
-      "(2) chrome://settings/content/siteDetails?site=https://kentsele.ist — verileri temizle, " +
-      "(3) sayfayı kapatıp yeniden aç, (4) Edge dene. " +
-      "Brave ise Ayarlar → Gizlilik → “Google push messaging” açık olsun. " +
-      "VPN/kurum ağı FCM engelliyorsa kapat. Teşhis: /api/push/health"
+  try {
+    const h = await fetch("/api/push/health", { cache: "no-store" }).then(
+      (r) =>
+        r.json() as Promise<{ canSubscribe?: boolean; canSend?: boolean }>
     );
+    d.healthCanSubscribe = Boolean(h.canSubscribe);
+    d.healthCanSend = Boolean(h.canSend);
+  } catch {
+    d.healthCanSubscribe = null;
   }
-  if (/applicationServerKey|invalid|not a valid/i.test(msg) || name === "InvalidAccessError") {
-    return "VAPID public key tarayıcıda geçersiz sayıldı. /api/push/health ve /api/push/vapid-public kontrol et.";
+
+  try {
+    const vapid = await fetchVapidPublicKey();
+    if (vapid) {
+      d.vapidChars = vapid.length;
+      const u8 = urlBase64ToUint8Array(vapid);
+      d.vapidBytes = u8.length;
+      d.vapidFirstByte = u8[0] ?? -1;
+    }
+  } catch (e) {
+    d.lastError = e instanceof Error ? e.message : String(e);
   }
-  if (/permission|denied|not allowed/i.test(msg) || name === "NotAllowedError") {
-    return "Bildirim izni yok. Site ayarlarından bildirimleri aç.";
+
+  try {
+    const reg = await navigator.serviceWorker.getRegistration("/");
+    d.swState =
+      reg?.active?.state ||
+      reg?.waiting?.state ||
+      reg?.installing?.state ||
+      "yok";
+    d.controller = Boolean(navigator.serviceWorker.controller);
+  } catch {
+    d.swState = "hata";
   }
-  if (/service worker|no active/i.test(msg)) {
-    return "Service Worker hazır değil. F5 ile yenile, 3 sn bekle, tekrar dene.";
-  }
-  return `Bildirim aboneliği başarısız: ${msg.slice(0, 160)}`;
+
+  return d;
 }
 
-/** Registers service worker; soft re-sync existing push when already granted */
+/** Arka plan: SW kaydı + mevcut aboneliği sunucuya yaz */
 export function PwaRegister() {
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
       return;
     }
-
     let cancelled = false;
-
     (async () => {
       try {
         const reg = await ensureServiceWorker();
         if (cancelled) return;
         if (Notification.permission !== "granted") return;
-        if (!("PushManager" in window)) return;
-
-        const existing = await reg.pushManager.getSubscription();
-        if (existing && !cancelled) {
-          await postSubscription(existing);
-        }
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) await postSubscription(sub);
       } catch (e) {
-        if (e instanceof Error && e.message === "SW_RELOAD") return;
         console.warn("[pwa]", e);
       }
     })();
-
     return () => {
       cancelled = true;
     };
   }, []);
-
   return null;
 }
 
-/** Call from Hesabım — user gesture for Notification permission */
+/**
+ * Hesabım — kullanıcı tıklamasıyla izin + FCM aboneliği
+ */
 export async function enablePushNotifications(): Promise<{
   ok: boolean;
   message: string;
+  diagnostics?: PushDiagnostics;
 }> {
-  if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
-    return { ok: false, message: "Bu tarayıcı PWA / bildirim desteklemiyor." };
+  const diag = await collectPushDiagnostics();
+
+  if (!diag.secure) {
+    return {
+      ok: false,
+      message: "Bildirimler yalnızca HTTPS üzerinde çalışır.",
+      diagnostics: diag,
+    };
   }
-  if (!("PushManager" in window)) {
+  if (!diag.hasServiceWorker || !diag.hasPushManager) {
     return {
       ok: false,
       message:
-        "Bu tarayıcı Web Push desteklemiyor. Chrome / Edge / Android Chrome dene; iOS’ta Ana Ekrana Ekle gerekir.",
+        "Bu tarayıcı Web Push desteklemiyor. Chrome veya Edge’in güncel sürümünü dene.",
+      diagnostics: diag,
     };
   }
-  if (!window.isSecureContext) {
+  if (diag.healthCanSubscribe === false) {
     return {
       ok: false,
-      message: "Bildirimler yalnızca HTTPS (veya localhost) üzerinde çalışır.",
+      message:
+        "Sunucuda VAPID public key yok. Vercel env + redeploy kontrol et (/api/push/health).",
+      diagnostics: diag,
     };
-  }
-
-  // Sunucu sağlığı (VAPID gerçekten var mı?)
-  try {
-    const health = await fetch("/api/push/health", { cache: "no-store" }).then(
-      (r) => r.json() as Promise<{ canSubscribe?: boolean; hint?: string }>
-    );
-    if (!health.canSubscribe) {
-      return {
-        ok: false,
-        message:
-          health.hint ||
-          "Sunucuda geçerli VAPID public key yok. Vercel env kontrol et.",
-      };
-    }
-  } catch {
-    /* health opsiyonel */
   }
 
   const vapid = await fetchVapidPublicKey();
   if (!vapid) {
     return {
       ok: false,
-      message:
-        "Push yapılandırılmamış. Vercel’e NEXT_PUBLIC_VAPID_PUBLIC_KEY ekleyip redeploy et.",
+      message: "VAPID public key alınamadı.",
+      diagnostics: diag,
     };
   }
 
-  try {
-    const bytes = urlBase64ToUint8Array(vapid);
-    if (bytes.length !== 65 || bytes[0] !== 4) {
-      return {
-        ok: false,
-        message:
-          "VAPID public key formatı hatalı (65 bayt P-256 olmalı). web-push generate-vapid-keys ile yenile.",
-      };
-    }
-  } catch {
+  const keyBytes = urlBase64ToUint8Array(vapid);
+  if (keyBytes.length !== 65 || keyBytes[0] !== 4) {
     return {
       ok: false,
-      message: "VAPID public key okunamadı. Env değerini kontrol et.",
+      message: `VAPID public key bozuk (bayt=${keyBytes.length}, ilk=${keyBytes[0]}). Yeniden üret.`,
+      diagnostics: { ...diag, vapidBytes: keyBytes.length, vapidFirstByte: keyBytes[0] ?? -1 },
     };
   }
 
   try {
+    diag.step = "permission";
     const permission = await Notification.requestPermission();
+    diag.permission = permission;
     if (permission !== "granted") {
       return {
         ok: false,
         message:
           permission === "denied"
-            ? "Bildirim izni engellendi. Tarayıcı site ayarlarından izin ver."
+            ? "İzin engelli görünüyor. chrome://settings/content/notifications içinde kentsele.ist = İzin ver olmalı (yalnızca site popup’ı yetmeyebilir)."
             : "Bildirim izni verilmedi.",
+        diagnostics: diag,
       };
     }
 
-    let reg = await ensureServiceWorker();
+    diag.step = "service-worker";
+    const reg = await ensureServiceWorker();
+    diag.swState = reg.active?.state || "—";
+    diag.controller = Boolean(navigator.serviceWorker.controller);
 
-    try {
-      const sub = await subscribeWithKey(reg, vapid);
+    // Mevcut abonelik varsa önce sunucuya yaz — FCM zaten kayıtlı demektir
+    diag.step = "existing-subscription";
+    let sub = await reg.pushManager.getSubscription();
+    if (sub) {
       const saved = await postSubscription(sub);
-      if (!saved.ok) {
+      if (saved.ok) {
         return {
-          ok: false,
-          message: saved.message || "Abonelik kaydedilemedi.",
+          ok: true,
+          message: "Bildirimler zaten açık ve sunucuya kaydedildi.",
+          diagnostics: diag,
         };
       }
-      sessionStorage.removeItem("kentsele_sw_reload");
-      return { ok: true, message: "Bildirimler açıldı." };
-    } catch (first) {
-      console.error("[push] subscribe first", first);
-
-      // Hard reset SW
+      // Eski abonelik sunucuya yazılamadıysa yenile
       try {
-        const old = await reg.pushManager.getSubscription();
-        if (old) await old.unsubscribe();
+        await sub.unsubscribe();
+        await sleep(400);
       } catch {
         /* ignore */
       }
-      try {
-        await reg.unregister();
-      } catch {
-        /* ignore */
-      }
+      sub = null;
+    }
 
-      // Tüm registration'ları sil (temiz slate)
-      try {
-        const all = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(all.map((r) => r.unregister()));
-      } catch {
-        /* ignore */
-      }
+    diag.step = "subscribe";
+    try {
+      // web.dev örneği birebir: Uint8Array
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: keyBytes as BufferSource,
+      });
+    } catch (subErr) {
+      console.error("[push] subscribe", subErr);
+      const errMsg =
+        subErr instanceof Error ? subErr.message : String(subErr);
+      const errName =
+        subErr instanceof DOMException ? subErr.name : "";
+      diag.lastError = `${errName}: ${errMsg}`;
 
-      reg = await ensureServiceWorker();
+      // İkinci deneme: kısa bekle + SW update
       try {
-        const sub = await subscribeWithKey(reg, vapid);
-        const saved = await postSubscription(sub);
-        if (!saved.ok) {
+        await reg.update();
+        await sleep(500);
+        const existing2 = await reg.pushManager.getSubscription();
+        if (existing2) {
+          try {
+            await existing2.unsubscribe();
+            await sleep(400);
+          } catch {
+            /* ignore */
+          }
+        }
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(vapid) as BufferSource,
+        });
+      } catch (subErr2) {
+        console.error("[push] subscribe retry", subErr2);
+        const msg2 =
+          subErr2 instanceof Error ? subErr2.message : String(subErr2);
+        diag.lastError = msg2;
+        diag.step = "subscribe-failed";
+
+        // İzin var ama FCM red — net ayrım
+        if (/push service error|registration failed/i.test(msg2 + errMsg)) {
           return {
             ok: false,
-            message: saved.message || "Abonelik kaydedilemedi.",
+            message:
+              "Site izni açık ama Chrome FCM aboneliğini oluşturamıyor (VAPID sunucuda OK). " +
+              "Bu genelde tarayıcı/OS tarafıdır: Windows Bildirim ayarları, Chrome arka plan uygulamaları, " +
+              "VPN/antivirüs veya bozuk site verisi. " +
+              "Yap: (1) Site verilerini sil → F5 → tekrar dene (2) Edge ile dene (3) chrome://gcm-internals — hatalara bak. " +
+              `Teşhis: izin=${permission}, SW=${diag.swState}, controller=${diag.controller}`,
+            diagnostics: diag,
           };
         }
-        sessionStorage.removeItem("kentsele_sw_reload");
-        return { ok: true, message: "Bildirimler açıldı." };
-      } catch (second) {
-        console.error("[push] subscribe second", second);
-        return { ok: false, message: explainPushError(second) };
+        return {
+          ok: false,
+          message: `Abonelik hatası: ${msg2}`,
+          diagnostics: diag,
+        };
       }
     }
-  } catch (e) {
-    console.error("[push]", e);
-    if (e instanceof Error && e.message === "SW_RELOAD") {
+
+    diag.step = "save";
+    const saved = await postSubscription(sub);
+    if (!saved.ok) {
       return {
-        ok: true,
-        message: "Service Worker kuruldu — sayfa yenileniyor, sonra tekrar dene.",
+        ok: false,
+        message: saved.message || "Abonelik kaydedilemedi.",
+        diagnostics: diag,
       };
     }
-    return { ok: false, message: explainPushError(e) };
+
+    diag.step = "done";
+    return {
+      ok: true,
+      message: "Bildirimler açıldı.",
+      diagnostics: diag,
+    };
+  } catch (e) {
+    console.error("[push]", e);
+    diag.lastError = e instanceof Error ? e.message : String(e);
+    return {
+      ok: false,
+      message: `Bildirim aboneliği başarısız: ${diag.lastError}`,
+      diagnostics: diag,
+    };
   }
 }

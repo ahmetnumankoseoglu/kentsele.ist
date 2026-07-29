@@ -7,8 +7,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https://fonts.gstatic.com",
-  // FCM / Web Push + Supabase + analytics
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.googleapis.com https://*.gstatic.com https://fcmregistrations.googleapis.com https://firebaseinstallations.googleapis.com https://fcm.googleapis.com https://updates.push.services.mozilla.com wss://*.web.push.apple.com https://web.push.apple.com",
+  // FCM aboneliği bazen *.google.com uçlarına da gider
+  "connect-src 'self' https: wss:",
   "frame-src 'self' https://www.googletagmanager.com https://vercel.live",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
@@ -33,6 +33,18 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        // SW: CSP’siz + açık scope (push aboneliği için kritik)
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          { key: "Service-Worker-Allowed", value: "/" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [
