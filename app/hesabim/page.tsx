@@ -6,7 +6,6 @@ import {
   getCurrentProfile,
   getSessionUser,
 } from "@/lib/auth/session";
-import { createServiceClient } from "@/lib/supabase/admin";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import {
   OWNER_STATUS_LABELS,
@@ -33,26 +32,13 @@ export default async function HesabimPage() {
 
   let myListings: MyListing[] = [];
   try {
-    const admin = createServiceClient();
-    // Misafir iken verilen ilanları aynı e-posta ile hesaba bağla
-    try {
-      const { linkUnownedListingsByEmail } = await import(
-        "@/lib/listings/claim-by-email"
-      );
-      await linkUnownedListingsByEmail(profile.id, user.email);
-    } catch (linkErr) {
-      console.error("[hesabim] claim-by-email:", linkErr);
-    }
-
-    const { data } = await admin
-      .from("listings")
-      .select(
-        "id, slug, ilce, mahalle, status, manage_token, kat_sayisi, daire_sayisi"
-      )
-      .eq("owner_user_id", profile.id)
-      .order("created_at", { ascending: false });
-    myListings = (data ?? []) as MyListing[];
-  } catch {
+    const { getListingsForAccount } = await import(
+      "@/lib/listings/claim-by-email"
+    );
+    const rows = await getListingsForAccount(profile.id, user.email);
+    myListings = rows as MyListing[];
+  } catch (e) {
+    console.error("[hesabim] listings", e);
     myListings = [];
   }
 

@@ -3,6 +3,16 @@ import {
   canOwnerEditListing,
   emailsMatch,
 } from "@/lib/listings/ownership";
+import { normalizeEmail } from "@/lib/listings/normalize-email";
+
+describe("normalizeEmail", () => {
+  it("lowercases, trims, strips zero-width", () => {
+    expect(normalizeEmail("  Foo@Bar.COM ")).toBe("foo@bar.com");
+    expect(normalizeEmail("a\u200Bb@c.com")).toBe("ab@c.com");
+    expect(normalizeEmail("")).toBe(null);
+    expect(normalizeEmail("noshop")).toBe(null);
+  });
+});
 
 describe("emailsMatch", () => {
   it("matches case-insensitively and trims", () => {

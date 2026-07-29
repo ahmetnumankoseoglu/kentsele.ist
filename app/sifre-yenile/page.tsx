@@ -18,16 +18,46 @@ export default function SifreYenilePage() {
 
   useEffect(() => {
     let cancelled = false;
+    const supabase = createBrowserSupabase();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (cancelled) return;
+      if (event === "PASSWORD_RECOVERY" || session) {
+        setReady(true);
+        setError(null);
+        setChecking(false);
+      }
+    });
+
     (async () => {
       try {
-        const supabase = createBrowserSupabase();
-        // Recovery link sets session (hash or code exchange via SSR client)
+        // PKCE: ?code=  — hash recovery: client auto-detects access_token
+        if (typeof window !== "undefined") {
+          const url = new URL(window.location.href);
+          const code = url.searchParams.get("code");
+          if (code) {
+            const { error: exErr } =
+              await supabase.auth.exchangeCodeForSession(code);
+            if (exErr) {
+              console.error("[sifre-yenile] exchangeCode", exErr);
+            } else {
+              url.searchParams.delete("code");
+              window.history.replaceState({}, "", url.pathname);
+            }
+          }
+        }
+
         const {
           data: { session },
         } = await supabase.auth.getSession();
         if (!cancelled) {
-          setReady(Boolean(session));
-          if (!session) {
+          if (session) {
+            setReady(true);
+            setError(null);
+          } else {
+            setReady(false);
             setError(
               "Geçerli bir sıfırlama oturumu yok. Lütfen e-postadaki bağlantıyı yeniden kullan veya yeni istek oluştur."
             );
@@ -41,8 +71,10 @@ export default function SifreYenilePage() {
         if (!cancelled) setChecking(false);
       }
     })();
+
     return () => {
       cancelled = true;
+      subscription.unsubscribe();
     };
   }, []);
 

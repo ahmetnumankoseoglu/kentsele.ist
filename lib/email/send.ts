@@ -164,6 +164,28 @@ export async function emailOnListingStatusChange(
   }
 }
 
+/** Şifre sıfırlama — bağlantı Supabase generateLink, gönderim Resend */
+export async function emailPasswordReset(opts: {
+  email: string;
+  resetUrl: string;
+  name?: string | null;
+}) {
+  const mail = T.templatePasswordReset({
+    name: opts.name,
+    resetUrl: opts.resetUrl,
+  });
+  return sendTemplateEmail({
+    to: opts.email,
+    alias: "password-reset",
+    variables: {
+      PREVIEW_TEXT: "Şifreni sıfırlamak için bağlantı.",
+      NAME: opts.name?.trim() || "Kullanıcı",
+      RESET_URL: opts.resetUrl,
+    },
+    fallback: { to: opts.email, ...mail },
+  });
+}
+
 export async function emailOnSignup(opts: {
   email: string;
   full_name: string;

@@ -51,11 +51,40 @@ export async function POST(req: Request) {
     let linkedListings = 0;
     if (userId) {
       try {
+        // Trigger profile oluşturmayabilir; FK için emin ol
+        const { data: existingProfile } = await admin
+          .from("profiles")
+          .select("id")
+          .eq("id", userId)
+          .maybeSingle();
+        if (!existingProfile) {
+          await admin.from("profiles").insert({
+            id: userId,
+            role,
+            full_name,
+            phone: phone ?? null,
+          });
+          if (role === "muteahhit") {
+            await admin.from("contractor_profiles").upsert(
+              {
+                user_id: userId,
+                company_name: company_name?.trim() || "",
+              },
+              { onConflict: "user_id" }
+            );
+          }
+        }
+
         const { linkUnownedListingsByEmail } = await import(
           "@/lib/listings/claim-by-email"
         );
         const linked = await linkUnownedListingsByEmail(userId, email);
         linkedListings = linked.linked;
+        console.info(
+          "[signup] linked listings for",
+          email.trim().toLowerCase(),
+          linkedListings
+        );
       } catch (linkErr) {
         console.error("[signup] claim-by-email:", linkErr);
       }

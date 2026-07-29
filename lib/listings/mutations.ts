@@ -4,6 +4,7 @@ import type { CreateListingInput } from "@/lib/validations/listing";
 import { buildListingSlug, randomShortId } from "@/lib/slug";
 import type { Listing } from "@/types/listing";
 import type { ListingStatus } from "@/lib/constants/listing";
+import { normalizeEmail } from "@/lib/listings/normalize-email";
 
 export async function createListing(
   input: CreateListingInput,
@@ -19,7 +20,9 @@ export async function createListing(
     shortId,
   });
   const manage_token = randomBytes(24).toString("base64url");
-  const email = String(input.email).trim();
+  // Normalize so later signup/login can match (case / whitespace)
+  const email =
+    normalizeEmail(String(input.email)) ?? String(input.email).trim();
   const status = opts?.status ?? "incelemede";
 
   const { data, error } = await supabase

@@ -204,6 +204,41 @@ export function templateActivateAccount(ctx: {
   };
 }
 
+/** 6b) Şifre sıfırlama — Resend (Supabase Auth maili değil) */
+export function templatePasswordReset(ctx: {
+  name?: string | null;
+  resetUrl: string;
+}) {
+  const title = "Şifre sıfırlama";
+  const greeting = ctx.name?.trim()
+    ? `Merhaba ${strong(ctx.name.trim())},`
+    : "Merhaba,";
+  const html = emailLayout({
+    title,
+    preheader: "kentsele.ist hesabın için yeni şifre belirle.",
+    bodyHtml: [
+      p(greeting),
+      p(
+        "Şifre sıfırlama talebin alındı. Aşağıdaki düğmeyle yeni şifreni belirleyebilirsin. Bu bağlantı sınırlı süre geçerlidir."
+      ),
+      p(
+        "Bu talebi sen yapmadıysan bu e-postayı yok sayabilirsin; şifren değişmez."
+      ),
+    ].join(""),
+    cta: { label: "Yeni şifre belirle", href: ctx.resetUrl },
+  });
+  return {
+    subject: "Şifre sıfırlama · kentsele.ist",
+    html,
+    text: plainFromLines([
+      ctx.name?.trim() ? `Merhaba ${ctx.name.trim()},` : "Merhaba,",
+      "Yeni şifre belirle:",
+      ctx.resetUrl,
+      "Bu talebi sen yapmadıysan yok say.",
+    ]),
+  };
+}
+
 /** 7) Malik hoş geldin */
 export function templateWelcomeMalik(ctx: { name: string }) {
   const title = "Hoş geldin — malik hesabın hazır";

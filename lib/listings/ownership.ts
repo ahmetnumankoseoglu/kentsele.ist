@@ -1,10 +1,14 @@
+import { normalizeEmail } from "@/lib/listings/normalize-email";
+
 /** İlan sahibi e-posta eşleşmesi (normalize) */
 export function emailsMatch(
   a?: string | null,
   b?: string | null
 ): boolean {
-  if (!a || !b) return false;
-  return a.trim().toLowerCase() === b.trim().toLowerCase();
+  const na = normalizeEmail(a);
+  const nb = normalizeEmail(b);
+  if (!na || !nb) return false;
+  return na === nb;
 }
 
 /**

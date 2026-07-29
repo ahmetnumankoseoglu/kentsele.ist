@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
-import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 export default function SifremiUnuttumPage() {
   const [email, setEmail] = useState("");
@@ -16,16 +15,16 @@ export default function SifremiUnuttumPage() {
     setLoading(true);
     setError(null);
     try {
-      const supabase = createBrowserSupabase();
-      // Current origin so local + prod both work (must be allowed in Supabase Auth URLs)
-      const redirectTo = `${window.location.origin}/sifre-yenile`;
-      const { error: err } = await supabase.auth.resetPasswordForEmail(
-        email.trim(),
-        { redirectTo }
-      );
-      if (err) {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
         setError(
-          "E-posta gönderilemedi. Adresi kontrol et veya daha sonra dene."
+          data.message ||
+            "E-posta gönderilemedi. Adresi kontrol et veya daha sonra dene."
         );
         setLoading(false);
         return;
@@ -42,16 +41,17 @@ export default function SifremiUnuttumPage() {
     <AppShell showBottomCta={false}>
       <h1 className="text-2xl font-bold text-[#111321]">Şifremi unuttum</h1>
       <p className="mt-1 text-sm text-[#6b7280]">
-        Kayıtlı e-posta adresine şifre sıfırlama bağlantısı göndeririz.
+        Kayıtlı e-posta adresine kentsele.ist üzerinden şifre sıfırlama
+        bağlantısı göndeririz.
       </p>
 
       {sent ? (
         <div className="card-elevated mt-6 space-y-3 p-5">
           <p className="text-sm font-bold text-[#168f43]">E-posta gönderildi</p>
-          <p className="text-sm leading-relaxed text-[#6b7280]">
-            <strong>{email}</strong> adresine bir bağlantı gönderdik. Gelen
-            kutusunu (ve spam klasörünü) kontrol et; bağlantıya tıklayınca yeni
-            şifreni belirleyebilirsin.
+          <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
+            <strong>{email}</strong> adresi kayıtlıysa bir bağlantı gönderdik.
+            Gelen kutusunu (ve spam klasörünü) kontrol et; bağlantıya tıklayınca
+            yeni şifreni belirleyebilirsin.
           </p>
           <Link href="/giris" className="btn-primary mt-2 w-full">
             Giriş sayfasına dön
