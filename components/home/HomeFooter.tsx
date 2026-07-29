@@ -104,14 +104,6 @@ export function HomeFooter({
           ))}
         </div>
 
-        <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-[#9ca3af]">
-          Paylaşım
-        </h3>
-        <p className="mt-2 text-xs text-[#6b7280]">
-          Sayfa paylaşımı için ilgili içerikteki “Paylaş” düğmelerini kullanın.
-          Kurumsal hesaplar eklendiğinde burada listelenir.
-        </p>
-
         <p className="mt-6 text-xs text-[#9ca3af]">
           © {new Date().getFullYear()} Kentsele · Yalnızca İstanbul ·{" "}
           {ISTANBUL_ILCELER.length} ilçe
