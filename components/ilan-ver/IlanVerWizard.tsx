@@ -64,10 +64,10 @@ function buildStepMeta(fromAccount: boolean) {
       sub: "Açıklama zorunlu (en az 20 karakter) · ada/parsel zorunlu",
     },
     {
-      title: fromAccount ? "İletişim bilgilerin" : "İletişim bilgilerin",
+      title: "İletişim bilgilerin",
       sub: fromAccount
         ? "Hesabından alındı — kontrol edip devam et"
-        : "E-posta ile hesabını sonradan eşleştireceğiz",
+        : "Ad, telefon ve e-posta",
     },
     {
       title: "Onay ve gönder",
@@ -508,22 +508,9 @@ export function IlanVerWizard({
                   </div>
                 </div>
               </div>
-              <p className="text-xs leading-relaxed text-[#6b7280]">
-                Bu bilgiler giriş yaptığın hesaptan geldi. Değiştirmek için{" "}
-                <a href="/hesabim" className="font-bold text-[#168f43]">
-                  Hesabım
-                </a>{" "}
-                üzerinden profilini güncelleyebilirsin. Devam ederek ilanı bu
-                iletişim bilgileriyle göndereceksin.
-              </p>
             </div>
           ) : (
             <div className="space-y-3">
-              {initialContact ? (
-                <p className="rounded-[3px] bg-[#fff7e6] px-3 py-2 text-xs text-[#b45309]">
-                  Hesabında eksik iletişim alanı var. Lütfen tamamla.
-                </p>
-              ) : null}
               <input
                 className="input-field"
                 placeholder="Ad soyad"
@@ -557,10 +544,6 @@ export function IlanVerWizard({
                   setForm((f) => ({ ...f, email: e.target.value }))
                 }
               />
-              <p className="text-xs text-[#6b7280]">
-                Zorunlu. İlanı sonradan düzenlemek için hesabını bu e-posta ile
-                eşleştireceğiz.
-              </p>
             </div>
           ))}
 
