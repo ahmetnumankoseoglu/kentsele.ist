@@ -33,7 +33,19 @@ export async function PATCH(
       .eq("user_id", id)
       .select("*")
       .single();
-    if (error) throw error;
+    if (error) {
+      console.error("[muteahhit PATCH]", error);
+      return NextResponse.json(
+        {
+          error: "db",
+          message:
+            error.message?.includes("verification fields")
+              ? "DB trigger admin güncellemesini engelliyor. Supabase SQL Editor’da migrations/009_admin_verification_trigger.sql dosyasını çalıştır."
+              : error.message || "Güncelleme başarısız",
+        },
+        { status: 500 }
+      );
+    }
 
     // Notify contractor by email (Auth user email + profile name)
     try {

@@ -12,7 +12,8 @@ kentsele.ist veritabanı, auth ve storage kurulumu.
 6. `migrations/006_rls_lockdown.sql` — rol / müteahhit onay alanlarını client’tan kilitle
 7. `migrations/007_contact_replies.sql` — iletişim formu admin cevabı alanları
 8. `migrations/008_storage_contractor_docs.sql` — private `contractor-docs` bucket
-9. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+9. `migrations/009_admin_verification_trigger.sql` — admin müteahhit onayı (service_role serbest)
+10. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
 
 ## Dashboard ayarları
 
