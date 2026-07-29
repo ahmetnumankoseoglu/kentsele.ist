@@ -42,9 +42,12 @@ export function getSiteUrl(): string {
 export const SITE_NAME = "kentsele.ist";
 export const SITE_LOCALE = "tr_TR";
 export const SITE_LANG = "tr-TR";
-/** ~150 karakter — SERP / piksel genişliği için */
+/**
+ * Meta description — hedef 120–160 karakter (SERP + denetim).
+ * Güncel uzunluk ~148.
+ */
 export const SITE_DESCRIPTION =
-  "İstanbul’da malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek bilgisi.";
+  "İstanbul’da malikler ücretsiz ilan açar; belge onayı almış müteahhitler iletişime geçer. 39 ilçe, rehber ve destek özeti tek yerde.";
 
 /** İstanbul geo — ICBM / schema GeoCoordinates (merkez yaklaşık) */
 export const ISTANBUL_GEO = {

@@ -27,8 +27,10 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+const baseMeta = istanbulGeoMetadata();
+
 export const metadata: Metadata = {
-  ...istanbulGeoMetadata(),
+  ...baseMeta,
   title: {
     default: "kentsele.ist | İstanbul Malik İlanları",
     template: "%s | kentsele.ist",
@@ -43,6 +45,10 @@ export const metadata: Metadata = {
     ],
     shortcut: ["/favicon.ico"],
     apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
+  },
+  other: {
+    ...((baseMeta.other as Record<string, string> | undefined) ?? {}),
+    "llms-txt": "/llms.txt",
   },
   formatDetection: {
     telephone: true,

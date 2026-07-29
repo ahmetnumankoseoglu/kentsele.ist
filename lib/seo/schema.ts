@@ -74,6 +74,7 @@ export function organizationSchema() {
     "@type": "Organization",
     "@id": `${url}/#organization`,
     name: SITE_NAME,
+    legalName: "kentsele.ist",
     url,
     logo: {
       "@type": "ImageObject",
@@ -90,6 +91,7 @@ export function organizationSchema() {
     },
     description: SITE_DESCRIPTION,
     alternateName: ["Kentsele", "kentsele"],
+    foundingDate: "2026",
     areaServed: istanbulPlaceSchema(),
     knowsAbout: [
       "Riskli yapı",
@@ -105,6 +107,26 @@ export function organizationSchema() {
       availableLanguage: ["Turkish"],
       url: `${url}/iletisim`,
     },
+    // Sosyal hesap yok — sameAs bilerek boş bırakılmaz; hakkında sayfası
+    // güven sinyali için
+    mainEntityOfPage: `${url}/hakkimizda`,
+  };
+}
+
+/** Editör / E-E-A-T — yazar uzmanlığı */
+export function editorPersonSchema() {
+  const url = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${url}/#editor`,
+    name: "kentsele.ist Editör",
+    jobTitle: "İstanbul kentsel dönüşüm içerik editörü",
+    description:
+      "Riskli yapı, 6306 ve destek programları hakkında bilgilendirici içerik üretir.",
+    worksFor: { "@id": `${url}/#organization` },
+    url: `${url}/hakkimizda`,
+    knowsAbout: ["Riskli yapı", "6306 sayılı kanun", "Kat karşılığı", "İBB kira desteği"],
   };
 }
 
@@ -385,26 +407,18 @@ export function howToSchema(opts: {
   };
 }
 
-/** Graph: Organization + Place + WebSite (site geneli) */
+/** Graph: Organization + Place + WebSite + Person (site geneli, tek script) */
 export function siteGraphSchema() {
-  const url = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        ...organizationSchema(),
-        "@context": undefined,
-      },
-      {
-        ...istanbulPlaceSchema(),
-        "@context": undefined,
-      },
-      {
-        ...websiteSchema(),
-        "@context": undefined,
-      },
+      organizationSchema(),
+      istanbulPlaceSchema(),
+      websiteSchema(),
+      editorPersonSchema(),
     ].map((node) => {
       const { ["@context"]: _, ...rest } = node as Record<string, unknown>;
+      // Her düğümde @type net kalsın (denetim uyarısı)
       return rest;
     }),
   };

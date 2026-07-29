@@ -4,15 +4,11 @@ import { AppShell } from "@/components/layout/AppShell";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "Hakkımızda | İstanbul Kentsel Dönüşüm Platformu",
+  title: "Hakkımızda | kentsele.ist",
   description:
-    "Kentsele: İstanbul kentsel dönüşümde malikleri ve onaylı müteahhitleri buluşturan platform. Misyon, vizyon ve neden biz.",
+    "kentsele.ist misyonu: İstanbul’da malik ile onaylı müteahhiti şeffaf buluşturmak. Editör ekibi ve platform ilkeleri.",
   path: "/hakkimizda",
-  keywords: [
-    "kentsele hakkında",
-    "kentsel dönüşüm platformu İstanbul",
-    "kentsele misyon",
-  ],
+  keywords: ["hakkımızda", "kentsele", "misyon", "editör"],
 });
 
 export default function HakkimizdaPage() {
@@ -23,9 +19,24 @@ export default function HakkimizdaPage() {
       </p>
       <h1 className="mt-1 text-2xl font-bold text-[#111321]">Hakkımızda</h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        İstanbul’da kentsel dönüşümü daha şeffaf, daha hızlı ve daha güvenli
-        hale getirmek için çalışıyoruz.
+        İstanbul’da dönüşüm süreçlerini daha şeffaf ve anlaşılır hale getirmek
+        için çalışıyoruz.
       </p>
+
+      <section className="card mt-4 p-4">
+        <h2 className="text-sm font-bold text-[#111321]">Editör ekibi</h2>
+        <p className="mt-1 text-xs font-semibold text-[#168f43]">
+          kentsele.ist Editör · İstanbul emlak ve dönüşüm içerikleri
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
+          Rehber ve haber metinleri; 6306, riskli yapı ve destek programları
+          hakkında bilgilendirme amaçlıdır. Resmi tutar ve prosedürler için
+          bakanlık / İBB kaynakları esas alınır.
+        </p>
+        <p className="mt-2 text-[11px] text-[#9ca3af]">
+          Son içerik gözden geçirme: 29 Temmuz 2026
+        </p>
+      </section>
 
       <section className="card-elevated mt-6 p-5">
         <h2 className="text-base font-bold text-[#111321]">Biz kimiz?</h2>

@@ -59,23 +59,30 @@ export function istanbulGeoMetadata(overrides?: {
     ])
   ).slice(0, 12);
 
+  const noIndex = Boolean(overrides?.noIndex);
+
   return {
     title,
     description,
-    keywords,
-    authors: [{ name: SITE_NAME, url: site }],
+    keywords: noIndex ? undefined : keywords,
+    authors: noIndex
+      ? undefined
+      : [{ name: "kentsele.ist Editör", url: `${site}/hakkimizda` }],
     creator: SITE_NAME,
     publisher: SITE_NAME,
     category: "Emlak ve İnşaat",
     applicationName: SITE_NAME,
     metadataBase: new URL(site),
-    alternates: {
-      canonical: url,
-      languages: {
-        "tr-TR": url,
-        "x-default": url,
-      },
-    },
+    // noindex sayfalarda hreflang verme (çakışma uyarısı)
+    alternates: noIndex
+      ? { canonical: url }
+      : {
+          canonical: url,
+          languages: {
+            "tr-TR": url,
+            "x-default": url,
+          },
+        },
     openGraph: {
       type: "website",
       locale: SITE_LOCALE,
@@ -92,7 +99,7 @@ export function istanbulGeoMetadata(overrides?: {
       description,
       images: [DEFAULT_OG_IMAGE],
     },
-    robots: overrides?.noIndex
+    robots: noIndex
       ? {
           index: false,
           follow: false,
@@ -109,14 +116,16 @@ export function istanbulGeoMetadata(overrides?: {
             "max-video-preview": -1,
           },
         },
-    other: {
-      "geo.region": ISTANBUL_GEO.region,
-      "geo.placename": ISTANBUL_GEO.placename,
-      "geo.position": `${ISTANBUL_GEO.latitude};${ISTANBUL_GEO.longitude}`,
-      ICBM: ISTANBUL_GEO.icbm,
-      language: SITE_LANG,
-      "content-language": SITE_LANG,
-    },
+    other: noIndex
+      ? undefined
+      : {
+          "geo.region": ISTANBUL_GEO.region,
+          "geo.placename": ISTANBUL_GEO.placename,
+          "geo.position": `${ISTANBUL_GEO.latitude};${ISTANBUL_GEO.longitude}`,
+          ICBM: ISTANBUL_GEO.icbm,
+          language: SITE_LANG,
+          "content-language": SITE_LANG,
+        },
   };
 }
 

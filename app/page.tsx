@@ -15,30 +15,19 @@ import {
 import { FAQ_ITEMS } from "@/lib/content/faq";
 import { getPublishedNews } from "@/lib/news/queries";
 import type { Metadata } from "next";
-import {
-  faqPageSchema,
-  organizationSchema,
-  websiteSchema,
-} from "@/lib/seo/schema";
+import { faqPageSchema } from "@/lib/seo/schema";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
-import { ShareButtons } from "@/components/seo/ShareButtons";
-import { getSiteUrl } from "@/lib/seo/site";
 import type { PublicListing } from "@/types/listing";
 
 const HOME_H1 = "kentsele.ist — İstanbul malik ilanları";
 
 export const metadata: Metadata = istanbulGeoMetadata({
   title: "kentsele.ist | İstanbul Malik İlanları",
+  // ~145 karakter — 120–160 aralığı
   description:
-    "İstanbul’da ücretsiz malik ilanı. Onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek özeti.",
+    "İstanbul’da ücretsiz malik ilanı açın; belge onayı almış müteahhitler sizi arasın. 39 ilçe, sade rehber ve destek özeti.",
   path: "/",
-  keywords: [
-    "kentsele.ist",
-    "malik ilanı",
-    "müteahhit",
-    "kat karşılığı",
-    "İstanbul ilan",
-  ],
+  keywords: ["kentsele.ist", "malik ilanı", "müteahhit", "İstanbul"],
 });
 
 const POPULAR_ILCELER = [
@@ -83,12 +72,8 @@ export default async function HomePage({
 
   const haberler = (await getPublishedNews()).slice(0, 3);
 
-  // Anasayfada tek öğeli BreadcrumbList yok (şema uyarısı)
-  const schemas = [
-    websiteSchema(),
-    organizationSchema(),
-    faqPageSchema([...FAQ_ITEMS]),
-  ];
+  // Org/WebSite layout’ta siteGraphSchema ile var — burada yalnızca FAQ (HTML boyutu)
+  const schemas = [faqPageSchema([...FAQ_ITEMS])];
 
   return (
     <AppShell fullBleed>
@@ -342,11 +327,6 @@ export default async function HomePage({
           <Link href="/ilan-ver" className="btn-primary mt-6 w-full">
             Hâlâ soruların mı var? İlan ver, arayalım
           </Link>
-          <ShareButtons
-            className="mt-8"
-            url={getSiteUrl()}
-            title="kentsele.ist — İstanbul malik ilanları"
-          />
         </section>
       </div>
     </AppShell>

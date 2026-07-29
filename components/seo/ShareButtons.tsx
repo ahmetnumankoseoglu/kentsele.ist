@@ -55,10 +55,10 @@ export function ShareButtons({ url, title, className = "" }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           className={btnBase}
-          aria-label="X ile paylaş"
+          aria-label="X (Twitter) ile paylaş"
         >
           <FaXTwitter className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          X
+          X’te paylaş
         </a>
         <a
           href={`https://www.facebook.com/sharer/sharer.php?u=${u}`}

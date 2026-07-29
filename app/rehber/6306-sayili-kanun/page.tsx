@@ -217,12 +217,12 @@ export default function Kanun6306Page() {
         <strong>ücretsiz ilan</strong> oluşturabilir; iletişim bilgileri
         yalnızca <strong>onaylı müteahhit</strong> hesaplarına açılır.{" "}
         <a
-          href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6306&MevzuatTur=1&MevzuatTertip=5"
+          href="https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6306.pdf"
           target="_blank"
           rel="noopener noreferrer nofollow"
           className="font-semibold text-[#168f43]"
         >
-          Güncel kanun metni (mevzuat.gov.tr)
+          Güncel kanun metni (PDF)
         </a>
         .
       </p>

@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
-import { NOINDEX_METADATA } from "@/lib/seo/noindex";
-import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
+import { getSiteUrl } from "@/lib/seo/site";
 
+/** Hesap paneli — index edilmez; hreflang yok (çakışma engeli) */
 export const metadata: Metadata = {
-  ...istanbulGeoMetadata({
-    title: "Hesabım",
-    description: "Hesap ve ilan yönetimi paneli.",
-    path: "/hesabim",
-    noIndex: true,
-  }),
-  ...NOINDEX_METADATA,
+  title: "Hesabım",
+  description:
+    "Hesap ve ilan yönetimi paneli. Giriş gerektirir; arama motorlarında listelenmez.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false, noimageindex: true },
+  },
+  alternates: {
+    canonical: `${getSiteUrl()}/hesabim`,
+  },
 };
 
 export default function HesabimLayout({
