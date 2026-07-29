@@ -15,7 +15,8 @@ kentsele.ist veritabanı, auth ve storage kurulumu.
 9. `migrations/009_admin_verification_trigger.sql` — admin müteahhit onayı (service_role serbest)
 10. `migrations/010_admin_set_contractor_verification.sql` — **zorunlu** admin Onayla/Reddet (RPC + bypass)
 11. `migrations/011_link_listings_by_email.sql` — misafir ilanı ↔ hesap e-posta bağlama (RPC)
-12. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+12. `migrations/012_auth_user_id_by_email.sql` — e-posta ile auth kullanıcı var mı (aktifleştir maili)
+13. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
 
 ### Müteahhit Onayla butonu çalışmıyorsa
 

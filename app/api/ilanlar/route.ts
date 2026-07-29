@@ -35,7 +35,11 @@ export async function POST(req: Request) {
     // Transactional email (non-blocking for client if Resend fails)
     try {
       const { emailOnListingCreated } = await import("@/lib/email/send");
-      await emailOnListingCreated(listing);
+      await emailOnListingCreated(listing, {
+        loggedInUserId: profile?.id ?? null,
+        // Girişli kullanıcı veya owner bağlandıysa "aktifleştir" maili yok
+        skipActivateAccount: Boolean(profile?.id || listing.owner_user_id),
+      });
     } catch (mailErr) {
       console.error("[email] listing create:", mailErr);
     }

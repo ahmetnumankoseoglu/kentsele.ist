@@ -172,14 +172,17 @@ export function templateListingRemoved(ctx: ListingEmailCtx) {
   };
 }
 
-/** 6) Hesap / üyelik aktifleştir (ilan e-postası ile kayıt çağrısı) */
+/**
+ * Hesap / üyelik aktifleştir — yalnızca henüz kaydı OLMAYAN e-postalara.
+ * (emailOnListingCreated auth kontrolü yapar; hesap varsa bu mail gitmez.)
+ */
 export function templateActivateAccount(ctx: {
   name: string;
   email: string;
   manageUrl?: string;
 }) {
   const title = "Hesabını aktifleştir — ilanını kolay yönet";
-  const registerUrl = `${site}/kayit?next=${encodeURIComponent(ctx.manageUrl || "/hesabim")}`;
+  const registerUrl = `${site}/kayit?next=${encodeURIComponent("/hesabim")}`;
   const html = emailLayout({
     title,
     preheader: "Aynı e-posta ile kayıt ol, ilanlarını tek yerden yönet.",
@@ -189,7 +192,7 @@ export function templateActivateAccount(ctx: {
         `kentsele.ist’te ilan oluşturdun. <strong style="color:#111321;">${ctx.email}</strong> adresiyle ücretsiz hesap açarsan ilanlarını “Hesabım”dan takip edebilir, düzenleyebilirsin.`
       ),
       p(
-        "Önemli: İlan düzenleme yetkisi, ilanda yazdığın e-posta ile giriş yaptığında geçerlidir."
+        "Önemli: İlan düzenleme yetkisi, ilanda yazdığın e-posta ile giriş yaptığında geçerlidir. Zaten hesabın varsa bu e-postayı yok sayıp giriş yapman yeterli."
       ),
     ].join(""),
     cta: { label: "Ücretsiz kayıt ol", href: registerUrl },
@@ -200,6 +203,7 @@ export function templateActivateAccount(ctx: {
     text: plainFromLines([
       `Merhaba ${ctx.name},`,
       `Hesap aç: ${registerUrl}`,
+      "Zaten hesabın varsa giriş yapman yeterli.",
     ]),
   };
 }

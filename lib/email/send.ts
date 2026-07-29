@@ -41,8 +41,21 @@ function toEmail(listing: Listing): string | null {
   return e;
 }
 
+export type ListingCreatedEmailOpts = {
+  /** Oturum açıkken ilan verildi */
+  loggedInUserId?: string | null;
+  /**
+   * true → "Hesabını aktifleştir" maili atma.
+   * Verilmezse: owner_user_id / auth e-posta varlığına bakılır.
+   */
+  skipActivateAccount?: boolean;
+};
+
 /** Fire after listing create — malik + optional admin */
-export async function emailOnListingCreated(listing: Listing) {
+export async function emailOnListingCreated(
+  listing: Listing,
+  opts?: ListingCreatedEmailOpts
+) {
   const ctx = listingCtx(listing);
   const vars = listingVars(listing);
   const to = toEmail(listing);
@@ -57,23 +70,48 @@ export async function emailOnListingCreated(listing: Listing) {
       fallback: { to, ...received },
     });
 
-    const registerUrl = `${site}/kayit?next=${encodeURIComponent(vars.MANAGE_URL)}`;
-    const activate = T.templateActivateAccount({
-      name: listing.iletisim_adi,
-      email: to,
-      manageUrl: vars.MANAGE_URL,
-    });
-    await sendTemplateEmail({
-      to,
-      alias: "activate-account",
-      variables: {
-        PREVIEW_TEXT: "Aynı e-posta ile kayıt ol, ilanını kolay yönet.",
-        NAME: listing.iletisim_adi,
-        USER_EMAIL: to,
-        REGISTER_URL: registerUrl,
-      },
-      fallback: { to, ...activate },
-    });
+    // Zaten hesabı olanlara "kayıt ol / aktifleştir" maili gönderme
+    let skipActivate = opts?.skipActivateAccount === true;
+    if (!skipActivate && (opts?.loggedInUserId || listing.owner_user_id)) {
+      skipActivate = true;
+    }
+    if (!skipActivate) {
+      try {
+        const { authUserExistsByEmail } = await import(
+          "@/lib/auth/user-by-email"
+        );
+        if (await authUserExistsByEmail(to)) {
+          skipActivate = true;
+        }
+      } catch (e) {
+        console.error("[email] authUserExistsByEmail:", e);
+      }
+    }
+
+    if (!skipActivate) {
+      const registerUrl = `${site}/kayit?next=${encodeURIComponent("/hesabim")}`;
+      const activate = T.templateActivateAccount({
+        name: listing.iletisim_adi,
+        email: to,
+        manageUrl: vars.MANAGE_URL,
+      });
+      await sendTemplateEmail({
+        to,
+        alias: "activate-account",
+        variables: {
+          PREVIEW_TEXT: "Aynı e-posta ile kayıt ol, ilanını kolay yönet.",
+          NAME: listing.iletisim_adi,
+          USER_EMAIL: to,
+          REGISTER_URL: registerUrl,
+        },
+        fallback: { to, ...activate },
+      });
+    } else {
+      console.info(
+        "[email] skip activate-account — user already has account:",
+        to
+      );
+    }
   }
 
   const adminTo = getAdminNotifyEmail();
