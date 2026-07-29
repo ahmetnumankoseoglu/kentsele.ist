@@ -80,9 +80,7 @@ export default async function IlanlarPage({
   const listings = all.slice(start, start + PAGE_SIZE);
 
   const site = getSiteUrl();
-  const h1 = ilce
-    ? `${ilce} kentsel dönüşüm ilanları`
-    : "İstanbul kentsel dönüşüm ilanları";
+  const h1 = ilce ? `${ilce} malik ilanları` : "İstanbul malik ilanları";
   const crumbs = [
     { name: "Ana sayfa", path: "/" },
     { name: "İlanlar", path: "/ilanlar" },
@@ -97,10 +95,10 @@ export default async function IlanlarPage({
   ];
 
   const schemas = [
-    collectionPageSchema(h1, "/ilanlar", "İstanbul kentsel dönüşüm ilan listesi"),
+    collectionPageSchema(h1, "/ilanlar", "İstanbul malik ilan listesi"),
     breadcrumbSchema(crumbs),
     itemListSchema(
-      "Kentsel dönüşüm ilanları",
+      "Malik ilanları",
       listings.map((l) => ({
         name: `${l.ilce} · ${formatListingUnits(l)}`,
         url: `${site}/ilan/${l.slug}`,
@@ -120,7 +118,7 @@ export default async function IlanlarPage({
       <h1 className="mb-1 text-2xl font-bold text-[#111321]">{h1}</h1>
       <p className="mb-6 text-sm text-[#6b7280]">
         Tüm açık ilanlar. İlçeye göre filtrele. Malik numarası yalnızca onaylı
-        müteahhit hesaplarına açıktır. Sayfa başına {PAGE_SIZE} ilan.
+        müteahhit hesaplarına açıktır.
       </p>
       <ListingsFeed
         listings={listings}

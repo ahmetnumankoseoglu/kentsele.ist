@@ -16,7 +16,7 @@ import {
 /** Kısa çekirdek set — yığma riskini düşür */
 const CORE_KEYWORDS = [
   "kentsele.ist",
-  "İstanbul malik ilanı",
+  "İstanbul kentsel dönüşüm",
   "müteahhit iletişim",
   "kat karşılığı",
   "riskli yapı",
@@ -45,7 +45,7 @@ export function istanbulGeoMetadata(overrides?: {
   const path = overrides?.path ?? "/";
   const url = `${site}${path === "/" ? "" : path}`;
   const title =
-    overrides?.title ?? "kentsele.ist | İstanbul Malik İlanları";
+    overrides?.title ?? "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları";
   const description = clampMetaDescription(
     overrides?.description ?? SITE_DESCRIPTION
   );

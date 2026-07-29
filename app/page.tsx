@@ -19,15 +19,15 @@ import { faqPageSchema } from "@/lib/seo/schema";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import type { PublicListing } from "@/types/listing";
 
-const HOME_H1 = "kentsele.ist — İstanbul malik ilanları";
+const HOME_H1 = "kentsele.ist — İstanbul kentsel dönüşüm ilanları";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "kentsele.ist | İstanbul Malik İlanları",
+  title: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
   // ~145 karakter — 120–160 aralığı
   description:
-    "İstanbul’da ücretsiz malik ilanı açın; belge onayı almış müteahhitler sizi arasın. 39 ilçe, sade rehber ve destek özeti.",
+    "İstanbul kentsel dönüşüm ilanları. Ücretsiz malik ilanı; belge onayı almış müteahhitler iletişime geçer. 39 ilçe ve rehber.",
   path: "/",
-  keywords: ["kentsele.ist", "malik ilanı", "müteahhit", "İstanbul"],
+  keywords: ["kentsele.ist", "kentsel dönüşüm", "İstanbul", "müteahhit"],
 });
 
 const POPULAR_ILCELER = [

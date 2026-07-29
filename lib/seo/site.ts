@@ -66,4 +66,4 @@ export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/opengraph-image`;
 export const DEFAULT_OG_IMAGE_WIDTH = 1200;
 export const DEFAULT_OG_IMAGE_HEIGHT = 630;
 export const DEFAULT_OG_IMAGE_ALT =
-  "kentsele.ist — İstanbul malik ilanları ve onaylı müteahhitler";
+  "kentsele.ist — İstanbul kentsel dönüşüm ilanları";

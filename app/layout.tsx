@@ -32,7 +32,7 @@ const baseMeta = istanbulGeoMetadata();
 export const metadata: Metadata = {
   ...baseMeta,
   title: {
-    default: "kentsele.ist | İstanbul Malik İlanları",
+    default: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
     template: "%s | kentsele.ist",
   },
   metadataBase: new URL(getSiteUrl()),
