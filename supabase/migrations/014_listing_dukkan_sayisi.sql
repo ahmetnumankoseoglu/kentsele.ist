@@ -2,8 +2,10 @@
 alter table public.listings
   add column if not exists dukkan_sayisi text not null default '0';
 
--- Public view: dükkan herkese açık
-create or replace view public.listings_public as
+-- CREATE OR REPLACE VIEW, sütun sırası değişince isim kaydırır → önce DROP
+drop view if exists public.listings_public;
+
+create view public.listings_public as
 select
   id,
   slug,
