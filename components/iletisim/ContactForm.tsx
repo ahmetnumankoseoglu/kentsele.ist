@@ -70,48 +70,86 @@ export function ContactForm({ prefill }: { prefill?: ContactPrefill | null }) {
           Giriş yaptığın için ad, e-posta ve telefon hesabından dolduruldu.
         </p>
       ) : null}
-      <input
-        className="input-field"
-        placeholder="Ad soyad"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        minLength={2}
-        readOnly={Boolean(prefill?.full_name?.trim())}
-      />
-      <input
-        className="input-field"
-        type="email"
-        placeholder="E-posta"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        readOnly={Boolean(prefill?.email?.trim())}
-      />
-      <input
-        className="input-field tabular-nums"
-        placeholder="Telefon"
-        inputMode="tel"
-        value={phone}
-        onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
-        readOnly={Boolean(prefill?.phone?.trim())}
-      />
-      <input
-        className="input-field"
-        placeholder="Konu"
-        value={subject}
-        onChange={(e) => setSubject(e.target.value)}
-        required
-        minLength={3}
-      />
-      <textarea
-        className="input-field min-h-32 resize-y"
-        placeholder="Mesajınız"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        required
-        minLength={10}
-      />
+      <div>
+        <label htmlFor="contact-name" className="mb-1 block text-xs font-bold text-[#6b7280]">
+          Ad soyad
+        </label>
+        <input
+          id="contact-name"
+          className="input-field"
+          name="name"
+          autoComplete="name"
+          placeholder="Ad soyad"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          minLength={2}
+          readOnly={Boolean(prefill?.full_name?.trim())}
+        />
+      </div>
+      <div>
+        <label htmlFor="contact-email" className="mb-1 block text-xs font-bold text-[#6b7280]">
+          E-posta
+        </label>
+        <input
+          id="contact-email"
+          className="input-field"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="E-posta"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          readOnly={Boolean(prefill?.email?.trim())}
+        />
+      </div>
+      <div>
+        <label htmlFor="contact-phone" className="mb-1 block text-xs font-bold text-[#6b7280]">
+          Telefon
+        </label>
+        <input
+          id="contact-phone"
+          className="input-field tabular-nums"
+          name="phone"
+          placeholder="Telefon"
+          inputMode="tel"
+          autoComplete="tel"
+          value={phone}
+          onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
+          readOnly={Boolean(prefill?.phone?.trim())}
+        />
+      </div>
+      <div>
+        <label htmlFor="contact-subject" className="mb-1 block text-xs font-bold text-[#6b7280]">
+          Konu
+        </label>
+        <input
+          id="contact-subject"
+          className="input-field"
+          name="subject"
+          placeholder="Konu"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          required
+          minLength={3}
+        />
+      </div>
+      <div>
+        <label htmlFor="contact-body" className="mb-1 block text-xs font-bold text-[#6b7280]">
+          Mesaj
+        </label>
+        <textarea
+          id="contact-body"
+          className="input-field min-h-32 resize-y"
+          name="body"
+          placeholder="Mesajınız"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          required
+          minLength={10}
+        />
+      </div>
       <p className="text-xs leading-relaxed text-[#6b7280]">
         Göndererek{" "}
         <Link href="/gizlilik" className="font-semibold text-[#168f43]">

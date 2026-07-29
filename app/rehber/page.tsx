@@ -15,10 +15,9 @@ import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const PATH = "/rehber";
-const TITLE =
-  "Kentsel Dönüşüm Rehberi | İstanbul 6306, Kira Yardımı, Hibe ve Kredi";
+const TITLE = "Rehber | 6306, kira yardımı, hibe ve kredi";
 const DESCRIPTION =
-  "Kentsel dönüşüm rehberi: kentsel dönüşüm nedir, 6306 sayılı kanun, kira ve taşınma yardımı evrakları, Yarısı Bizden hibe-kredi. İstanbul 39 ilçe.";
+  "6306 sayılı kanun, kira–taşınma yardımı ve Yarısı Bizden özeti. İstanbul malikleri ve firmalar için kısa rehber.";
 
 export const metadata: Metadata = {
   ...istanbulGeoMetadata({
@@ -26,12 +25,11 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     path: PATH,
     keywords: [
-      "kentsel dönüşüm rehberi",
-      "kentsel dönüşüm nedir",
-      "6306 sayılı kanun",
-      "kira yardımı İstanbul",
-      "Yarısı Bizden hesaplama",
-      "İstanbul kentsel dönüşüm",
+      "6306",
+      "kira yardımı",
+      "Yarısı Bizden",
+      "rehber",
+      "İstanbul",
     ],
   }),
 };

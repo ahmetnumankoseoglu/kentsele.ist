@@ -38,16 +38,26 @@ export async function generateMetadata({
   try {
     const listing = await getPublicListingBySlug(slug);
     if (!listing) return { title: "İlan bulunamadı" };
-    const title = `${listing.ilce} Kentsel Dönüşüm — ${formatListingUnits(listing)}`;
-    const description = listing.aciklama.slice(0, 155);
+    const title = `${listing.ilce} — ${formatListingUnits(listing)}`;
     const pageUrl = `${getSiteUrl()}/ilan/${slug}`;
+    const { istanbulGeoMetadata } = await import("@/lib/seo/istanbul");
     return {
-      title,
-      description,
-      openGraph: { title, description, type: "article", locale: "tr_TR" },
-      alternates: {
-        canonical: pageUrl,
-        languages: { "tr-TR": pageUrl, "x-default": pageUrl },
+      ...istanbulGeoMetadata({
+        title,
+        description: listing.aciklama,
+        path: `/ilan/${slug}`,
+        keywords: [listing.ilce, "ilan", listing.mahalle ?? ""].filter(
+          Boolean
+        ),
+      }),
+      openGraph: {
+        ...istanbulGeoMetadata({
+          title,
+          description: listing.aciklama,
+          path: `/ilan/${slug}`,
+        }).openGraph,
+        type: "article",
+        url: pageUrl,
       },
     };
   } catch {

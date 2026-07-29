@@ -16,9 +16,8 @@ import { getSiteUrl } from "@/lib/seo/site";
 const K = DESTEK_TUTARLARI.konut;
 const T = DESTEK_TUTARLARI.ticari;
 const PATH = "/rehber/hibe-ve-kredi-hesaplama";
-const TITLE =
-  "İstanbul Yarısı Bizden Hibe ve Kredi Hesaplama | Konut & İş Yeri";
-const DESCRIPTION = `İstanbul Yarısı Bizden: konut ${formatTRY(K.toplamBirim)} (hibe ${formatTRY(K.hibe)} + kredi ${formatTRY(K.kredi)} + taşınma ${formatTRY(K.tasinma)}), iş yeri ${formatTRY(T.toplamBirim)}. Konut+dükkân karışık hesap.`;
+const TITLE = "Yarısı Bizden hibe ve kredi hesaplama";
+const DESCRIPTION = `Konut ${formatTRY(K.toplamBirim)} (hibe+kredi+taşınma), iş yeri ${formatTRY(T.toplamBirim)}. Karışık birim hesabı.`;
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
 const MODIFIED = "2026-07-29T12:00:00+03:00";
 
@@ -26,14 +25,7 @@ export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
   description: DESCRIPTION,
   path: PATH,
-  keywords: [
-    "Yarısı Bizden İstanbul",
-    "kentsel dönüşüm hibe 875000",
-    "kentsel dönüşüm kredi 875000",
-    "1 milyon 875 bin destek",
-    "iş yeri dönüşüm 1 milyon",
-    "İstanbul kentsel dönüşüm destek",
-  ],
+  keywords: ["Yarısı Bizden", "hibe", "kredi", "İstanbul", "hesaplama"],
   datePublished: PUBLISHED,
   dateModified: MODIFIED,
 });

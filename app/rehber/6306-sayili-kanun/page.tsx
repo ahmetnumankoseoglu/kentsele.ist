@@ -15,10 +15,9 @@ import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const PATH = "/rehber/6306-sayili-kanun";
-const TITLE =
-  "6306 Sayılı Kanun Nedir? İstanbul Kentsel Dönüşüm ve Riskli Yapı";
+const TITLE = "6306 sayılı kanun: riskli yapı ve malik süreci";
 const DESCRIPTION =
-  "6306 sayılı Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun: riskli yapı tespiti, malik hakları, itiraz, yıkım süreci. İstanbul kentsel dönüşüm rehberi.";
+  "Riskli yapı tespiti, malik hakları, itiraz ve yıkım özeti. 6306 metnine resmi link ile erişim.";
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
 const MODIFIED = "2026-07-28T22:00:00+03:00";
 
@@ -26,14 +25,7 @@ export const metadata: Metadata = rehberArticleMetadata({
   title: TITLE,
   description: DESCRIPTION,
   path: PATH,
-  keywords: [
-    "6306 sayılı kanun",
-    "6306 kentsel dönüşüm",
-    "riskli yapı kanunu İstanbul",
-    "afet riski altındaki alanlar",
-    "kentsel dönüşüm malik hakları",
-    "İstanbul riskli yapı",
-  ],
+  keywords: ["6306", "riskli yapı", "malik hakları", "İstanbul"],
   datePublished: PUBLISHED,
   dateModified: MODIFIED,
 });
@@ -225,7 +217,7 @@ export default function Kanun6306Page() {
         <strong>ücretsiz ilan</strong> oluşturabilir; iletişim bilgileri
         yalnızca <strong>onaylı müteahhit</strong> hesaplarına açılır.{" "}
         <a
-          href="https://www.mevzuat.gov.tr"
+          href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6306&MevzuatTur=1&MevzuatTertip=5"
           target="_blank"
           rel="noopener noreferrer nofollow"
           className="font-semibold text-[#168f43]"

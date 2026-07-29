@@ -11,6 +11,7 @@ import {
   collectionPageSchema,
   itemListSchema,
 } from "@/lib/seo/schema";
+import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 import type { PublicListing } from "@/types/listing";
 
@@ -32,24 +33,26 @@ export async function generateMetadata({
     sp.ilce && isValidIstanbulIlce(sp.ilce) ? sp.ilce : undefined;
   const page = parsePage(sp.page);
   const title = ilce
-    ? `${ilce} Kentsel Dönüşüm İlanları`
-    : "İstanbul Kentsel Dönüşüm İlanları";
+    ? `${ilce} malik ilanları`
+    : "İstanbul malik ilanları";
   const description = ilce
-    ? `${ilce} kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer.`
-    : "İstanbul geneli kentsel dönüşüm ilanları. 39 ilçe, ücretsiz malik ilanı, onaylı müteahhit iletişimi.";
+    ? `${ilce} için açık ilanlar. Ücretsiz malik kaydı; onaylı müteahhit iletişimi.`
+    : "İstanbul geneli açık ilanlar. 39 ilçe, ücretsiz malik ilanı, onaylı müteahhit iletişimi.";
 
   const params = new URLSearchParams();
   if (ilce) params.set("ilce", ilce);
   if (page > 1) params.set("page", String(page));
   const q = params.toString();
-  const canonical = `${getSiteUrl()}/ilanlar${q ? `?${q}` : ""}`;
+  const path = `/ilanlar${q ? `?${q}` : ""}`;
 
-  return {
+  return istanbulGeoMetadata({
     title: page > 1 ? `${title} · Sayfa ${page}` : title,
     description,
-    openGraph: { title, description, locale: "tr_TR", type: "website" },
-    alternates: { canonical },
-  };
+    path,
+    keywords: ilce
+      ? [`${ilce} ilan`, "malik", "müteahhit"]
+      : ["ilan listesi", "malik", "İstanbul"],
+  });
 }
 
 export default async function IlanlarPage({

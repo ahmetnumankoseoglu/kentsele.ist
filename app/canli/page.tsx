@@ -13,14 +13,9 @@ export const revalidate = 0;
 export const metadata: Metadata = istanbulGeoMetadata({
   title: "Canlı Yayın | Site İstatistikleri",
   description:
-    "kentsele.ist canlı yayın: müteahhit, malik, ilan, anlaşma ve teklife açık ilan sayıları anlık güncellenir.",
+    "Anlık özet: müteahhit, malik, ilan, anlaşma ve teklife açık kayıtlar. 30 sn’de yenilenir.",
   path: "/canli",
-  keywords: [
-    "canlı yayın",
-    "kentsel dönüşüm istatistik",
-    "müteahhit sayısı",
-    "ilan sayısı",
-  ],
+  keywords: ["canlı yayın", "istatistik", "müteahhit", "ilan"],
 });
 
 export default async function CanliPage() {

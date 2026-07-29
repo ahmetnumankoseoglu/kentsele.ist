@@ -10,9 +10,13 @@ import {
 export function jsonLdScript(
   data: Record<string, unknown> | Record<string, unknown>[]
 ) {
-  return {
-    __html: JSON.stringify(data),
-  };
+  // XSS: </script> kırılımını engelle
+  const raw = JSON.stringify(data)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+  return { __html: raw };
 }
 
 export function istanbulPlaceSchema() {
@@ -75,37 +79,66 @@ export function organizationSchema() {
       "@type": "ImageObject",
       url: `${url}/favicon.ico`,
       contentUrl: `${url}/favicon.svg`,
+      width: 48,
+      height: 48,
     },
-    image: DEFAULT_OG_IMAGE,
+    image: {
+      "@type": "ImageObject",
+      url: DEFAULT_OG_IMAGE,
+      width: 1200,
+      height: 630,
+    },
     description: SITE_DESCRIPTION,
     alternateName: ["Kentsele", "kentsele"],
     areaServed: istanbulPlaceSchema(),
     knowsAbout: [
-      "Kentsel dönüşüm",
-      "6306 sayılı kanun",
       "Riskli yapı",
+      "6306 sayılı kanun",
       "Yarısı Bizden",
-      "İstanbul kentsel dönüşüm",
+      "Kat karşılığı",
+      "İstanbul emlak",
     ],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
       areaServed: "TR-34",
       availableLanguage: ["Turkish"],
+      url: `${url}/iletisim`,
     },
   };
 }
 
+/**
+ * BreadcrumbList — en az 2 öğe (SERP / şema uyarıları).
+ * Tek öğe verilirse “Ana sayfa” öne eklenir.
+ */
 export function breadcrumbSchema(items: { name: string; path: string }[]) {
   const url = getSiteUrl();
+  let list = items;
+  if (list.length === 0) {
+    list = [
+      { name: "Ana sayfa", path: "/" },
+      { name: SITE_NAME, path: "/" },
+    ];
+  } else if (list.length === 1) {
+    const only = list[0]!;
+    if (only.path === "/" || only.path === "") {
+      list = [
+        { name: "Ana sayfa", path: "/" },
+        { name: "İlanlar", path: "/ilanlar" },
+      ];
+    } else {
+      list = [{ name: "Ana sayfa", path: "/" }, only];
+    }
+  }
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
+    itemListElement: list.map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: item.name,
-      item: `${url}${item.path}`,
+      item: `${url}${item.path.startsWith("/") ? item.path : `/${item.path}`}`,
     })),
   };
 }

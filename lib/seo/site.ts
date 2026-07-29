@@ -42,8 +42,9 @@ export function getSiteUrl(): string {
 export const SITE_NAME = "kentsele.ist";
 export const SITE_LOCALE = "tr_TR";
 export const SITE_LANG = "tr-TR";
+/** ~150 karakter — SERP / piksel genişliği için */
 export const SITE_DESCRIPTION =
-  "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer.";
+  "İstanbul’da malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek bilgisi.";
 
 /** İstanbul geo — ICBM / schema GeoCoordinates (merkez yaklaşık) */
 export const ISTANBUL_GEO = {
@@ -59,5 +60,7 @@ export const ISTANBUL_GEO = {
 
 /** Absolute OG/Twitter image (Next.js file convention) */
 export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/opengraph-image`;
+export const DEFAULT_OG_IMAGE_WIDTH = 1200;
+export const DEFAULT_OG_IMAGE_HEIGHT = 630;
 export const DEFAULT_OG_IMAGE_ALT =
-  "kentsele.ist — İstanbul kentsel dönüşüm ilanları, malik ücretsiz ilan";
+  "kentsele.ist — İstanbul malik ilanları ve onaylı müteahhitler";

@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   ...istanbulGeoMetadata(),
   title: {
-    default: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
+    default: "kentsele.ist | İstanbul Malik İlanları",
     template: "%s | kentsele.ist",
   },
   metadataBase: new URL(getSiteUrl()),

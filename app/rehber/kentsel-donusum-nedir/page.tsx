@@ -14,9 +14,9 @@ import {
 import { rehberArticleMetadata } from "@/lib/seo/istanbul";
 
 const PATH = "/rehber/kentsel-donusum-nedir";
-const TITLE = "Kentsel Dönüşüm Nedir? Amaç, Süreç ve Malik Hakları | İstanbul";
+const TITLE = "Riskli yapı ve malik hakları nedir? | Rehber";
 const DESCRIPTION =
-  "Kentsel dönüşüm nedir, amacı nedir, mülkiyet hakkı, riskli yapı ve riskli alan farkı, itiraz, tahliye, 2/3 çoğunluk, vergi muafiyeti. İstanbul odaklı bilgilendirme rehberi.";
+  "Amaç, mülkiyet, riskli yapı / alan farkı, itiraz, tahliye ve 2/3 çoğunluk. İstanbul malikleri için kısa özet.";
 const PUBLISHED = "2026-07-28T10:00:00+03:00";
 const MODIFIED = "2026-07-28T22:00:00+03:00";
 
@@ -25,14 +25,11 @@ export const metadata: Metadata = rehberArticleMetadata({
   description: DESCRIPTION,
   path: PATH,
   keywords: [
-    "kentsel dönüşüm nedir",
-    "kentsel dönüşüm amacı",
-    "riskli yapı nedir",
-    "riskli alan nedir",
-    "kentsel dönüşüm malik hakları",
-    "riskli yapı itiraz 15 gün",
-    "kentsel dönüşüm vergi muafiyeti",
-    "İstanbul kentsel dönüşüm",
+    "riskli yapı",
+    "malik hakları",
+    "riskli alan",
+    "2/3 çoğunluk",
+    "İstanbul",
   ],
   datePublished: PUBLISHED,
   dateModified: MODIFIED,

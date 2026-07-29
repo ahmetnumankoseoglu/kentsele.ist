@@ -63,7 +63,7 @@ export function HomeFooter({
         </h3>
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
           <a
-            href="https://www.csb.gov.tr"
+            href="https://csb.gov.tr/"
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
@@ -71,7 +71,7 @@ export function HomeFooter({
             CSB Bakanlığı
           </a>
           <a
-            href="https://www.ibb.istanbul"
+            href="https://www.ibb.istanbul/"
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
@@ -79,12 +79,12 @@ export function HomeFooter({
             İBB
           </a>
           <a
-            href="https://www.mevzuat.gov.tr"
+            href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6306&MevzuatTur=1&MevzuatTertip=5"
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
           >
-            Mevzuat
+            6306 sayılı kanun
           </a>
         </div>
 
@@ -103,6 +103,14 @@ export function HomeFooter({
             </Link>
           ))}
         </div>
+
+        <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-[#9ca3af]">
+          Paylaşım
+        </h3>
+        <p className="mt-2 text-xs text-[#6b7280]">
+          Sayfa paylaşımı için ilgili içerikteki “Paylaş” düğmelerini kullanın.
+          Kurumsal hesaplar eklendiğinde burada listelenir.
+        </p>
 
         <p className="mt-6 text-xs text-[#9ca3af]">
           © {new Date().getFullYear()} Kentsele · Yalnızca İstanbul ·{" "}

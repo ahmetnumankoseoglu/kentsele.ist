@@ -16,10 +16,9 @@ import { DESTEK_TUTARLARI, formatTRY } from "@/lib/content/destek-tutarlari";
 import { IBB_KIRA_DESTEGI } from "@/lib/content/ibb-kira-destegi";
 
 const PATH = "/rehber/kira-yardimi";
-const TITLE =
-  "İstanbul Kira Yardımı 2026 | İBB + Bakanlık Tutarları, Evrak ve Başvuru";
+const TITLE = "İstanbul kira ve taşınma yardımı | İBB ve bakanlık";
 const DESCRIPTION =
-  "İstanbul kentsel dönüşüm kira yardımı: İBB hızlı tarama D–E ve güçlendirme tutarları, riskli/rezerv alan 18.000 TL, aylık mı 125.000 TL taşınma mı, Ek-1/2/3 evrak listeleri.";
+  "İBB hızlı tarama / güçlendirme tutarları, riskli alan kira ve taşınma özeti, başvuru evrak listesi.";
 const PUBLISHED = "2026-07-01T09:00:00+03:00";
 const MODIFIED = "2026-07-29T12:00:00+03:00";
 
@@ -31,15 +30,11 @@ export const metadata: Metadata = rehberArticleMetadata({
   description: DESCRIPTION,
   path: PATH,
   keywords: [
-    "İstanbul kira yardımı",
-    "İBB kira yardımı",
-    "kentsel dönüşüm kira yardımı",
-    "hızlı tarama D E kira",
-    "İBB 10000 TL kira yardımı",
-    "riskli alan kira yardımı 18000",
-    "taşınma yardımı 125000",
-    "kira yardımı evrak listesi",
-    "6306 kira yardımı",
+    "kira yardımı",
+    "İBB",
+    "taşınma yardımı",
+    "evrak",
+    "İstanbul",
   ],
   datePublished: PUBLISHED,
   dateModified: MODIFIED,

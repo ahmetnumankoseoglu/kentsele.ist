@@ -28,5 +28,6 @@ export default function robots(): MetadataRoute.Robots {
     ],
     sitemap: `${site}/sitemap.xml`,
     host: site,
+    // AI keşif: public/llms.txt
   };
 }

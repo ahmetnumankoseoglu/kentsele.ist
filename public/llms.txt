@@ -1,0 +1,24 @@
+# kentsele.ist
+
+> İstanbul odaklı malik–müteahhit eşleştirme platformu. Malikler ücretsiz ilan verir; belge onayı almış müteahhitler iletişime geçer.
+
+## Site
+- Ana sayfa: https://kentsele.ist/
+- İlanlar: https://kentsele.ist/ilanlar
+- İlan ver: https://kentsele.ist/ilan-ver
+- Rehber: https://kentsele.ist/rehber
+- Haberler: https://kentsele.ist/haberler
+- Canlı özet: https://kentsele.ist/canli
+- İletişim: https://kentsele.ist/iletisim
+- Hakkımızda: https://kentsele.ist/hakkimizda
+- Site haritası: https://kentsele.ist/site-haritasi
+- KVKK: https://kentsele.ist/gizlilik
+
+## Kapsam
+- Yalnızca İstanbul (39 ilçe)
+- Misafir malik ilanı (kayıtsız oluşturma; düzenleme için hesap)
+- Müteahhit belge onayı sonrası iletişim
+- Rehber: 6306, kira yardımı, hibe-kredi
+
+## Not
+Resmi tutar ve prosedürler değişebilir; güncel bilgi için bakanlık / İBB kaynaklarına bakın.

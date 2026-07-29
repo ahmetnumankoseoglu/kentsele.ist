@@ -18,12 +18,20 @@ export function AppShell({
 }) {
   return (
     <div className="flex min-h-dvh flex-col bg-white text-[#111321]">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-[3px] focus:bg-[#2cb34f] focus:px-3 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+      >
+        İçeriğe atla
+      </a>
       <SiteHeader />
       <main
+        id="main-content"
+        tabIndex={-1}
         className={
           fullBleed
-            ? "flex-1"
-            : "mx-auto w-full max-w-lg flex-1 px-4 pb-8 pt-4"
+            ? "flex-1 outline-none"
+            : "mx-auto w-full max-w-lg flex-1 px-4 pb-8 pt-4 outline-none"
         }
       >
         {children}

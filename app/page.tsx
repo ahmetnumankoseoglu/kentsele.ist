@@ -16,28 +16,28 @@ import { FAQ_ITEMS } from "@/lib/content/faq";
 import { getPublishedNews } from "@/lib/news/queries";
 import type { Metadata } from "next";
 import {
-  breadcrumbSchema,
   faqPageSchema,
   organizationSchema,
   websiteSchema,
 } from "@/lib/seo/schema";
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
+import { ShareButtons } from "@/components/seo/ShareButtons";
+import { getSiteUrl } from "@/lib/seo/site";
 import type { PublicListing } from "@/types/listing";
 
-const HOME_H1 = "kentsele.ist — İstanbul kentsel dönüşüm ilanları";
+const HOME_H1 = "kentsele.ist — İstanbul malik ilanları";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
+  title: "kentsele.ist | İstanbul Malik İlanları",
   description:
-    "kentsele.ist — İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek hesaplama.",
+    "İstanbul’da ücretsiz malik ilanı. Onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek özeti.",
   path: "/",
   keywords: [
     "kentsele.ist",
-    "kentsel dönüşüm ilanları",
-    "İstanbul kentsel dönüşüm",
     "malik ilanı",
-    "müteahhit bul",
+    "müteahhit",
     "kat karşılığı",
+    "İstanbul ilan",
   ],
 });
 
@@ -83,10 +83,10 @@ export default async function HomePage({
 
   const haberler = (await getPublishedNews()).slice(0, 3);
 
+  // Anasayfada tek öğeli BreadcrumbList yok (şema uyarısı)
   const schemas = [
     websiteSchema(),
     organizationSchema(),
-    breadcrumbSchema([{ name: "Ana sayfa", path: "/" }]),
     faqPageSchema([...FAQ_ITEMS]),
   ];
 
@@ -112,9 +112,8 @@ export default async function HomePage({
             {HOME_H1}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-white/80">
-            Kentsel dönüşüm ilanı ver, müteahhit bul. Malikler ücretsiz ve
-            kayıtsız ilan verir; müteahhitler belge onayı sonrası malikle
-            iletişime geçer.
+            İlanını kayıtsız oluştur; ekip teyidi sonrası listelenir. Belge
+            onayı almış müteahhitler seninle iletişime geçer.
           </p>
           <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row">
             <Link
@@ -140,37 +139,39 @@ export default async function HomePage({
         <section className="py-8">
           <h2 className="section-title">Nasıl çalışır?</h2>
           <div className="grid gap-3">
-            {[
-              {
-                n: "1",
-                t: "İhtiyacını anlat",
-                d: "Birkaç kısa soruya yanıt ver, 2 dakikada kayıtsız ilan oluştur.",
-              },
-              {
-                n: "2",
-                t: "Onay ve yayın",
-                d: "Ekibimiz teyit araması yapar, ilanın yayına alınır.",
-              },
-              {
-                n: "3",
-                t: "Onaylı müteahhitler ulaşır",
-                d: "Belgesi onaylı müteahhitler ilanı görür ve seninle iletişime geçer.",
-              },
-            ].map((s, i) => (
-              <div
-                key={s.n}
-                className="how-step card flex gap-3 p-4 animate-fade-up"
-                style={{ animationDelay: `${i * 60}ms` }}
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
-                  {s.n}
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-[#111321]">{s.t}</p>
-                  <p className="mt-0.5 text-sm text-[#6b7280]">{s.d}</p>
-                </div>
-              </div>
-            ))}
+            <ol className="m-0 list-none space-y-3 p-0">
+              {[
+                {
+                  n: "1",
+                  t: "İhtiyacını anlat",
+                  d: "Kısa formla 2 dakikada kayıtsız ilan oluştur.",
+                },
+                {
+                  n: "2",
+                  t: "Onay ve yayın",
+                  d: "Ekip teyit eder; ilanın listelenir.",
+                },
+                {
+                  n: "3",
+                  t: "Onaylı firmalar ulaşır",
+                  d: "Belgesi uygun müteahhitler seninle iletişime geçer.",
+                },
+              ].map((s, i) => (
+                <li
+                  key={s.n}
+                  className="how-step card flex gap-3 p-4 animate-fade-up"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2cb34f] text-sm font-bold text-white">
+                    {s.n}
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-[#111321]">{s.t}</p>
+                    <p className="mt-0.5 text-sm text-[#6b7280]">{s.d}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
           <Link href="/ilan-ver" className="btn-primary mt-5 w-full">
             Hemen İlan Ver
@@ -183,19 +184,19 @@ export default async function HomePage({
             {[
               {
                 t: "İstanbul’a özel",
-                d: "Sadece İstanbul kentsel dönüşüm ilanları. 39 ilçenin tamamı tek yerde.",
+                d: "Yalnızca 39 ilçe. Yerel ihtiyaçlara göre sade bir liste.",
               },
               {
                 t: "Ücretsiz malik ilanı",
-                d: "İlan vermek ücretsiz ve kayıtsız. Düzenlemek için hesap gerekir. Müteahhitler ilan veremez.",
+                d: "Oluşturmak ücretsiz ve kayıtsız. Düzenlemek için hesap gerekir. Müteahhitler ilan açamaz.",
               },
               {
                 t: "Teyitli yayın",
-                d: "İlanlar ekip teyidi sonrası yayına alınır; sahte ilan riski azalır.",
+                d: "Ekip teyidi sonrası listelenir; sahte kayıt riski azalır.",
               },
               {
-                t: "Onaylı müteahhit iletişimi",
-                d: "Malik numarası herkese açık değildir. Yalnızca belge onayı almış müteahhitler arar.",
+                t: "Onaylı iletişim",
+                d: "Telefon herkese açık değil. Yalnızca belge onayı almış firmalar arar.",
               },
             ].map((item, i) => (
               <div
@@ -312,7 +313,7 @@ export default async function HomePage({
                 href={`/${ilceToSeoSlug(name)}`}
                 className="rounded-full border border-[#e3e4e6] bg-white px-3.5 py-2 text-xs font-semibold text-[#111321] transition hover:border-[#2cb34f] hover:text-[#168f43]"
               >
-                {name} kentsel dönüşüm
+                {name}
               </Link>
             ))}
             <Link
@@ -325,11 +326,9 @@ export default async function HomePage({
         </section>
 
         <section className="mb-8 overflow-hidden rounded-lg bg-[#111321] px-5 py-7 text-center text-white">
-          <h2 className="text-lg font-bold">
-            Kentsel dönüşüm için teklif mi arıyorsun?
-          </h2>
+          <h2 className="text-lg font-bold">Teklif mi arıyorsun?</h2>
           <p className="mt-2 text-sm text-white/70">
-            İlanını 2 dakikada oluştur; teyit sonrası onaylı müteahhitler seni
+            İlanını 2 dakikada oluştur; teyit sonrası onaylı firmalar seni
             arasın.
           </p>
           <Link href="/ilan-ver" className="btn-primary mt-5 w-full sm:w-auto sm:min-w-[200px]">
@@ -343,6 +342,11 @@ export default async function HomePage({
           <Link href="/ilan-ver" className="btn-primary mt-6 w-full">
             Hâlâ soruların mı var? İlan ver, arayalım
           </Link>
+          <ShareButtons
+            className="mt-8"
+            url={getSiteUrl()}
+            title="kentsele.ist — İstanbul malik ilanları"
+          />
         </section>
       </div>
     </AppShell>

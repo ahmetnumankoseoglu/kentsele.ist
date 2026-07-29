@@ -6,11 +6,11 @@ import { getCurrentProfile, getSessionUser } from "@/lib/auth/session";
 import { formatPhoneInput } from "@/lib/phone";
 
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "İletişim | Sorularınızı Bize Yazın",
+  title: "İletişim | Bize yazın",
   description:
-    "Kentsele iletişim formu. Sorularınız, önerileriniz ve destek talepleriniz için bize yazın.",
+    "Platform, ilan veya hesap sorularınız için iletişim formu. Mesajınız yönetim paneline düşer.",
   path: "/iletisim",
-  keywords: ["kentsele iletişim", "kentsel dönüşüm iletişim İstanbul"],
+  keywords: ["iletişim", "destek", "kentsele"],
 });
 
 export default async function IletisimPage() {

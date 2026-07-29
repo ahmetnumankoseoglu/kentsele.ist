@@ -42,49 +42,21 @@ export async function generateMetadata({
   if (!ilce) return { title: "Sayfa bulunamadı" };
 
   const meta = getDistrictMeta(ilce, ISTANBUL_ILCELER);
-  const title = `${ilce} Kentsel Dönüşüm 2026 | İlan Ver, Müteahhit Bul`;
-  const description = `${ilce} kentsel dönüşüm rehberi (${meta.side}). ${ilce}’da riskli yapı, kat karşılığı ve hakediş süreçleri. Ücretsiz ilan verin; onaylı müteahhitler sizi arasın.`;
-  const pageUrl = `${getSiteUrl()}/${seoSlug}`;
-
-  return {
+  const title = `${ilce} malik ilanları | ${meta.side}`;
+  const description = `${ilce} (${meta.side}): riskli yapı, kat karşılığı ve hakediş. Ücretsiz ilan; onaylı müteahhit iletişimi.`;
+  const { istanbulGeoMetadata } = await import("@/lib/seo/istanbul");
+  return istanbulGeoMetadata({
     title,
     description,
+    path: `/${seoSlug}`,
     keywords: [
-      `${ilce} kentsel dönüşüm`,
-      `${ilce} kentsel dönüşüm ilanları`,
-      `${ilce} kentsel dönüşüm müteahhit`,
+      `${ilce} ilan`,
       `${ilce} kat karşılığı`,
-      `${ilce} riskli yapı`,
-      `${ilce} kentsel dönüşüm 2026`,
-      "İstanbul kentsel dönüşüm",
-      `${meta.side} kentsel dönüşüm`,
+      meta.side,
+      "malik",
+      "müteahhit",
     ],
-    openGraph: {
-      title: `${ilce} Kentsel Dönüşüm`,
-      description,
-      locale: "tr_TR",
-      type: "website",
-      url: pageUrl,
-      siteName: "Kentsele",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${ilce} Kentsel Dönüşüm`,
-      description,
-    },
-    alternates: {
-      canonical: pageUrl,
-      languages: {
-        "tr-TR": pageUrl,
-        "x-default": pageUrl,
-      },
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: { index: true, follow: true },
-    },
-  };
+  });
 }
 
 export default async function DistrictSeoPage({

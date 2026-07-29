@@ -1,17 +1,17 @@
 /** Authoritative external links — SEO + user trust on rehber pages */
 const SOURCES = [
   {
-    href: "https://www.csb.gov.tr",
+    href: "https://csb.gov.tr/",
     label: "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
     short: "Bakanlık (CSB)",
   },
   {
-    href: "https://www.mevzuat.gov.tr",
+    href: "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6306&MevzuatTur=1&MevzuatTertip=5",
     label: "Mevzuat Bilgi Sistemi — 6306 sayılı kanun metni",
-    short: "Mevzuat.gov.tr",
+    short: "6306 sayılı kanun",
   },
   {
-    href: "https://www.ibb.istanbul",
+    href: "https://www.ibb.istanbul/",
     label: "İstanbul Büyükşehir Belediyesi",
     short: "İBB resmi site",
   },

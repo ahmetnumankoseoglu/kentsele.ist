@@ -9,25 +9,19 @@ import {
   collectionPageSchema,
   itemListSchema,
 } from "@/lib/seo/schema";
+import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import { getSiteUrl } from "@/lib/seo/site";
 
 export const metadata: Metadata = {
-  title: "İstanbul Kentsel Dönüşüm Haberleri",
-  description:
-    "İstanbul kentsel dönüşüm haberleri, rehberler ve piyasa notları. Google News uyumlu güncel içerikler.",
-  openGraph: {
-    title: "İstanbul Kentsel Dönüşüm Haberleri",
+  ...istanbulGeoMetadata({
+    title: "Haberler | İstanbul emlak ve regülasyon notları",
     description:
-      "İstanbul kentsel dönüşüm haberleri ve rehberler. Malikler ve müteahhitler için güncel içerik.",
-    locale: "tr_TR",
-    type: "website",
-  },
+      "Güncel haberler, regülasyon notları ve piyasa özeti. Malikler ve müteahhitler için kısa içerikler.",
+    path: "/haberler",
+    keywords: ["haber", "regülasyon", "İstanbul emlak"],
+  }),
   alternates: {
-    canonical: `${getSiteUrl()}/haberler`,
-    languages: {
-      "tr-TR": `${getSiteUrl()}/haberler`,
-      "x-default": `${getSiteUrl()}/haberler`,
-    },
+    ...istanbulGeoMetadata({ path: "/haberler" }).alternates,
     types: {
       "application/rss+xml": `${getSiteUrl()}/haberler/rss.xml`,
     },
@@ -87,7 +81,7 @@ export default async function HaberlerPage() {
             Haberler · İstanbul
           </p>
           <h1 className="mt-2 text-[28px] font-bold leading-tight">
-            Kentsel dönüşüm haberleri
+            Haberler ve regülasyon notları
           </h1>
           <p className="mt-2 max-w-md text-sm text-white/75">
             Malikler ve müteahhitler için güncel rehberler, regülasyon notları ve
