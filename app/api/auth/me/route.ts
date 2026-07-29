@@ -12,6 +12,7 @@ export async function GET() {
       authenticated: true,
       role: profile.role,
       full_name: profile.full_name,
+      phone: profile.phone ?? null,
       email: user.email ?? null,
     });
   } catch {

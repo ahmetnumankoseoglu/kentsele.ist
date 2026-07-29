@@ -7,7 +7,7 @@ import type { ListingStatus } from "@/lib/constants/listing";
 
 export async function createListing(
   input: CreateListingInput,
-  opts?: { status?: ListingStatus }
+  opts?: { status?: ListingStatus; ownerUserId?: string | null }
 ): Promise<{ listing: Listing; manageUrlPath: string }> {
   const supabase = createServiceClient();
   const shortId = randomShortId(4);
@@ -39,6 +39,7 @@ export async function createListing(
       email,
       status,
       manage_token,
+      owner_user_id: opts?.ownerUserId ?? null,
       published_at: status === "yayinda" ? new Date().toISOString() : null,
       belge_aplikasyon: input.belge_aplikasyon ?? false,
       belge_imar_durum: input.belge_imar_durum ?? false,

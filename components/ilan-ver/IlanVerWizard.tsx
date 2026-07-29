@@ -13,7 +13,11 @@ import {
   type ListingBelgeKey,
   type OdemeTercihi,
 } from "@/lib/constants/listing";
-import { formatPhoneInput, normalizeTrPhone } from "@/lib/phone";
+import {
+  formatPhoneDisplay,
+  formatPhoneInput,
+  normalizeTrPhone,
+} from "@/lib/phone";
 import {
   parseDigitInput,
   sanitizeDigitInput,
@@ -21,37 +25,56 @@ import {
 
 const STEPS = 8;
 
-const STEP_META = [
-  { title: "İlçe seçin", sub: "Yalnızca İstanbul · 39 ilçe" },
-  {
-    title: "Mahalle seçin",
-    sub: "Seçtiğiniz ilçenin güncel mahalleleri",
-  },
-  {
-    title: "Kaç kat inşa edilecek?",
-    sub: "Hızlı seç veya özel rakam yaz (zemin altı dahil)",
-  },
-  {
-    title: "Binada kaç daire olacak?",
-    sub: "Hızlı seç veya özel rakam yaz",
-  },
-  {
-    title: "Ödeme tercihiniz nedir?",
-    sub: "Müteahhitler buna göre teklif verir",
-  },
-  {
-    title: "Detay, ada/parsel ve belgeler",
-    sub: "Açıklama zorunlu (en az 20 karakter) · ada/parsel zorunlu",
-  },
-  {
-    title: "İletişim bilgilerin",
-    sub: "E-posta ile hesabını sonradan eşleştireceğiz",
-  },
-  {
-    title: "Onay ve gönder",
-    sub: "Bilgileri kontrol et, şartları onayla",
-  },
-];
+export type InitialContact = {
+  full_name: string;
+  phone: string;
+  email: string;
+};
+
+function phoneForInput(raw: string): string {
+  if (!raw.trim()) return "";
+  // Stored as +90… → display as 05xx xxx xx xx
+  if (raw.startsWith("+") || raw.replace(/\D/g, "").startsWith("90")) {
+    return formatPhoneDisplay(raw.startsWith("+") ? raw : `+${raw}`);
+  }
+  return formatPhoneInput(raw);
+}
+
+function buildStepMeta(fromAccount: boolean) {
+  return [
+    { title: "İlçe seçin", sub: "Yalnızca İstanbul · 39 ilçe" },
+    {
+      title: "Mahalle seçin",
+      sub: "Seçtiğiniz ilçenin güncel mahalleleri",
+    },
+    {
+      title: "Kaç kat inşa edilecek?",
+      sub: "Hızlı seç veya özel rakam yaz (zemin altı dahil)",
+    },
+    {
+      title: "Binada kaç daire olacak?",
+      sub: "Hızlı seç veya özel rakam yaz",
+    },
+    {
+      title: "Ödeme tercihiniz nedir?",
+      sub: "Müteahhitler buna göre teklif verir",
+    },
+    {
+      title: "Detay, ada/parsel ve belgeler",
+      sub: "Açıklama zorunlu (en az 20 karakter) · ada/parsel zorunlu",
+    },
+    {
+      title: fromAccount ? "İletişim bilgilerin" : "İletişim bilgilerin",
+      sub: fromAccount
+        ? "Hesabından alındı — kontrol edip devam et"
+        : "E-posta ile hesabını sonradan eşleştireceğiz",
+    },
+    {
+      title: "Onay ve gönder",
+      sub: "Bilgileri kontrol et, şartları onayla",
+    },
+  ] as const;
+}
 
 const emptyBelgeler = () =>
   Object.fromEntries(LISTING_BELGELER.map((b) => [b.key, false])) as Record<
@@ -59,12 +82,34 @@ const emptyBelgeler = () =>
     boolean
   >;
 
-export function IlanVerWizard() {
+export function IlanVerWizard({
+  initialContact = null,
+}: {
+  initialContact?: InitialContact | null;
+}) {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
+
+  const prefilledName = initialContact?.full_name?.trim() || "";
+  const prefilledPhone = phoneForInput(initialContact?.phone || "");
+  const prefilledEmail = initialContact?.email?.trim() || "";
+
+  // Hesaptan ad + telefon + e-posta doluysa iletişim adımı salt okunur
+  const contactFromAccount = Boolean(
+    prefilledName.length >= 2 &&
+      normalizeTrPhone(prefilledPhone) &&
+      prefilledEmail &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(prefilledEmail)
+  );
+
+  const stepMeta = useMemo(
+    () => buildStepMeta(contactFromAccount),
+    [contactFromAccount]
+  );
+
   const [form, setForm] = useState({
     ilce: "",
     mahalle: "",
@@ -74,14 +119,14 @@ export function IlanVerWizard() {
     daire_sayisi: "",
     odeme_tercihi: "" as OdemeTercihi | "",
     aciklama: "",
-    iletisim_adi: "",
-    telefon: "",
-    email: "",
+    iletisim_adi: prefilledName,
+    telefon: prefilledPhone,
+    email: prefilledEmail,
     ...emptyBelgeler(),
   });
 
   const progress = useMemo(() => ((step + 1) / STEPS) * 100, [step]);
-  const meta = STEP_META[step]!;
+  const meta = stepMeta[step]!;
   const mahalleler = useMemo(
     () => getMahallelerForIlce(form.ilce),
     [form.ilce]
@@ -435,47 +480,89 @@ export function IlanVerWizard() {
           </div>
         )}
 
-        {step === 6 && (
-          <div className="space-y-3">
-            <input
-              className="input-field"
-              placeholder="Ad soyad"
-              value={form.iletisim_adi}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, iletisim_adi: e.target.value }))
-              }
-            />
-            <input
-              className="input-field tabular-nums"
-              placeholder="Cep telefonu"
-              inputMode="tel"
-              autoComplete="tel"
-              value={form.telefon}
-              onChange={(e) => {
-                setForm((f) => ({
-                  ...f,
-                  telefon: formatPhoneInput(e.target.value),
-                }));
-                setError(null);
-              }}
-            />
-            <input
-              className="input-field"
-              placeholder="E-posta"
-              inputMode="email"
-              autoComplete="email"
-              type="email"
-              value={form.email}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, email: e.target.value }))
-              }
-            />
-            <p className="text-xs text-[#6b7280]">
-              Zorunlu. İlanı sonradan düzenlemek için hesabını bu e-posta ile
-              eşleştireceğiz.
-            </p>
-          </div>
-        )}
+        {step === 6 &&
+          (contactFromAccount ? (
+            <div className="space-y-3">
+              <div className="card space-y-2.5 border border-[#eaf8ee] bg-[#f8fdf9] p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#168f43]">
+                  Hesabından alındı
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[#6b7280]">Ad soyad</span>
+                    <span className="font-semibold text-[#111321]">
+                      {form.iletisim_adi}
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[#6b7280]">Telefon</span>
+                    <span className="font-semibold tabular-nums text-[#111321]">
+                      {form.telefon}
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-[#6b7280]">E-posta</span>
+                    <span className="break-all text-right font-semibold text-[#111321]">
+                      {form.email}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs leading-relaxed text-[#6b7280]">
+                Bu bilgiler giriş yaptığın hesaptan geldi. Değiştirmek için{" "}
+                <a href="/hesabim" className="font-bold text-[#168f43]">
+                  Hesabım
+                </a>{" "}
+                üzerinden profilini güncelleyebilirsin. Devam ederek ilanı bu
+                iletişim bilgileriyle göndereceksin.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {initialContact ? (
+                <p className="rounded-[3px] bg-[#fff7e6] px-3 py-2 text-xs text-[#b45309]">
+                  Hesabında eksik iletişim alanı var. Lütfen tamamla.
+                </p>
+              ) : null}
+              <input
+                className="input-field"
+                placeholder="Ad soyad"
+                value={form.iletisim_adi}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, iletisim_adi: e.target.value }))
+                }
+              />
+              <input
+                className="input-field tabular-nums"
+                placeholder="Cep telefonu"
+                inputMode="tel"
+                autoComplete="tel"
+                value={form.telefon}
+                onChange={(e) => {
+                  setForm((f) => ({
+                    ...f,
+                    telefon: formatPhoneInput(e.target.value),
+                  }));
+                  setError(null);
+                }}
+              />
+              <input
+                className="input-field"
+                placeholder="E-posta"
+                inputMode="email"
+                autoComplete="email"
+                type="email"
+                value={form.email}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
+              />
+              <p className="text-xs text-[#6b7280]">
+                Zorunlu. İlanı sonradan düzenlemek için hesabını bu e-posta ile
+                eşleştireceğiz.
+              </p>
+            </div>
+          ))}
 
         {step === 7 && (
           <div className="space-y-4">

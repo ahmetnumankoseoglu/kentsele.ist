@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { IlanVerWizard } from "@/components/ilan-ver/IlanVerWizard";
-import { getCurrentProfile } from "@/lib/auth/session";
+import { getCurrentProfile, getSessionUser } from "@/lib/auth/session";
 
 export default async function IlanVerPage() {
   const profile = await getCurrentProfile();
+  const user = await getSessionUser();
 
   if (profile?.role === "muteahhit") {
     return (
@@ -34,9 +35,18 @@ export default async function IlanVerPage() {
     );
   }
 
+  const initialContact =
+    profile && user
+      ? {
+          full_name: profile.full_name || "",
+          phone: profile.phone || "",
+          email: user.email || "",
+        }
+      : null;
+
   return (
     <AppShell showBottomCta={false}>
-      <IlanVerWizard />
+      <IlanVerWizard initialContact={initialContact} />
     </AppShell>
   );
 }

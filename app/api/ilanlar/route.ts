@@ -26,7 +26,9 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { listing, manageUrlPath } = await createListing(parsed.data);
+    const { listing, manageUrlPath } = await createListing(parsed.data, {
+      ownerUserId: profile?.id ?? null,
+    });
     const { getSiteUrl } = await import("@/lib/seo/site");
     const site = getSiteUrl();
 
