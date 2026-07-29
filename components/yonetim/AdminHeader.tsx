@@ -7,6 +7,7 @@ import { AdminLogoutButton } from "./AdminLogoutButton";
 const LINKS = [
   { href: "/yonetim/ilanlar", label: "İlanlar" },
   { href: "/yonetim/ilanlar/yeni", label: "Yeni ilan" },
+  { href: "/yonetim/malikler", label: "Malikler" },
   { href: "/yonetim/muteahhitler", label: "Müteahhitler" },
   { href: "/yonetim/iletisim", label: "İletişim" },
   { href: "/yonetim/haberler", label: "Haberler" },
@@ -37,7 +38,12 @@ export function AdminHeader() {
           {LINKS.map((l) => {
             const active =
               pathname === l.href ||
-              (l.href !== "/yonetim/ilanlar" && pathname.startsWith(l.href));
+              (l.href !== "/yonetim/ilanlar" &&
+                l.href !== "/yonetim/ilanlar/yeni" &&
+                pathname.startsWith(l.href)) ||
+              (l.href === "/yonetim/ilanlar" &&
+                pathname.startsWith("/yonetim/ilanlar") &&
+                !pathname.startsWith("/yonetim/ilanlar/yeni"));
             return (
               <Link
                 key={l.href}
@@ -52,12 +58,6 @@ export function AdminHeader() {
               </Link>
             );
           })}
-          <Link
-            href="/"
-            className="ml-auto shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white/50 hover:text-white"
-          >
-            Siteye dön
-          </Link>
         </nav>
       </div>
     </header>
