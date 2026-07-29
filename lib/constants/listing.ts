@@ -96,6 +96,20 @@ export const DAIRE_SECENEKLERI = [
   "50",
 ] as const;
 
+/** Dükkan hızlı seçim — 0 = dükkan yok */
+export const DUKKAN_SECENEKLERI = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "8",
+  "10",
+  "12",
+] as const;
+
 /** Malik formunda “elimde var” diye işaretlenen belgeler */
 export const LISTING_BELGELER = [
   {

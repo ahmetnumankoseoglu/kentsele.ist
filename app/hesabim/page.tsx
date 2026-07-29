@@ -23,6 +23,7 @@ type MyListing = {
   manage_token: string;
   kat_sayisi: string;
   daire_sayisi: string;
+  dukkan_sayisi?: string | null;
 };
 
 export default async function HesabimPage() {
@@ -146,6 +147,9 @@ export default async function HesabimPage() {
                       </p>
                       <p className="mt-0.5 text-xs text-[#6b7280]">
                         {l.kat_sayisi} kat · {l.daire_sayisi} daire
+                        {l.dukkan_sayisi && l.dukkan_sayisi !== "0"
+                          ? ` · ${l.dukkan_sayisi} dükkan`
+                          : ""}
                       </p>
                     </div>
                     <span

@@ -44,6 +44,26 @@ describe("createListingSchema", () => {
     expect(r.success).toBe(false);
   });
 
+  it("accepts dukkan 0 and defaults missing dukkan to 0", () => {
+    const withZero = createListingSchema.safeParse({
+      ...base,
+      dukkan_sayisi: "0",
+    });
+    expect(withZero.success).toBe(true);
+    if (withZero.success) expect(withZero.data.dukkan_sayisi).toBe("0");
+
+    const missing = createListingSchema.safeParse(base);
+    expect(missing.success).toBe(true);
+    if (missing.success) expect(missing.data.dukkan_sayisi).toBe("0");
+
+    const shops = createListingSchema.safeParse({
+      ...base,
+      dukkan_sayisi: "3",
+    });
+    expect(shops.success).toBe(true);
+    if (shops.success) expect(shops.data.dukkan_sayisi).toBe("3");
+  });
+
   it("rejects mahalle not in ilce", () => {
     const r = createListingSchema.safeParse({
       ...base,

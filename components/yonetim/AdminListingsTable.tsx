@@ -59,7 +59,12 @@ export function AdminListingsTable({ listings }: { listings: Listing[] }) {
                     {listing.mahalle ? ` · ${listing.mahalle}` : ""}
                   </p>
                   <p className="mt-0.5 text-xs text-slate-500">
-                    {listing.kat_sayisi} kat · {listing.daire_sayisi} daire ·{" "}
+                    {listing.kat_sayisi} kat · {listing.daire_sayisi} daire
+                    {listing.dukkan_sayisi &&
+                    listing.dukkan_sayisi !== "0"
+                      ? ` · ${listing.dukkan_sayisi} dükkan`
+                      : ""}{" "}
+                    ·{" "}
                     {listing.iletisim_adi}
                   </p>
                 </div>

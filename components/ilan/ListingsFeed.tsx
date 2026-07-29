@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ListingCard } from "@/components/ilan/ListingCard";
 import { IlceFilter } from "@/components/ilan/IlceFilter";
+import { ListingsPagination } from "@/components/ilan/ListingsPagination";
 import type { PublicListing } from "@/types/listing";
 
 export function ListingsFeed({
@@ -10,6 +11,10 @@ export function ListingsFeed({
   ilce,
   title,
   filterBasePath = "/ilanlar",
+  page = 1,
+  pageSize = 20,
+  totalCount,
+  showPagination = false,
 }: {
   listings: PublicListing[];
   errorMsg: string | null;
@@ -17,7 +22,15 @@ export function ListingsFeed({
   title?: string;
   /** IlceFilter uses / by default; for /ilanlar pass /ilanlar */
   filterBasePath?: "/" | "/ilanlar";
+  page?: number;
+  pageSize?: number;
+  /** Full filtered total (for pagination label) */
+  totalCount?: number;
+  showPagination?: boolean;
 }) {
+  const total = totalCount ?? listings.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
   return (
     <section>
       <div className="mb-4 flex items-end justify-between gap-2">
@@ -26,7 +39,10 @@ export function ListingsFeed({
         </h2>
         {!errorMsg && (
           <span className="mb-2 text-xs font-bold text-[#6b7280]">
-            {listings.length} ilan
+            {total} ilan
+            {showPagination && totalPages > 1
+              ? ` · s. ${page}/${totalPages}`
+              : ""}
           </span>
         )}
       </div>
@@ -62,6 +78,15 @@ export function ListingsFeed({
           ))
         )}
       </div>
+
+      {showPagination && !errorMsg && total > 0 ? (
+        <ListingsPagination
+          page={page}
+          totalPages={totalPages}
+          basePath={filterBasePath}
+          ilce={ilce}
+        />
+      ) : null}
     </section>
   );
 }

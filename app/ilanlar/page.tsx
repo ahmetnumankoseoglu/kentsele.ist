@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { ListingsFeed } from "@/components/ilan/ListingsFeed";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicListingsForViewer } from "@/lib/listings/queries";
+import { formatListingUnits } from "@/lib/listings/format";
 import { isValidIstanbulIlce } from "@/lib/constants/istanbul-ilceler";
 import {
   breadcrumbSchema,
@@ -13,14 +14,23 @@ import {
 import { getSiteUrl } from "@/lib/seo/site";
 import type { PublicListing } from "@/types/listing";
 
+const PAGE_SIZE = 20;
+
+function parsePage(raw: string | undefined): number {
+  const n = Number.parseInt(raw ?? "1", 10);
+  if (!Number.isFinite(n) || n < 1) return 1;
+  return n;
+}
+
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ ilce?: string }>;
+  searchParams: Promise<{ ilce?: string; page?: string }>;
 }): Promise<Metadata> {
   const sp = await searchParams;
   const ilce =
     sp.ilce && isValidIstanbulIlce(sp.ilce) ? sp.ilce : undefined;
+  const page = parsePage(sp.page);
   const title = ilce
     ? `${ilce} Kentsel Dönüşüm İlanları`
     : "İstanbul Kentsel Dönüşüm İlanları";
@@ -28,51 +38,68 @@ export async function generateMetadata({
     ? `${ilce} kentsel dönüşüm ilanları. Malikler ücretsiz ilan verir; onaylı müteahhitler iletişime geçer.`
     : "İstanbul geneli kentsel dönüşüm ilanları. 39 ilçe, ücretsiz malik ilanı, onaylı müteahhit iletişimi.";
 
+  const params = new URLSearchParams();
+  if (ilce) params.set("ilce", ilce);
+  if (page > 1) params.set("page", String(page));
+  const q = params.toString();
+  const canonical = `${getSiteUrl()}/ilanlar${q ? `?${q}` : ""}`;
+
   return {
-    title,
+    title: page > 1 ? `${title} · Sayfa ${page}` : title,
     description,
     openGraph: { title, description, locale: "tr_TR", type: "website" },
-    alternates: {
-      canonical: ilce
-        ? `${getSiteUrl()}/ilanlar?ilce=${encodeURIComponent(ilce)}`
-        : `${getSiteUrl()}/ilanlar`,
-    },
+    alternates: { canonical },
   };
 }
 
 export default async function IlanlarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ilce?: string }>;
+  searchParams: Promise<{ ilce?: string; page?: string }>;
 }) {
   const sp = await searchParams;
   const ilce =
     sp.ilce && isValidIstanbulIlce(sp.ilce) ? sp.ilce : undefined;
+  let page = parsePage(sp.page);
 
-  let listings: PublicListing[] = [];
+  let all: PublicListing[] = [];
   let errorMsg: string | null = null;
   try {
-    listings = await getPublicListingsForViewer(ilce);
+    all = await getPublicListingsForViewer(ilce);
   } catch {
     errorMsg = "İlanlar yüklenemedi.";
   }
 
+  const total = all.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE) || 1);
+  if (page > totalPages) page = totalPages;
+  const start = (page - 1) * PAGE_SIZE;
+  const listings = all.slice(start, start + PAGE_SIZE);
+
   const site = getSiteUrl();
+  const h1 = ilce
+    ? `${ilce} kentsel dönüşüm ilanları`
+    : "İstanbul kentsel dönüşüm ilanları";
+  const crumbs = [
+    { name: "Ana sayfa", path: "/" },
+    { name: "İlanlar", path: "/ilanlar" },
+    ...(ilce
+      ? [
+          {
+            name: ilce,
+            path: `/ilanlar?ilce=${encodeURIComponent(ilce)}`,
+          },
+        ]
+      : []),
+  ];
+
   const schemas = [
-    collectionPageSchema(
-      ilce ? `${ilce} Kentsel Dönüşüm İlanları` : "İstanbul Kentsel Dönüşüm İlanları",
-      "/ilanlar",
-      "İstanbul kentsel dönüşüm ilan listesi"
-    ),
-    breadcrumbSchema([
-      { name: "Ana sayfa", path: "/" },
-      { name: "İlanlar", path: "/ilanlar" },
-      ...(ilce ? [{ name: ilce, path: `/ilanlar?ilce=${encodeURIComponent(ilce)}` }] : []),
-    ]),
+    collectionPageSchema(h1, "/ilanlar", "İstanbul kentsel dönüşüm ilan listesi"),
+    breadcrumbSchema(crumbs),
     itemListSchema(
       "Kentsel dönüşüm ilanları",
       listings.map((l) => ({
-        name: `${l.ilce} · ${l.kat_sayisi} kat · ${l.daire_sayisi} daire`,
+        name: `${l.ilce} · ${formatListingUnits(l)}`,
         url: `${site}/ilan/${l.slug}`,
       }))
     ),
@@ -81,25 +108,26 @@ export default async function IlanlarPage({
   return (
     <AppShell>
       <JsonLd data={schemas} />
-      <nav className="mb-4 text-xs text-[#6b7280]">
-        <Link href="/" className="font-medium text-[#168f43]">
-          Ana sayfa
-        </Link>
-        <span className="mx-1.5">/</span>
-        <span className="text-[#111321]">İlanlar</span>
-      </nav>
-      <h1 className="mb-1 text-2xl font-bold text-[#111321]">
-        {ilce ? `${ilce} kentsel dönüşüm ilanları` : "İstanbul kentsel dönüşüm ilanları"}
-      </h1>
+      <Breadcrumbs
+        items={crumbs.map((c, i) => ({
+          name: c.name,
+          href: i < crumbs.length - 1 ? c.path : undefined,
+        }))}
+      />
+      <h1 className="mb-1 text-2xl font-bold text-[#111321]">{h1}</h1>
       <p className="mb-6 text-sm text-[#6b7280]">
-        Tüm açık ilanlar. İlçeye göre filtrele. Malik numarası yalnızca
-        onaylı müteahhit hesaplarına açıktır.
+        Tüm açık ilanlar. İlçeye göre filtrele. Malik numarası yalnızca onaylı
+        müteahhit hesaplarına açıktır. Sayfa başına {PAGE_SIZE} ilan.
       </p>
       <ListingsFeed
         listings={listings}
         errorMsg={errorMsg}
         ilce={ilce}
         filterBasePath="/ilanlar"
+        page={page}
+        pageSize={PAGE_SIZE}
+        totalCount={total}
+        showPagination
       />
     </AppShell>
   );

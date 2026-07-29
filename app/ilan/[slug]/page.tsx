@@ -24,6 +24,8 @@ import {
   getSessionUser,
 } from "@/lib/auth/session";
 import { canOwnerEditListing } from "@/lib/listings/ownership";
+import { formatListingUnits } from "@/lib/listings/format";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { ShareButtons } from "@/components/seo/ShareButtons";
 import type { PublicListing } from "@/types/listing";
 
@@ -36,7 +38,7 @@ export async function generateMetadata({
   try {
     const listing = await getPublicListingBySlug(slug);
     if (!listing) return { title: "İlan bulunamadı" };
-    const title = `${listing.ilce} Kentsel Dönüşüm — ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`;
+    const title = `${listing.ilce} Kentsel Dönüşüm — ${formatListingUnits(listing)}`;
     const description = listing.aciklama.slice(0, 155);
     const pageUrl = `${getSiteUrl()}/ilan/${slug}`;
     return {
@@ -100,17 +102,20 @@ export default async function IlanDetailPage({
     /* sahiplik yoksa buton çıkmaz */
   }
 
+  const units = formatListingUnits(listing);
+  const h1 = `${listing.ilce} kentsel dönüşüm — ${units}${titleAdaParsel ? ` · ${titleAdaParsel}` : ""}`;
+  const crumbItems = [
+    { name: "Ana sayfa", path: "/" },
+    { name: "İlanlar", path: "/ilanlar" },
+    { name: `${listing.ilce} Kentsel Dönüşüm`, path: districtPath },
+    { name: "İlan detayı", path: `/ilan/${listing.slug}` },
+  ];
   const schemas = [
-    breadcrumbSchema([
-      { name: "Ana sayfa", path: "/" },
-      { name: "İlanlar", path: "/ilanlar" },
-      { name: `${listing.ilce} Kentsel Dönüşüm`, path: districtPath },
-      { name: "İlan detayı", path: `/ilan/${listing.slug}` },
-    ]),
+    breadcrumbSchema(crumbItems),
     {
       "@context": "https://schema.org",
       "@type": "RealEstateListing",
-      name: `${listing.ilce} kentsel dönüşüm — ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`,
+      name: h1,
       description: listing.aciklama,
       url: `${getSiteUrl()}/ilan/${listing.slug}`,
       datePosted: listing.published_at ?? listing.created_at,
@@ -126,21 +131,12 @@ export default async function IlanDetailPage({
   return (
     <AppShell showBottomCta={false}>
       <JsonLd data={schemas} />
-      <nav className="mb-4 text-xs text-[#6b7280]">
-        <Link href="/" className="font-medium text-[#168f43]">
-          Ana sayfa
-        </Link>
-        <span className="mx-1.5">/</span>
-        <Link
-          href={districtPath}
-          className="font-medium text-[#168f43]"
-          title={`${listing.ilce} kentsel dönüşüm`}
-        >
-          {listing.ilce}
-        </Link>
-        <span className="mx-1.5">/</span>
-        <span className="text-[#111321]">İlan</span>
-      </nav>
+      <Breadcrumbs
+        items={crumbItems.map((c, i) => ({
+          name: c.name,
+          href: i < crumbItems.length - 1 ? c.path : undefined,
+        }))}
+      />
 
       <div className="mb-3 flex items-center justify-between gap-2">
         <p className="text-sm font-medium text-[#6b7280]">
@@ -151,15 +147,14 @@ export default async function IlanDetailPage({
       </div>
 
       <h1 className="text-[22px] font-bold leading-snug text-[#111321]">
-        {listing.kat_sayisi} kat · {listing.daire_sayisi} daire
-        {titleAdaParsel ? ` · ${titleAdaParsel}` : ""}
+        {h1}
       </h1>
       <p className="mt-1 text-sm font-bold text-[#168f43]">
         {ODEME_LABELS[listing.odeme_tercihi as OdemeTercihi]}
       </p>
 
       <div className="card-elevated mt-6 p-4">
-        <h2 className="text-sm font-bold text-[#111321]">İhtiyaç detayı</h2>
+        <h2 className="text-sm font-bold text-[#111321]">Detay</h2>
         <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-[#6b7280]">
           {listing.aciklama}
         </p>
@@ -220,7 +215,7 @@ export default async function IlanDetailPage({
       <ShareButtons
         className="mt-6"
         url={`${getSiteUrl()}/ilan/${listing.slug}`}
-        title={`${listing.ilce} · ${listing.kat_sayisi} kat, ${listing.daire_sayisi} daire`}
+        title={`${listing.ilce} · ${units}`}
       />
 
       {ownerManagePath ? (

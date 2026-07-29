@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublishedNews } from "@/lib/news/queries";
 import {
@@ -96,13 +97,13 @@ export default async function HaberlerPage() {
       </section>
 
       <div className="mx-auto max-w-lg px-4 py-6">
-        <nav className="mb-5 text-xs text-[#6b7280]">
-          <Link href="/" className="font-medium text-[#168f43]">
-            Ana sayfa
-          </Link>
-          <span className="mx-1.5">/</span>
-          <span className="text-[#111321]">Haberler</span>
-        </nav>
+        <Breadcrumbs
+          className="mb-5"
+          items={[
+            { name: "Ana sayfa", href: "/" },
+            { name: "Haberler" },
+          ]}
+        />
 
         {featured && (
           <Link

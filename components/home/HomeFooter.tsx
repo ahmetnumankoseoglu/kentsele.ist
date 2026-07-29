@@ -62,7 +62,7 @@ export function HomeFooter({
           <a
             href="https://www.csb.gov.tr"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
           >
             CSB Bakanlığı
@@ -70,7 +70,7 @@ export function HomeFooter({
           <a
             href="https://www.ibb.istanbul"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
           >
             İBB
@@ -78,7 +78,7 @@ export function HomeFooter({
           <a
             href="https://www.mevzuat.gov.tr"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="text-[#6b7280] hover:text-[#168f43]"
           >
             Mevzuat

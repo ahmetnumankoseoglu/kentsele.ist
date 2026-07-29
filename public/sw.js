@@ -1,6 +1,6 @@
 /* kentsele.ist service worker — PWA + push */
 const CACHE = "kentsele-shell-v1";
-const PRECACHE = ["/", "/favicon.svg", "/manifest.webmanifest"];
+const PRECACHE = ["/", "/favicon.ico", "/favicon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -63,8 +63,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || "kentsele.ist", {
       body: data.body || "",
-      icon: "/favicon.svg",
-      badge: "/favicon.svg",
+      icon: "/favicon.ico",
+      badge: "/favicon.ico",
       data: { url: data.url || "/" },
     })
   );

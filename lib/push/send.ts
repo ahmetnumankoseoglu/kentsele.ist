@@ -58,7 +58,7 @@ async function sendToRows(
   return { sent, failed };
 }
 
-/** Tüm abonelere (yeni yayındaki ilan vb.) */
+/** Tüm abonelere */
 export async function sendPushToAll(
   payload: PushPayload
 ): Promise<{ sent: number; failed: number }> {
@@ -67,6 +67,38 @@ export async function sendPushToAll(
   const { data: rows, error } = await admin
     .from("push_subscriptions")
     .select("id, endpoint, p256dh, auth");
+  if (error || !rows?.length) return { sent: 0, failed: 0 };
+  return sendToRows(rows, payload);
+}
+
+/**
+ * Onaylı müteahhit abonelerine (yeni yayındaki ilan).
+ * contractor_profiles.verification_status = approved + push kaydı olanlar.
+ */
+export async function sendPushToApprovedContractors(
+  payload: PushPayload
+): Promise<{ sent: number; failed: number }> {
+  if (!configureVapid()) return { sent: 0, failed: 0 };
+  const admin = createServiceClient();
+  const { data: contractors, error: cErr } = await admin
+    .from("contractor_profiles")
+    .select("user_id")
+    .eq("verification_status", "approved");
+  if (cErr || !contractors?.length) return { sent: 0, failed: 0 };
+
+  const userIds = [
+    ...new Set(
+      contractors
+        .map((c: { user_id: string }) => c.user_id)
+        .filter(Boolean)
+    ),
+  ];
+  if (!userIds.length) return { sent: 0, failed: 0 };
+
+  const { data: rows, error } = await admin
+    .from("push_subscriptions")
+    .select("id, endpoint, p256dh, auth")
+    .in("user_id", userIds);
   if (error || !rows?.length) return { sent: 0, failed: 0 };
   return sendToRows(rows, payload);
 }
@@ -89,7 +121,7 @@ export async function sendPushToUser(
 /**
  * Olaylara göre push — e-posta ile paralel, hata yutma.
  * Şu an tetiklenenler:
- * - ilan → yayinda: herkese + sahibe
+ * - ilan → yayinda: yalnızca onaylı müteahhitlere + sahibe
  * - ilan durum değişimi: sahibe
  * - müteahhit onay/red: müteahhide
  */
@@ -111,7 +143,7 @@ export async function pushOnListingStatus(
     const hesabim = `${site}/hesabim`;
 
     if (nextStatus === "yayinda") {
-      await sendPushToAll({
+      await sendPushToApprovedContractors({
         title: "Yeni kentsel dönüşüm ilanı",
         body: `${listing.ilce} — yayında. Detaylara bak.`,
         url: publicUrl,

@@ -26,7 +26,9 @@ export function PushEnableButton() {
         alabilirsin:
       </p>
       <ul className="mt-2 list-inside list-disc text-xs text-[#6b7280]">
-        <li>Yeni yayına alınan ilanlar (herkese)</li>
+        <li>
+          Yeni yayına alınan ilanlar — yalnızca onaylı müteahhit hesaplarına
+        </li>
         <li>Kendi ilanının yayına alınması / kaldırılması</li>
         <li>Müteahhit onay veya red sonucu</li>
       </ul>
@@ -48,7 +50,15 @@ export function PushEnableButton() {
         {loading ? "…" : "Bildirimleri aç"}
       </button>
       {msg ? (
-        <p className="mt-2 text-xs font-medium text-[#168f43]">{msg}</p>
+        <p
+          className={`mt-2 text-xs font-medium ${
+            msg.includes("açıldı") || msg.includes("açık")
+              ? "text-[#168f43]"
+              : "text-[#be3317]"
+          }`}
+        >
+          {msg}
+        </p>
       ) : null}
     </div>
   );

@@ -46,6 +46,7 @@ export function websiteSchema() {
     "@type": "WebSite",
     "@id": `${url}/#website`,
     name: SITE_NAME,
+    alternateName: "İstanbul Kentsel Dönüşüm İlanları",
     url,
     description: SITE_DESCRIPTION,
     inLanguage: SITE_LANG,
@@ -72,10 +73,12 @@ export function organizationSchema() {
     url,
     logo: {
       "@type": "ImageObject",
-      url: `${url}/favicon.svg`,
+      url: `${url}/favicon.ico`,
+      contentUrl: `${url}/favicon.svg`,
     },
     image: DEFAULT_OG_IMAGE,
     description: SITE_DESCRIPTION,
+    alternateName: ["Kentsele", "kentsele"],
     areaServed: istanbulPlaceSchema(),
     knowsAbout: [
       "Kentsel dönüşüm",
@@ -191,7 +194,7 @@ export function newsArticleSchema(article: {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${url}/favicon.svg`,
+        url: `${url}/favicon.ico`,
       },
     },
     mainEntityOfPage: {

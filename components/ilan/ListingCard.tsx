@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicListing } from "@/types/listing";
 import { ODEME_LABELS, type OdemeTercihi } from "@/lib/constants/listing";
+import { formatListingUnits } from "@/lib/listings/format";
 import { StatusBadge } from "./StatusBadge";
 
 function initials(name: string) {
@@ -39,8 +40,7 @@ export function ListingCard({ listing }: { listing: PublicListing }) {
               {adaParsel ? ` · ${adaParsel}` : ""}
             </p>
             <p className="mt-0.5 text-xs text-[#6b7280]">
-              Kentsel Dönüşüm · {listing.kat_sayisi} kat · {listing.daire_sayisi}{" "}
-              daire
+              Kentsel Dönüşüm · {formatListingUnits(listing)}
             </p>
           </div>
           <StatusBadge status={listing.status} />

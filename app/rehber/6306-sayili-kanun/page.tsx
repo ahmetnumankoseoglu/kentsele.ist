@@ -227,7 +227,7 @@ export default function Kanun6306Page() {
         <a
           href="https://www.mevzuat.gov.tr"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           className="font-semibold text-[#168f43]"
         >
           Güncel kanun metni (mevzuat.gov.tr)

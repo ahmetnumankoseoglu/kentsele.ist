@@ -5,9 +5,12 @@ import type { Listing } from "@/types/listing";
 
 function listingVars(listing: Listing) {
   const site = getSiteUrl();
+  const dukkanN = Number(listing.dukkan_sayisi ?? 0);
   const building =
     listing.kat_sayisi && listing.daire_sayisi
-      ? `${listing.kat_sayisi} kat · ${listing.daire_sayisi} daire`
+      ? `${listing.kat_sayisi} kat · ${listing.daire_sayisi} daire${
+          dukkanN > 0 ? ` · ${listing.dukkan_sayisi} dükkan` : ""
+        }`
       : "—";
   return {
     PREVIEW_TEXT: `${listing.ilce} ilanınız hakkında bilgilendirme`,

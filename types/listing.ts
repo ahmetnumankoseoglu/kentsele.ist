@@ -10,6 +10,8 @@ export type Listing = {
   parsel?: string | null;
   kat_sayisi: string;
   daire_sayisi: string;
+  /** 0 veya daha fazla; yoksa "0" */
+  dukkan_sayisi?: string | null;
   odeme_tercihi: OdemeTercihi;
   aciklama: string;
   iletisim_adi: string;

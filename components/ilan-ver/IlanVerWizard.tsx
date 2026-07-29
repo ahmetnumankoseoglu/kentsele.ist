@@ -6,6 +6,7 @@ import { ISTANBUL_ILCELER } from "@/lib/constants/istanbul-ilceler";
 import { getMahallelerForIlce } from "@/lib/constants/istanbul-mahalleler";
 import {
   DAIRE_SECENEKLERI,
+  DUKKAN_SECENEKLERI,
   KAT_SECENEKLERI,
   LISTING_BELGELER,
   ODEME_LABELS,
@@ -13,6 +14,7 @@ import {
   type ListingBelgeKey,
   type OdemeTercihi,
 } from "@/lib/constants/listing";
+import { formatListingUnits } from "@/lib/listings/format";
 import {
   formatPhoneDisplay,
   formatPhoneInput,
@@ -52,8 +54,8 @@ function buildStepMeta(fromAccount: boolean) {
       sub: "Hızlı seç veya özel rakam yaz (zemin altı dahil)",
     },
     {
-      title: "Binada kaç daire olacak?",
-      sub: "Hızlı seç veya özel rakam yaz",
+      title: "Kaç daire ve dükkan olacak?",
+      sub: "Daire zorunlu · dükkan yoksa 0 seçin",
     },
     {
       title: "Ödeme tercihiniz nedir?",
@@ -117,6 +119,7 @@ export function IlanVerWizard({
     parsel: "",
     kat_sayisi: "",
     daire_sayisi: "",
+    dukkan_sayisi: "0",
     odeme_tercihi: "" as OdemeTercihi | "",
     aciklama: "",
     iletisim_adi: prefilledName,
@@ -146,6 +149,7 @@ export function IlanVerWizard({
           parsel: form.parsel,
           kat_sayisi: form.kat_sayisi,
           daire_sayisi: form.daire_sayisi,
+          dukkan_sayisi: form.dukkan_sayisi || "0",
           odeme_tercihi: form.odeme_tercihi,
           aciklama: form.aciklama,
           iletisim_adi: form.iletisim_adi,
@@ -185,6 +189,9 @@ export function IlanVerWizard({
       const n = parseDigitInput(form.daire_sayisi, 0);
       if (!form.daire_sayisi.trim() || n < 1)
         return setError("Daire sayısı girin (en az 1)");
+      const d = parseDigitInput(form.dukkan_sayisi, -1);
+      if (!form.dukkan_sayisi.trim() || d < 0)
+        return setError("Dükkan sayısı girin (yoksa 0)");
     }
     if (step === 4 && !form.odeme_tercihi)
       return setError("Ödeme tercihi seçin");
@@ -328,42 +335,87 @@ export function IlanVerWizard({
         )}
 
         {step === 3 && (
-          <div>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-              {DAIRE_SECENEKLERI.map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  onClick={() => {
-                    setForm((f) => ({ ...f, daire_sayisi: d }));
+          <div className="space-y-6">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">
+                Daire <span className="text-[#ee401d]">*</span>
+              </p>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                {DAIRE_SECENEKLERI.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => {
+                      setForm((f) => ({ ...f, daire_sayisi: d }));
+                      setError(null);
+                    }}
+                    data-selected={form.daire_sayisi === d}
+                    className="option-chip py-3.5 text-sm font-bold tabular-nums"
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+              <label className="mt-4 block text-xs font-bold text-[#6b7280]">
+                Özel daire sayısı
+                <input
+                  className="input-field mt-1.5 text-lg font-bold tabular-nums"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
+                  placeholder="Listede yoksa yazın"
+                  value={form.daire_sayisi}
+                  onChange={(e) => {
+                    setForm((f) => ({
+                      ...f,
+                      daire_sayisi: sanitizeDigitInput(e.target.value),
+                    }));
                     setError(null);
                   }}
-                  data-selected={form.daire_sayisi === d}
-                  className="option-chip py-3.5 text-sm font-bold tabular-nums"
-                >
-                  {d}
-                </button>
-              ))}
+                  onFocus={(e) => e.target.select()}
+                />
+              </label>
             </div>
-            <label className="mt-4 block text-xs font-bold text-[#6b7280]">
-              Özel daire sayısı
-              <input
-                className="input-field mt-1.5 text-lg font-bold tabular-nums"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                autoComplete="off"
-                placeholder="Listede yoksa yazın"
-                value={form.daire_sayisi}
-                onChange={(e) => {
-                  setForm((f) => ({
-                    ...f,
-                    daire_sayisi: sanitizeDigitInput(e.target.value),
-                  }));
-                  setError(null);
-                }}
-                onFocus={(e) => e.target.select()}
-              />
-            </label>
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#6b7280]">
+                Dükkan
+              </p>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                {DUKKAN_SECENEKLERI.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => {
+                      setForm((f) => ({ ...f, dukkan_sayisi: d }));
+                      setError(null);
+                    }}
+                    data-selected={form.dukkan_sayisi === d}
+                    className="option-chip py-3.5 text-sm font-bold tabular-nums"
+                  >
+                    {d === "0" ? "Yok" : d}
+                  </button>
+                ))}
+              </div>
+              <label className="mt-4 block text-xs font-bold text-[#6b7280]">
+                Özel dükkan sayısı
+                <input
+                  className="input-field mt-1.5 text-lg font-bold tabular-nums"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
+                  placeholder="0"
+                  value={form.dukkan_sayisi}
+                  onChange={(e) => {
+                    setForm((f) => ({
+                      ...f,
+                      dukkan_sayisi: sanitizeDigitInput(e.target.value),
+                    }));
+                    setError(null);
+                  }}
+                  onFocus={(e) => e.target.select()}
+                />
+              </label>
+            </div>
           </div>
         )}
 
@@ -390,7 +442,7 @@ export function IlanVerWizard({
           <div className="space-y-4">
             <div>
               <p className="text-sm font-bold text-[#111321]">
-                İhtiyaç detayı <span className="text-[#ee401d]">*</span>
+                Detay <span className="text-[#ee401d]">*</span>
               </p>
               <p className="mt-0.5 text-xs text-[#6b7280]">
                 Zorunlu · en az 20 karakter
@@ -551,7 +603,7 @@ export function IlanVerWizard({
                 </li>
                 <li>
                   <span className="font-semibold text-[#111321]">Bina:</span>{" "}
-                  {form.kat_sayisi} kat · {form.daire_sayisi} daire
+                  {formatListingUnits(form)}
                 </li>
                 <li>
                   <span className="font-semibold text-[#111321]">Ödeme:</span>{" "}

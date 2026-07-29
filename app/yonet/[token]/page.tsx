@@ -110,6 +110,7 @@ export default async function YonetPage({
     parsel: listing.parsel ?? null,
     kat_sayisi: listing.kat_sayisi,
     daire_sayisi: listing.daire_sayisi,
+    dukkan_sayisi: listing.dukkan_sayisi ?? "0",
     odeme_tercihi: listing.odeme_tercihi as OdemeTercihi,
     aciklama: listing.aciklama,
     iletisim_adi: listing.iletisim_adi,

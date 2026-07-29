@@ -6,6 +6,7 @@ import { IlceFilter } from "@/components/ilan/IlceFilter";
 import { FaqAccordion } from "@/components/home/FaqAccordion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicListingsForViewer } from "@/lib/listings/queries";
+import { SITE_NAME } from "@/lib/seo/site";
 import {
   isValidIstanbulIlce,
   ISTANBUL_ILCELER,
@@ -23,12 +24,15 @@ import {
 import { istanbulGeoMetadata } from "@/lib/seo/istanbul";
 import type { PublicListing } from "@/types/listing";
 
+const HOME_H1 = "kentsele.ist — İstanbul kentsel dönüşüm ilanları";
+
 export const metadata: Metadata = istanbulGeoMetadata({
-  title: "İstanbul Kentsel Dönüşüm İlanları | Ücretsiz Malik İlanı",
+  title: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
   description:
-    "İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek hesaplama.",
+    "kentsele.ist — İstanbul kentsel dönüşüm ilanları. Malikler ücretsiz ve kayıtsız ilan verir; onaylı müteahhitler iletişime geçer. 39 ilçe, rehber ve destek hesaplama.",
   path: "/",
   keywords: [
+    "kentsele.ist",
     "kentsel dönüşüm ilanları",
     "İstanbul kentsel dönüşüm",
     "malik ilanı",
@@ -103,14 +107,15 @@ export default async function HomePage({
         <div className="absolute inset-0 bg-gradient-to-t from-[#111321] via-[#111321]/70 to-[#111321]/40" />
         <div className="relative mx-auto max-w-lg px-4 pb-8 pt-10">
           <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
-            İstanbul · Kentsel Dönüşüm
+            {SITE_NAME} · İstanbul · Kentsel Dönüşüm
           </p>
           <h1 className="mt-2 text-[26px] font-bold leading-tight text-white">
-            Kentsel dönüşüm ilanı ver, müteahhit bul.
+            {HOME_H1}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-white/80">
-            Malikler ücretsiz ve kayıtsız ilan verir. Müteahhitler belge onayı
-            sonrası malikle iletişime geçer.
+            Kentsel dönüşüm ilanı ver, müteahhit bul. Malikler ücretsiz ve
+            kayıtsız ilan verir; müteahhitler belge onayı sonrası malikle
+            iletişime geçer.
           </p>
           <div className="mt-6 flex w-full flex-col gap-2 sm:flex-row">
             <Link
@@ -246,7 +251,7 @@ export default async function HomePage({
                 </Link>
               </div>
             ) : (
-              listings.slice(0, 6).map((l, i) => (
+              listings.slice(0, 5).map((l, i) => (
                 <div
                   key={l.id}
                   className="animate-fade-up"
@@ -257,7 +262,7 @@ export default async function HomePage({
               ))
             )}
           </div>
-          {listings.length > 6 && (
+          {listings.length > 5 && (
             <Link href="/ilanlar" className="btn-secondary mt-4 w-full">
               Daha fazla ilan ({listings.length})
             </Link>

@@ -24,6 +24,20 @@ const daireSayisiSchema = z
     return n >= 1 && n <= 999;
   }, "Daire sayısı en az 1 olmalı");
 
+/** Dükkan: 0 veya pozitif (yoksa 0) */
+const dukkanSayisiSchema = z
+  .union([z.string(), z.number()])
+  .optional()
+  .transform((v) => {
+    if (v === undefined || v === null || String(v).trim() === "") return "0";
+    return String(v).trim();
+  })
+  .refine((v) => /^\d+$/.test(v), "Dükkan sayısı yalnızca rakam olmalı")
+  .refine((v) => {
+    const n = Number(v);
+    return n >= 0 && n <= 999;
+  }, "Dükkan sayısı 0–999 arası olmalı");
+
 /** Ada / parsel: zorunlu, yalnızca rakam */
 const adaParselRequired = z
   .union([z.string(), z.number()])
@@ -52,6 +66,7 @@ export const createListingSchema = z
     parsel: adaParselRequired,
     kat_sayisi: katSayisiSchema,
     daire_sayisi: daireSayisiSchema,
+    dukkan_sayisi: dukkanSayisiSchema,
     odeme_tercihi: z.enum(ODEME_TERCIHLERI),
     aciklama: z.string().trim().min(20, "En az 20 karakter").max(2000),
     iletisim_adi: z.string().trim().min(2).max(80),
@@ -100,6 +115,7 @@ export const updateListingByOwnerSchema = z
     parsel: adaParselOptionalUpdate,
     kat_sayisi: katSayisiSchema.optional(),
     daire_sayisi: daireSayisiSchema.optional(),
+    dukkan_sayisi: dukkanSayisiSchema.optional(),
     odeme_tercihi: z.enum(ODEME_TERCIHLERI).optional(),
     aciklama: z.string().trim().min(20).max(2000).optional(),
     iletisim_adi: z.string().trim().min(2).max(80).optional(),
@@ -136,6 +152,7 @@ export const adminUpdateListingSchema = z.object({
   parsel: adaParselOptionalUpdate,
   kat_sayisi: katSayisiSchema.optional(),
   daire_sayisi: daireSayisiSchema.optional(),
+  dukkan_sayisi: dukkanSayisiSchema.optional(),
   odeme_tercihi: z.enum(ODEME_TERCIHLERI).optional(),
   aciklama: z.string().trim().min(20).max(2000).optional(),
   iletisim_adi: z.string().trim().min(2).max(80).optional(),

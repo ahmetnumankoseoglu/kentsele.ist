@@ -132,6 +132,7 @@ export type AccountListingRow = {
   manage_token: string;
   kat_sayisi: string;
   daire_sayisi: string;
+  dukkan_sayisi?: string | null;
 };
 
 type ListingScanRow = AccountListingRow & {
@@ -166,7 +167,7 @@ export async function getListingsForAccount(
   }
 
   const selectCols =
-    "id, slug, ilce, mahalle, status, manage_token, kat_sayisi, daire_sayisi, email, owner_user_id";
+    "id, slug, ilce, mahalle, status, manage_token, kat_sayisi, daire_sayisi, dukkan_sayisi, email, owner_user_id";
 
   const { data: owned, error: ownedErr } = await admin
     .from("listings")
@@ -227,5 +228,6 @@ export async function getListingsForAccount(
     manage_token: r.manage_token,
     kat_sayisi: r.kat_sayisi,
     daire_sayisi: r.daire_sayisi,
+    dukkan_sayisi: r.dukkan_sayisi ?? "0",
   }));
 }

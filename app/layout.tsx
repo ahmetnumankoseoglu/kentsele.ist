@@ -29,14 +29,19 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   ...istanbulGeoMetadata(),
   title: {
-    default: "İstanbul Kentsel Dönüşüm İlanları | Ücretsiz Malik İlanı",
-    template: "%s | Kentsele",
+    default: "kentsele.ist | İstanbul Kentsel Dönüşüm İlanları",
+    template: "%s | kentsele.ist",
   },
   metadataBase: new URL(getSiteUrl()),
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml", sizes: "any" }],
-    shortcut: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
+      { url: "/icons/icon-192", type: "image/png", sizes: "192x192" },
+      { url: "/icons/icon-512", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
   formatDetection: {
     telephone: true,

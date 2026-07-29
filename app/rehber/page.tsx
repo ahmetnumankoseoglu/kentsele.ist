@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   breadcrumbSchema,
@@ -81,6 +82,12 @@ export default function RehberIndexPage() {
   return (
     <AppShell showBottomCta>
       <JsonLd data={schemas} />
+      <Breadcrumbs
+        items={[
+          { name: "Ana sayfa", href: "/" },
+          { name: "Rehber" },
+        ]}
+      />
       <p className="text-xs font-bold uppercase tracking-wider text-[#2cb34f]">
         Bilgi bankası · Kentsel dönüşüm · İstanbul
       </p>

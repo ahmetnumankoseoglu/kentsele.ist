@@ -35,6 +35,7 @@ export async function createListing(
       parsel: input.parsel?.trim() || null,
       kat_sayisi: input.kat_sayisi,
       daire_sayisi: input.daire_sayisi,
+      dukkan_sayisi: input.dukkan_sayisi ?? "0",
       odeme_tercihi: input.odeme_tercihi,
       aciklama: input.aciklama,
       iletisim_adi: input.iletisim_adi,

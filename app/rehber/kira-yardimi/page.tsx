@@ -243,7 +243,7 @@ export default function KiraYardimiPage() {
         <a
           href={IBB.resmiUrl}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           className="font-bold text-[#168f43]"
         >
           kentseldonusum.ibb.istanbul

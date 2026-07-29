@@ -37,7 +37,7 @@ export function OfficialSources({
             <a
               href={s.href}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               className="text-sm font-semibold text-[#168f43] underline-offset-2 hover:underline"
               title={s.label}
             >

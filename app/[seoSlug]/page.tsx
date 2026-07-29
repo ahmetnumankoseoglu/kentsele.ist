@@ -16,6 +16,7 @@ import {
   getDistrictMeta,
 } from "@/lib/content/district-meta";
 import { getPublicListingsForViewer } from "@/lib/listings/queries";
+import { formatListingUnits } from "@/lib/listings/format";
 import {
   breadcrumbSchema,
   faqPageSchema,
@@ -139,7 +140,7 @@ export default async function DistrictSeoPage({
     itemListSchema(
       `${ilce} kentsel dönüşüm ilanları`,
       listings.map((l) => ({
-        name: `${l.ilce} · ${l.kat_sayisi} kat · ${l.daire_sayisi} daire`,
+        name: `${l.ilce} · ${formatListingUnits(l)}`,
         url: `${site}/ilan/${l.slug}`,
       }))
     ),

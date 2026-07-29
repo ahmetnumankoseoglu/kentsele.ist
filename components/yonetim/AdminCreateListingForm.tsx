@@ -28,6 +28,7 @@ export function AdminCreateListingForm() {
     parsel: "",
     kat_sayisi: "5",
     daire_sayisi: "8",
+    dukkan_sayisi: "0",
     odeme_tercihi: "kat_karsiligi" as OdemeTercihi,
     aciklama: "",
     iletisim_adi: "",
@@ -167,7 +168,7 @@ export function AdminCreateListingForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div>
           <label className={labelClass} htmlFor="c-kat">
             Kat
@@ -200,6 +201,23 @@ export function AdminCreateListingForm() {
               setForm((f) => ({
                 ...f,
                 daire_sayisi: sanitizeDigitInput(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="c-dukkan">
+            Dükkan
+          </label>
+          <input
+            id="c-dukkan"
+            className={inputClass}
+            inputMode="numeric"
+            value={form.dukkan_sayisi}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                dukkan_sayisi: sanitizeDigitInput(e.target.value),
               }))
             }
           />

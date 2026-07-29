@@ -27,6 +27,7 @@ type OwnerListing = {
   parsel: string | null;
   kat_sayisi: string;
   daire_sayisi: string;
+  dukkan_sayisi: string;
   odeme_tercihi: OdemeTercihi;
   aciklama: string;
   iletisim_adi: string;
@@ -58,6 +59,7 @@ export function OwnerPanel({
     parsel: initial.parsel ?? "",
     kat_sayisi: initial.kat_sayisi,
     daire_sayisi: initial.daire_sayisi,
+    dukkan_sayisi: initial.dukkan_sayisi ?? "0",
     odeme_tercihi: initial.odeme_tercihi,
     aciklama: initial.aciklama,
     iletisim_adi: initial.iletisim_adi,
@@ -93,6 +95,7 @@ export function OwnerPanel({
           parsel: form.parsel || null,
           kat_sayisi: form.kat_sayisi,
           daire_sayisi: form.daire_sayisi,
+          dukkan_sayisi: form.dukkan_sayisi || "0",
           odeme_tercihi: form.odeme_tercihi,
           aciklama: form.aciklama,
           iletisim_adi: form.iletisim_adi,
@@ -121,6 +124,7 @@ export function OwnerPanel({
         parsel: listing.parsel ?? "",
         kat_sayisi: listing.kat_sayisi,
         daire_sayisi: listing.daire_sayisi,
+        dukkan_sayisi: listing.dukkan_sayisi ?? "0",
         odeme_tercihi: listing.odeme_tercihi,
         aciklama: listing.aciklama,
         iletisim_adi: listing.iletisim_adi,
@@ -301,7 +305,7 @@ export function OwnerPanel({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelClass} htmlFor="kat">
               Kat
@@ -334,6 +338,24 @@ export function OwnerPanel({
                 setForm((f) => ({
                   ...f,
                   daire_sayisi: sanitizeDigitInput(e.target.value),
+                }))
+              }
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="dukkan">
+              Dükkan
+            </label>
+            <input
+              id="dukkan"
+              className={inputClass}
+              inputMode="numeric"
+              value={form.dukkan_sayisi}
+              disabled={readOnly}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  dukkan_sayisi: sanitizeDigitInput(e.target.value),
                 }))
               }
             />
