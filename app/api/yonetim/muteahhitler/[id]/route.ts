@@ -8,40 +8,95 @@ const schema = z.object({
   rejection_reason: z.string().optional().nullable(),
 });
 
+function migrationHint(message?: string) {
+  const base =
+    "Supabase SQL Editor’da migrations/010_admin_set_contractor_verification.sql dosyasının tamamını çalıştırıp tekrar dene.";
+  if (!message) return base;
+  if (
+    message.includes("verification fields") ||
+    message.includes("admin_set_contractor_verification") ||
+    message.includes("Could not find the function") ||
+    message.includes("schema cache")
+  ) {
+    return `${message} — ${base}`;
+  }
+  return message;
+}
+
 export async function PATCH(
   req: Request,
   ctx: { params: Promise<{ id: string }> }
 ) {
   if (!(await isAdminAuthenticated())) {
-    return NextResponse.json({ error: "auth" }, { status: 401 });
+    return NextResponse.json(
+      { error: "auth", message: "Oturum geçersiz. /yonetim’den yeniden giriş yap." },
+      { status: 401 }
+    );
   }
   try {
     const { id } = await ctx.params;
     const parsed = schema.safeParse(await req.json());
     if (!parsed.success) {
-      return NextResponse.json({ error: "validation" }, { status: 400 });
+      return NextResponse.json(
+        { error: "validation", message: "Geçersiz istek." },
+        { status: 400 }
+      );
     }
 
     const admin = createServiceClient();
-    const { data, error } = await admin
-      .from("contractor_profiles")
-      .update({
-        verification_status: parsed.data.verification_status,
-        rejection_reason: parsed.data.rejection_reason ?? null,
-        reviewed_at: new Date().toISOString(),
-      })
-      .eq("user_id", id)
-      .select("*")
-      .single();
-    if (error) {
-      console.error("[muteahhit PATCH]", error);
+    const status = parsed.data.verification_status;
+    const reason =
+      status === "rejected"
+        ? (parsed.data.rejection_reason ?? "Belgeler yetersiz")
+        : null;
+
+    // Prefer RPC (bypass flag + SECURITY DEFINER). Fallback to direct update.
+    let data: Record<string, unknown> | null = null;
+    let errorMessage: string | null = null;
+
+    const rpc = await admin.rpc("admin_set_contractor_verification", {
+      p_user_id: id,
+      p_status: status,
+      p_rejection_reason: reason,
+    });
+
+    if (!rpc.error && rpc.data) {
+      data = Array.isArray(rpc.data) ? rpc.data[0] : rpc.data;
+    } else {
+      if (rpc.error) {
+        console.error("[muteahhit PATCH] rpc", rpc.error);
+        errorMessage = rpc.error.message;
+      }
+
+      const direct = await admin
+        .from("contractor_profiles")
+        .update({
+          verification_status: status,
+          rejection_reason: reason,
+          reviewed_at: new Date().toISOString(),
+        })
+        .eq("user_id", id)
+        .select("*")
+        .single();
+
+      if (direct.error) {
+        console.error("[muteahhit PATCH] direct", direct.error);
+        return NextResponse.json(
+          {
+            error: "db",
+            message: migrationHint(direct.error.message || errorMessage || undefined),
+          },
+          { status: 500 }
+        );
+      }
+      data = direct.data;
+    }
+
+    if (!data) {
       return NextResponse.json(
         {
           error: "db",
-          message:
-            error.message?.includes("verification fields")
-              ? "DB trigger admin güncellemesini engelliyor. Supabase SQL Editor’da migrations/009_admin_verification_trigger.sql dosyasını çalıştır."
-              : error.message || "Güncelleme başarısız",
+          message: migrationHint(errorMessage || "Güncelleme sonucu boş."),
         },
         { status: 500 }
       );
@@ -49,10 +104,7 @@ export async function PATCH(
 
     // Notify contractor by email (Auth user email + profile name)
     try {
-      if (
-        parsed.data.verification_status === "approved" ||
-        parsed.data.verification_status === "rejected"
-      ) {
+      if (status === "approved" || status === "rejected") {
         const { data: userData } = await admin.auth.admin.getUserById(id);
         const email = userData.user?.email;
         const { data: profile } = await admin
@@ -65,8 +117,8 @@ export async function PATCH(
           await emailOnContractorStatus({
             email,
             name: profile?.full_name || "Müteahhit",
-            status: parsed.data.verification_status,
-            reason: parsed.data.rejection_reason,
+            status,
+            reason,
           });
         }
       }
@@ -74,9 +126,18 @@ export async function PATCH(
       console.error("[email] contractor status:", mailErr);
     }
 
-    return NextResponse.json({ item: data });
+    return NextResponse.json({
+      item: data,
+      verification_status: status,
+    });
   } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "server" }, { status: 500 });
+    console.error("[muteahhit PATCH]", e);
+    const msg =
+      e instanceof Error && e.message.includes("Missing Supabase")
+        ? "Sunucuda SUPABASE_SERVICE_ROLE_KEY eksik."
+        : e instanceof Error
+          ? e.message
+          : "Sunucu hatası";
+    return NextResponse.json({ error: "server", message: msg }, { status: 500 });
   }
 }

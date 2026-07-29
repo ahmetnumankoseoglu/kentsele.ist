@@ -13,7 +13,13 @@ kentsele.ist veritabanı, auth ve storage kurulumu.
 7. `migrations/007_contact_replies.sql` — iletişim formu admin cevabı alanları
 8. `migrations/008_storage_contractor_docs.sql` — private `contractor-docs` bucket
 9. `migrations/009_admin_verification_trigger.sql` — admin müteahhit onayı (service_role serbest)
-10. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+10. `migrations/010_admin_set_contractor_verification.sql` — **zorunlu** admin Onayla/Reddet (RPC + bypass)
+11. `seed.sql` — isteğe bağlı örnek ilanlar (geliştirme)
+
+### Müteahhit Onayla butonu çalışmıyorsa
+
+Supabase → SQL Editor → New query → `010_admin_set_contractor_verification.sql` içeriğini yapıştır → **Run**.
+Sonra admin panelde Onayla’ya tekrar bas.
 
 ## Dashboard ayarları
 
